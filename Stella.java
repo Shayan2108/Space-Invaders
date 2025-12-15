@@ -1,8 +1,8 @@
-public class Stella {
+public class Stella extends Thread{
     public int x,y,velocita;
     public MyPanel m;
 
-    public Stella(int x, int y, int velocita, MyPanel m) {
+    public  Stella(int x, int y, int velocita, MyPanel m) {
         this.x = x;
         this.y = y;
         this.velocita = velocita;

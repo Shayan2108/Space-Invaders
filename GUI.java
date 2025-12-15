@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
-public class GUI extends Thread {
+public class GUI extends Thread{
 
     @Override
     public void run() {
@@ -13,6 +13,7 @@ public class GUI extends Thread {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(new MyPanel());
+
+
     }
-    
 }
