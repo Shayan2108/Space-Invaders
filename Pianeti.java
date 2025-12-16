@@ -8,20 +8,23 @@ public class Pianeti extends Stella {
     int grandezzaPianeta;
     long timer;
     int frequenzaAggiornamento;
+
     public Pianeti(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image) {
         super(x, y, velocita, m);
+        grandezzaPianeta = m.r.nextInt(80, 300);
+        super.x = m.r.nextInt(0, 400 - grandezzaPianeta);
+        super.y = 0 - grandezzaPianeta;
         this.image = image;
         frameAttuale = 1;
-        grandezzaPianeta = m.r.nextInt(25, 200);
-        frequenzaAggiornamento = 500;
-        super.y =  0 - grandezzaPianeta;
+        frequenzaAggiornamento = 66;
         timer = System.currentTimeMillis() + frequenzaAggiornamento;
         this.start();
     }
+
     @Override
     public void run() {
         while (y <= super.m.getHeight()) {
-            y += 4;
+            y += 1;
             try {
                 sleep(33);
             } catch (InterruptedException e) {
@@ -29,21 +32,19 @@ public class Pianeti extends Stella {
                 e.printStackTrace();
             }
         }
-        synchronized(super.m.pianeti)
-        {
+        synchronized (super.m.pianeti) {
             m.pianeti.remove(this);
         }
     }
-    public void stampaPianeti(Graphics g)
-    {
-        g.drawImage(image.get(frameAttuale), x, y,grandezzaPianeta,grandezzaPianeta, null);
-        if(System.currentTimeMillis() > timer)
-        {
+
+    public void stampaPianeti(Graphics g) {
+        g.drawImage(image.get(frameAttuale), x, y, grandezzaPianeta, grandezzaPianeta, null);
+        if (System.currentTimeMillis() > timer) {
             frameAttuale++;
             timer += frequenzaAggiornamento;
-        if(frameAttuale > 4)
-            frameAttuale = 0;
+            if (frameAttuale > 59)
+                frameAttuale = 0;
         }
     }
-    
+
 }

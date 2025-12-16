@@ -56,7 +56,7 @@ public class MyPanel extends JPanel {
         sfondo = new Sfondo();
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-        NPianeti = 28;
+        NPianeti = 10;
         uploadPianeti();
         try {
             nave = ImageIO.read(new File("Nave.png"));
@@ -94,10 +94,11 @@ public class MyPanel extends JPanel {
         larghezzaFiamma = 20;
         paddingBullet1 = 30;
         paddingBullet2 = 50;
-        frequezaminimaPianeti = 2000;
-        frequezaMassimaPianeti = 6000;
+        frequezaminimaPianeti = 10000;
+        frequezaMassimaPianeti = 20000;
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
+        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,immaginiPianeti.get(r.nextInt(1, NPianeti))));
     }
 
     @Override
@@ -106,12 +107,11 @@ public class MyPanel extends JPanel {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
-            stampaPianeti(g);
+        stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
         stampaBullets(g);
         stampaFuoco(g);
     }
-
     private void stampaFuoco(Graphics g) {
         g.drawImage(fiamma.get(frameFiamma), xNave + (larghezzaNave / 2) - (larghezzaFiamma / 2),
                 yNave + altezzaNave - (altezzaFiamma / 2) - 17, larghezzaFiamma, altezzaFiamma, null);
@@ -148,13 +148,14 @@ public class MyPanel extends JPanel {
             immaginiPianeti.add(new ArrayList<>());
         }
         for (int i = 0; i < NPianeti; i++) {
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 60; j++) {
                 try {
-                    immaginiPianeti.get(i).add(ImageIO.read(new File("Planets/" + (i + 1) + "/" + (j + 1) + ".png")));
+                    immaginiPianeti.get(i).add(ImageIO.read(new File("Planets/" + (i + 1) + "/" + j + ".png")));
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
             }
         }
     }
@@ -194,7 +195,7 @@ public class MyPanel extends JPanel {
                 }
                 if (System.currentTimeMillis() >= timer) {
                     pianeti.add(new Pianeti(r.nextInt(0, getWidth()), 0, 6, MyPanel.this,
-                    immaginiPianeti.get(r.nextInt(0, 27))));
+                    immaginiPianeti.get(r.nextInt(1, NPianeti))));
                     timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
                 }
                 synchronized (stelle) {
