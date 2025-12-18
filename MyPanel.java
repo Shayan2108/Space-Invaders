@@ -16,6 +16,8 @@ public class MyPanel extends JPanel {
     volatile ArrayList<BufferedImage> fiamma = new ArrayList<>();
     volatile ArrayList<Pianeti> pianeti = new ArrayList<>();
     volatile ArrayList<ArrayList<BufferedImage>> immaginiPianeti = new ArrayList<>();
+    volatile ArrayList<BufferedImage> immaginiDettagli = new ArrayList<>();
+    volatile ArrayList<Dettagli> dettagli = new ArrayList<>();
     int frameFiamma;
     Random r;
     Sfondo sfondo;
@@ -41,6 +43,7 @@ public class MyPanel extends JPanel {
     int frequezaminimaPianeti;
     int frequezaMassimaPianeti;
     int NPianeti;
+    int NpngPerDettagliImmagini;
     
 
     public MyPanel() {
@@ -53,11 +56,28 @@ public class MyPanel extends JPanel {
         bulletDisponibili.setForeground(Color.WHITE);
         this.add(bulletDisponibili);
         r = new Random();
-        sfondo = new Sfondo();
+        sfondo = new Sfondo(this);
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
         NPianeti = 10;
+        xNave = 200;
+        movimento = 3;
+        paddingX = 90;
+        paddingY = 150;
+        frameFiamma = 1;
+        altezzaNave = 150;
+        larghezzaNave = 100;
+        altezzaFiamma = 50;
+        larghezzaFiamma = 20;
+        paddingBullet1 = 30;
+        paddingBullet2 = 50;
+        frequezaminimaPianeti = 10000;
+        frequezaMassimaPianeti = 20000;
+        timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
+        timerStampaPianeta = System.currentTimeMillis() + 1000;
+        NpngPerDettagliImmagini = 8;
         uploadPianeti();
+        uploadAsteroidi();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -80,25 +100,11 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        xNave = 200;
-        movimento = 3;
         game.start();
         sfondo.start();
         spostaBullet.start();
-        paddingX = 90;
-        paddingY = 150;
-        frameFiamma = 1;
-        altezzaNave = 150;
-        larghezzaNave = 100;
-        altezzaFiamma = 50;
-        larghezzaFiamma = 20;
-        paddingBullet1 = 30;
-        paddingBullet2 = 50;
-        frequezaminimaPianeti = 10000;
-        frequezaMassimaPianeti = 20000;
-        timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
-        timerStampaPianeta = System.currentTimeMillis() + 1000;
         pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,immaginiPianeti.get(r.nextInt(1, NPianeti))));
+        dettagli.add((new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini)))));
     }
 
     @Override
@@ -107,6 +113,7 @@ public class MyPanel extends JPanel {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
+                stampaAsteroidi(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
         stampaBullets(g);
@@ -131,7 +138,13 @@ public class MyPanel extends JPanel {
 
     private void stampaPianeti(Graphics g) {
         for (int i = 0; i < pianeti.size(); i++) {
-            pianeti.get(i).stampaPianeti(g);
+            pianeti.get(i).stampaOggettiClasse(g);
+        }
+    }
+    private void stampaAsteroidi(Graphics g)
+    {
+        for (int i = 0; i < dettagli.size(); i++) {
+            dettagli.get(i).stampaDettagli(g);
         }
     }
 
@@ -159,57 +172,16 @@ public class MyPanel extends JPanel {
             }
         }
     }
-
-    class Sfondo extends Thread {
-        @Override
-        public void run() {
-            try {
-                sleep(33);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            synchronized (stelle) {
-                for (int i = 0; i < getWidth(); i++) {
-                    stelle.add(new Stella(r.nextInt(0, getWidth()), r.nextInt(0, getHeight()), 8, MyPanel.this));
-                }
-            }
-            while (true) {
-                if (isPressed) {
-                    if (xNave + paddingX + movimento <= getWidth() && xNave + movimento >= 0)
-                        xNave += movimento;
-                    else if (xNave + paddingX + movimento > getWidth()) {
-                        xNave = getWidth() - paddingX + 1;
-                    } else if (xNave + movimento < 0) {
-                        xNave = 0;
-                    }
-                } else {
-                    yNave = getHeight() - paddingY;
-                }
+    private void uploadAsteroidi()
+    {
+            for (int j = 0; j < NpngPerDettagliImmagini; j++) 
+            {
                 try {
-                    sleep(33);
-                } catch (InterruptedException e) {
+                    immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
+                } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
-
-                }
-                if (System.currentTimeMillis() >= timer) {
-                    pianeti.add(new Pianeti(r.nextInt(0, getWidth()), 0, 6, MyPanel.this,
-                    immaginiPianeti.get(r.nextInt(1, NPianeti))));
-                    timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
-                }
-                synchronized (stelle) {
-                    for (int i = 0; i < getWidth() / 75; i++) {
-                        stelle.add(new Stella(r.nextInt(0, getWidth()), 0, 8, MyPanel.this));
-                    }
-                    for (int i = 0; i < stelle.size(); i++) {
-                        stelle.get(i).sposta();
-                        if (stelle.get(i).isFinita()) {
-                            stelle.remove(i);
-                        }
-                    }
-                }
-            }
+                    System.err.println("Errore caricando: Asteroidi/" + "vio" + "/" + j + ".png");
+                }   
         }
     }
 }

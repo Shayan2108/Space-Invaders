@@ -11,7 +11,7 @@ public class GUI extends Thread{
         frame.setLocation(new Point(100, 100));
         frame.setTitle("Space Invaders");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setResizable(false);
+        frame.setResizable(false);
         frame.add(new MyPanel());
 
 

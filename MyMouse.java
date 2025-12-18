@@ -12,10 +12,8 @@ public class MyMouse implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if(m.bulletMassime - m.bullets.size() > 0){
-        // m.bullets.add(new Bullets(m, m.xNave + 10 ,m.yNave, 4));
-        // m.bullets.add(new Bullets(m, m.xNave + 70,m.yNave, 4));
-        m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1, m.yNave, 4));
-        m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 4));
+        m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1, m.yNave, 8));
+        m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 8));
         }
 
         
