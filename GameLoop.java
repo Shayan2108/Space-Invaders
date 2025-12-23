@@ -3,7 +3,6 @@ public class GameLoop extends Thread {
 
     public GameLoop(MyPanel m) {
         this.m = m;
-        this.start();
     }
 
     @Override

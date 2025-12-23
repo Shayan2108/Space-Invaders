@@ -7,22 +7,22 @@ class Sfondo extends Thread {
         this.m = m;
         frequenzaAsteroidiSpawn = 1000;
         timerAsteroidi = System.currentTimeMillis() + frequenzaAsteroidiSpawn;
-        this.start();
     }
 
     @Override
     public void run() {
-        while (m.getWidth() == 0) {
+        while (m.getWidth() == 0 || m.getHeight() == 0) {
+
             try {
                 sleep(33);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            synchronized (m.stelle) {
-                for (int i = 0; i < m.getWidth(); i++) {
-                    m.stelle.add(new Stella(m.r.nextInt(0, m.getWidth()), m.r.nextInt(0, m.getHeight()), 7, m));
-                }
+        }
+        synchronized (m.stelle) {
+            for (int i = 0; i < m.getWidth(); i++) {
+                m.stelle.add(new Stella(m.r.nextInt(0, m.getWidth()), m.r.nextInt(0, m.getHeight()), 7, m));
             }
         }
 

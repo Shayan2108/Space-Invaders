@@ -1,9 +1,8 @@
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class SchermataIniziale  extends JPanel {
     CardLayout cl;
@@ -20,6 +19,8 @@ public class SchermataIniziale  extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 cl.show(contenitore, "GAME");
                 GUI.statoAttuale = "GAME";
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
+                frame.setSize(new Dimension(400 , 800));
             }
         });
     }

@@ -13,13 +13,13 @@ public class GUI extends Thread{
         contenitore.add(game,"GAME");
         contenitore.add(schermataIniziale,"START");
         cl.show(contenitore, "START");
-        frame.setSize(400, 800);
         frame.setVisible(true);
         frame.setLocation(new Point(100, 100));
         frame.setTitle("Space Invaders");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(contenitore);
+        frame.setSize(300, 300);
 
 
     }

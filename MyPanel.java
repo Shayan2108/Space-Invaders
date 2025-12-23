@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -108,13 +107,16 @@ public class MyPanel extends JPanel {
             }
         }
         spostaBullet.start();
-        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(1, NPianeti))));
         dettagli.add((new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
                 immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini)))));
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
                 MyPanel.this.requestFocusInWindow();
+                pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(0, NPianeti))));
+                if(!sfondo.isAlive()) sfondo.start();
+                if(!game.isAlive()) game.start();
+
             }
         });
     }
