@@ -19,7 +19,7 @@ public class GUI extends Thread{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(contenitore);
-        frame.setSize(300, 300);
+        frame.setSize(1259, 718);
 
 
     }
