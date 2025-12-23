@@ -1,5 +1,9 @@
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,9 +48,12 @@ public class MyPanel extends JPanel {
     int frequezaMassimaPianeti;
     int NPianeti;
     int NpngPerDettagliImmagini;
-    
+    CardLayout cl;
+    JPanel contenitore;
 
-    public MyPanel() {
+    public MyPanel(CardLayout cl, JPanel contenitore) {
+        this.cl = cl;
+        this.contenitore = contenitore;
         this.setFocusable(true);
         this.addKeyListener(new MyKey(this));
         this.addMouseListener(new MyMouse(this));
@@ -100,11 +107,16 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        game.start();
-        sfondo.start();
         spostaBullet.start();
-        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,immaginiPianeti.get(r.nextInt(1, NPianeti))));
-        dettagli.add((new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini)))));
+        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(1, NPianeti))));
+        dettagli.add((new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini)))));
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                MyPanel.this.requestFocusInWindow();
+            }
+        });
     }
 
     @Override
@@ -113,12 +125,13 @@ public class MyPanel extends JPanel {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
-                stampaAsteroidi(g);
+        stampaAsteroidi(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
         stampaBullets(g);
         stampaFuoco(g);
     }
+
     private void stampaFuoco(Graphics g) {
         g.drawImage(fiamma.get(frameFiamma), xNave + (larghezzaNave / 2) - (larghezzaFiamma / 2),
                 yNave + altezzaNave - (altezzaFiamma / 2) - 17, larghezzaFiamma, altezzaFiamma, null);
@@ -141,8 +154,8 @@ public class MyPanel extends JPanel {
             pianeti.get(i).stampaOggettiClasse(g);
         }
     }
-    private void stampaAsteroidi(Graphics g)
-    {
+
+    private void stampaAsteroidi(Graphics g) {
         for (int i = 0; i < dettagli.size(); i++) {
             dettagli.get(i).stampaDettagli(g);
         }
@@ -172,16 +185,15 @@ public class MyPanel extends JPanel {
             }
         }
     }
-    private void uploadAsteroidi()
-    {
-            for (int j = 0; j < NpngPerDettagliImmagini; j++) 
-            {
-                try {
-                    immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    System.err.println("Errore caricando: Asteroidi/" + "vio" + "/" + j + ".png");
-                }   
+
+    private void uploadAsteroidi() {
+        for (int j = 0; j < NpngPerDettagliImmagini; j++) {
+            try {
+                immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                System.err.println("Errore caricando: Asteroidi/" + "vio" + "/" + j + ".png");
+            }
         }
     }
 }

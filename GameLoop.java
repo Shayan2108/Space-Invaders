@@ -3,12 +3,15 @@ public class GameLoop extends Thread {
 
     public GameLoop(MyPanel m) {
         this.m = m;
+        this.start();
     }
 
     @Override
     public void run() {
         while (true) {
-            m.repaint();
+            if (GUI.statoAttuale == "GAME") {
+                m.repaint();
+            }
             try {
                 sleep(33);
             } catch (InterruptedException e) {
@@ -18,4 +21,3 @@ public class GameLoop extends Thread {
         }
     }
 }
-    
