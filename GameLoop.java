@@ -8,7 +8,9 @@ public class GameLoop extends Thread {
     @Override
     public void run() {
         while (true) {
-            m.repaint();
+            if (GUI.statoAttuale == "GAME") {
+                m.repaint();
+            }
             try {
                 sleep(33);
             } catch (InterruptedException e) {
@@ -18,4 +20,3 @@ public class GameLoop extends Thread {
         }
     }
 }
-    

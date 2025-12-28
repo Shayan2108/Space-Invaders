@@ -1,5 +1,8 @@
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -51,9 +54,15 @@ public class MyPanel extends JPanel {
     int frequezaMassimaPianeti;
     int NPianeti;
     int NpngPerDettagliImmagini;
-    boolean gameOver;
 
-    public MyPanel() {
+    
+    boolean gameOver;
+    CardLayout cl;
+    JPanel contenitore;
+
+    public MyPanel(CardLayout cl, JPanel contenitore) {
+        this.cl = cl;
+        this.contenitore = contenitore;
         this.setFocusable(true);
         this.addKeyListener(new MyKey(this));
         this.addMouseListener(new MyMouse(this));
@@ -92,14 +101,12 @@ public class MyPanel extends JPanel {
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         for (int i = 0; i < 66; i++) {
             try {
                 immaginiBullet.add(ImageIO.read(new File("Laser/" + (i + 1) + ".png")));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -107,16 +114,28 @@ public class MyPanel extends JPanel {
             try {
                 fiamma.add(ImageIO.read(new File("Fire/" + (i + 1) + ".png")));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        game.start();
-        sfondo.start();
         spostaBullet.start();
+
+       
         pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(1, NPianeti))));
-        dettagli.add((new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
-                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini)))));
+        dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                MyPanel.this.requestFocusInWindow();
+                pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                        immaginiPianeti.get(r.nextInt(0, NPianeti))));
+                if (!sfondo.isAlive())
+                    sfondo.start();
+                if (!game.isAlive())
+                    game.start();
+            }
+        });
     }
 
     @Override
@@ -178,10 +197,8 @@ public class MyPanel extends JPanel {
                 try {
                     immaginiPianeti.get(i).add(ImageIO.read(new File("Planets/" + (i + 1) + "/" + j + ".png")));
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -191,8 +208,7 @@ public class MyPanel extends JPanel {
             try {
                 immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                System.err.println("Errore caricando: Asteroidi/" + "vio" + "/" + j + ".png");
+                System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
             }
         }
     }
@@ -211,7 +227,6 @@ public class MyPanel extends JPanel {
          * } catch (IOException e) {
          * e.printStackTrace();
          * }
-         * 
          */
 
         for (int r = 0; r < righe; r++) {
