@@ -97,7 +97,7 @@ public class MyPanel extends JPanel {
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
         uploadPianeti();
-        uploadAsteroidi();
+        uploadDettagli();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -120,7 +120,7 @@ public class MyPanel extends JPanel {
         spostaBullet.start();
 
        
-        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(1, NPianeti))));
+        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(0, NPianeti))));
         dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
                 immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
 
@@ -141,8 +141,7 @@ public class MyPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
-                getHeight() - bulletDisponibili.getHeight());
+        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
         stampaAsteroidi(g);
         stampaPianeti(g);
@@ -181,8 +180,7 @@ public class MyPanel extends JPanel {
     }
 
     private void stampaBullets(Graphics g) {
-        this.bulletDisponibili
-                .setText("Munizione Rimanenti :" + Integer.toString(bulletMassime - bullets.size()) + "   ");
+        this.bulletDisponibili.setText("Munizione Rimanenti :" + Integer.toString(bulletMassime - bullets.size()) + "   ");
         for (int i = 0; i < bullets.size(); i++) {
             g.drawImage(bullets.get(i).image, bullets.get(i).x, bullets.get(i).y, 20, 60, null);
         }
@@ -203,7 +201,7 @@ public class MyPanel extends JPanel {
         }
     }
 
-    private void uploadAsteroidi() {
+    private void uploadDettagli() {
         for (int j = 0; j < NpngPerDettagliImmagini; j++) {
             try {
                 immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
