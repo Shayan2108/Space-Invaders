@@ -7,6 +7,7 @@ class Sfondo extends Thread {
         this.m = m;
         frequenzaAsteroidiSpawn = 1000;
         timerAsteroidi = System.currentTimeMillis() + frequenzaAsteroidiSpawn;
+        this.setName("Sfondo Thread");
     }
 
     @Override
