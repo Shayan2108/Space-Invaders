@@ -1,3 +1,4 @@
+
 /**
  * @file MyPanel.java
  *
@@ -125,9 +126,9 @@ public class MyPanel extends JPanel {
     /**
      * @brief costruttore del pannello
      *
-     * inizializza tutti gli attributi, immagini, thread, nemici e listener
+     *        inizializza tutti gli attributi, immagini, thread, nemici e listener
      *
-     * @param cl layout del contenitore
+     * @param cl          layout del contenitore
      * @param contenitore pannello contenitore
      */
     public MyPanel(CardLayout cl, JPanel contenitore) {
@@ -208,16 +209,17 @@ public class MyPanel extends JPanel {
     /**
      * @brief metodo che stampa tutto la grafica di swing
      *
-     * è il metodo che viene chiamato quando chiamamiamo la repaint()
+     *        è il metodo che viene chiamato quando chiamamiamo la repaint()
      *
      * @param g oggetto grafico per disegnare
      */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(), getHeight() - bulletDisponibili.getHeight());
+        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
+                getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
-        stampaAsteroidi(g);
+        stampaDettagli(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
         stampaBullets(g);
@@ -225,7 +227,7 @@ public class MyPanel extends JPanel {
     }
 
     // Metodi privati chiamati nel PiantComponent
-     /**
+    /**
      * @brief disegna la fiamma della nave
      * @param g oggetto grafico
      */
@@ -233,7 +235,8 @@ public class MyPanel extends JPanel {
         g.drawImage(fiamma.get(frameFiamma), xNave + (larghezzaNave / 2) - (larghezzaFiamma / 2),
                 yNave + altezzaNave - (altezzaFiamma / 2) - 17, larghezzaFiamma, altezzaFiamma, null);
         frameFiamma++;
-        if (frameFiamma >= 8) frameFiamma = 1;
+        if (frameFiamma >= 8)
+            frameFiamma = 1;
     }
 
     /**
@@ -263,9 +266,11 @@ public class MyPanel extends JPanel {
      * @brief disegna gli asteroidi/dettagli sullo schermo
      * @param g oggetto grafico
      */
-    private void stampaAsteroidi(Graphics g) {
-        for (Dettagli d : dettagli) {
-            d.stampaDettagli(g);
+    private void stampaDettagli(Graphics g) {
+        synchronized (dettagli) {
+            for (int i = 0; i < dettagli.size(); i++) {
+                dettagli.get(i).stampaDettagli(g);
+            }
         }
     }
 
@@ -275,8 +280,10 @@ public class MyPanel extends JPanel {
      */
     private void stampaBullets(Graphics g) {
         bulletDisponibili.setText("Munizione Rimanenti :" + Integer.toString(bulletMassime - bullets.size()) + "   ");
-        for (Bullets b : bullets) {
-            g.drawImage(b.image, b.x, b.y, 20, 60, null);
+        synchronized (bullets) {
+            for (int i = 0; i < bullets.size(); i++) {
+                g.drawImage(bullets.get(i).image, bullets.get(i).x, bullets.get(i).y, 20, 60, null);
+            }
         }
     }
 
@@ -310,10 +317,11 @@ public class MyPanel extends JPanel {
             }
         }
     }
+
     /**
      * @brief inizializza i nemici
      *
-     * posiziona i nemici in righe e colonne sullo schermo
+     *        posiziona i nemici in righe e colonne sullo schermo
      */
     public void inizializzaNemici() {
         int righe = 3; // numero di righe di nemici
