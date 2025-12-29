@@ -1,3 +1,16 @@
+/**
+ * @file MyPanel.java
+ *
+ * @author Mohammad Shayan Attari Bin Mohammad Zeshan Attari
+ * @version 1.0
+ *
+ * @brief pannello principale del gioco
+ *
+ * La classe gestisce tutto ciò che viene disegnato a schermo:
+ * stelle, pianeti, asteroidi, nave, fuoco e proiettili.
+ * Contiene anche la logica per il movimento della nave e la gestione
+ * dei nemici.
+ */
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,53 +26,110 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class MyPanel extends JPanel {
+
+    /** lista di stelle presenti sullo sfondo */
     volatile ArrayList<Stella> stelle = new ArrayList<>();
+
+    /** immagini dei proiettili */
     volatile ArrayList<BufferedImage> immaginiBullet = new ArrayList<>();
+
+    /** lista dei proiettili attivi */
     volatile ArrayList<Bullets> bullets = new ArrayList<>();
+
+    /** immagini della fiamma della nave */
     volatile ArrayList<BufferedImage> fiamma = new ArrayList<>();
+
+    /** lista dei pianeti sullo schermo */
     volatile ArrayList<Pianeti> pianeti = new ArrayList<>();
+
+    /** immagini dei pianeti divise per tipo */
     volatile ArrayList<ArrayList<BufferedImage>> immaginiPianeti = new ArrayList<>();
+
+    /** immagini degli asteroidi/dettagli */
     volatile ArrayList<BufferedImage> immaginiDettagli = new ArrayList<>();
+
+    /** lista degli asteroidi/dettagli sullo schermo */
     volatile ArrayList<Dettagli> dettagli = new ArrayList<>();
+
+    /** lista dei nemici presenti sullo schermo */
     volatile ArrayList<Nemico> nemici = new ArrayList<>();
 
+    /** frame corrente della fiamma */
     int frameFiamma;
+
+    /** generatore di numeri casuali */
     Random r;
+
+    /** thread per lo sfondo */
     Sfondo sfondo;
+
+    /** immagine della nave */
     BufferedImage nave;
+
+    /** posizione orizzontale della nave */
     int xNave;
+
+    /** posizione verticale della nave */
     int yNave;
+
+    /** stato dei tasti premuti */
     volatile boolean isPressed;
+
+    /** velocità della nave */
     volatile int movimento;
+
+    /** thread per aggiornare il pannello */
     GameLoop game;
+
+    /** thread per muovere i proiettili */
     SpostaBullet spostaBullet;
 
+    /** JLabel per mostrare proiettili disponibili */
     public JLabel bulletDisponibili;
+
+    /** numero massimo di proiettili */
     public volatile int bulletMassime;
-    int paddingX;
-    int paddingY;
-    int larghezzaNave;
-    int altezzaNave;
-    int larghezzaFiamma;
-    int altezzaFiamma;
-    int paddingBullet1;
-    int paddingBullet2;
-    int dirNemici;
-    int velocitaNemici;
-    int passoDiscesaNemici = 20;
+
+    /** margini e dimensioni della nave e della fiamma */
+    int paddingX, paddingY, larghezzaNave, altezzaNave, larghezzaFiamma, altezzaFiamma;
+    int paddingBullet1, paddingBullet2;
+
+    /** direzione e velocità dei nemici */
+    int dirNemici, velocitaNemici, passoDiscesaNemici = 20;
+
+    /** tempo dell'ultimo sparo nemici */
     long ultimoSparoNemici;
+
+    /** timer per spawn pianeti */
     Long timer;
+
+    /** timer per stampare pianeta */
     long timerStampaPianeta;
-    int frequezaminimaPianeti;
-    int frequezaMassimaPianeti;
+
+    /** intervalli per spawn pianeti */
+    int frequezaminimaPianeti, frequezaMassimaPianeti;
+
+    /** numero di pianeti disponibili */
     int NPianeti;
+
+    /** numero di immagini per dettagli */
     int NpngPerDettagliImmagini;
 
-    
+    /** stato del gioco */
     boolean gameOver;
+
+    /** layout e contenitore del pannello */
     CardLayout cl;
     JPanel contenitore;
 
+    /**
+     * @brief costruttore del pannello
+     *
+     * inizializza tutti gli attributi, immagini, thread, nemici e listener
+     *
+     * @param cl layout del contenitore
+     * @param contenitore pannello contenitore
+     */
     public MyPanel(CardLayout cl, JPanel contenitore) {
         this.cl = cl;
         this.contenitore = contenitore;
@@ -85,7 +155,7 @@ public class MyPanel extends JPanel {
         altezzaNave = 150;
         larghezzaNave = 100;
         altezzaFiamma = 50;
-        dirNemici = 1; // 1 = destra, -1 = sinistra
+        dirNemici = 1;
         velocitaNemici = 2;
         passoDiscesaNemici = 20;
         larghezzaFiamma = 20;
@@ -135,10 +205,17 @@ public class MyPanel extends JPanel {
         });
     }
 
+    /**
+     * @brief metodo che stampa tutto la grafica di swing
+     *
+     * è il metodo che viene chiamato quando chiamamiamo la repaint()
+     *
+     * @param g oggetto grafico per disegnare
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),getHeight() - bulletDisponibili.getHeight());
+        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(), getHeight() - bulletDisponibili.getHeight());
         stampaStelle(g);
         stampaAsteroidi(g);
         stampaPianeti(g);
@@ -147,14 +224,22 @@ public class MyPanel extends JPanel {
         stampaFuoco(g);
     }
 
+    // Metodi privati chiamati nel PiantComponent
+     /**
+     * @brief disegna la fiamma della nave
+     * @param g oggetto grafico
+     */
     private void stampaFuoco(Graphics g) {
         g.drawImage(fiamma.get(frameFiamma), xNave + (larghezzaNave / 2) - (larghezzaFiamma / 2),
                 yNave + altezzaNave - (altezzaFiamma / 2) - 17, larghezzaFiamma, altezzaFiamma, null);
         frameFiamma++;
-        if (frameFiamma >= 8)
-            frameFiamma = 1;
+        if (frameFiamma >= 8) frameFiamma = 1;
     }
 
+    /**
+     * @brief disegna tutte le stelle sullo sfondo
+     * @param g oggetto grafico
+     */
     private void stampaStelle(Graphics g) {
         synchronized (stelle) {
             for (Stella stella : stelle) {
@@ -164,25 +249,40 @@ public class MyPanel extends JPanel {
         }
     }
 
+    /**
+     * @brief disegna tutti i pianeti sullo schermo
+     * @param g oggetto grafico
+     */
     private void stampaPianeti(Graphics g) {
-        for (int i = 0; i < pianeti.size(); i++) {
-            pianeti.get(i).stampaOggettiClasse(g);
+        for (Pianeti p : pianeti) {
+            p.stampaOggettiClasse(g);
         }
     }
 
+    /**
+     * @brief disegna gli asteroidi/dettagli sullo schermo
+     * @param g oggetto grafico
+     */
     private void stampaAsteroidi(Graphics g) {
-        for (int i = 0; i < dettagli.size(); i++) {
-            dettagli.get(i).stampaDettagli(g);
+        for (Dettagli d : dettagli) {
+            d.stampaDettagli(g);
         }
     }
 
+    /**
+     * @brief disegna i proiettili e aggiorna JLabel
+     * @param g oggetto grafico
+     */
     private void stampaBullets(Graphics g) {
-        this.bulletDisponibili.setText("Munizione Rimanenti :" + Integer.toString(bulletMassime - bullets.size()) + "   ");
-        for (int i = 0; i < bullets.size(); i++) {
-            g.drawImage(bullets.get(i).image, bullets.get(i).x, bullets.get(i).y, 20, 60, null);
+        bulletDisponibili.setText("Munizione Rimanenti :" + Integer.toString(bulletMassime - bullets.size()) + "   ");
+        for (Bullets b : bullets) {
+            g.drawImage(b.image, b.x, b.y, 20, 60, null);
         }
     }
 
+    /**
+     * @brief carica le immagini dei pianeti
+     */
     private void uploadPianeti() {
         for (int i = 0; i < NPianeti; i++) {
             immaginiPianeti.add(new ArrayList<>());
@@ -198,6 +298,9 @@ public class MyPanel extends JPanel {
         }
     }
 
+    /**
+     * @brief carica le immagini degli asteroidi/dettagli
+     */
     private void uploadDettagli() {
         for (int j = 0; j < NpngPerDettagliImmagini; j++) {
             try {
@@ -207,7 +310,11 @@ public class MyPanel extends JPanel {
             }
         }
     }
-
+    /**
+     * @brief inizializza i nemici
+     *
+     * posiziona i nemici in righe e colonne sullo schermo
+     */
     public void inizializzaNemici() {
         int righe = 3; // numero di righe di nemici
         int colonne = 6; // numero di nemici per riga
