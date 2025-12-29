@@ -118,9 +118,6 @@ public class MyPanel extends JPanel {
             }
         }
         spostaBullet.start();
-
-       
-        pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this, immaginiPianeti.get(r.nextInt(0, NPianeti))));
         dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
                 immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
 
