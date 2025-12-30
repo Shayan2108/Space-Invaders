@@ -33,19 +33,13 @@ class SpostaBullet extends Thread {
     @Override
     public void run() {
         while (true) {
-
-            if (!m.inGioco) { // se il gioco non è partito, non muovere proiettili
-                try {
-                    sleep(33);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
+            for (int i = 0; i < m.bullets.size(); i++) {
+                m.bullets.get(i).sposta();
             }
             synchronized (m.bullets) {
                 for (int i = m.bullets.size() - 1; i >= 0; i--) {
                     Bullets b = m.bullets.get(i);
-                    b.sposta();
+                    //b.sposta();
 
                     // Controllo collisioni con i nemici
                     synchronized (m.nemici) {

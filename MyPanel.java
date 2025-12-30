@@ -195,7 +195,6 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        spostaBullet.start();
         dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
                 immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
 
@@ -210,6 +209,8 @@ public class MyPanel extends JPanel {
                     sfondo.start();
                 if (!game.isAlive())
                     game.start();
+                if (!spostaBullet.isAlive())
+                    spostaBullet.start();
             }
         });
     }
@@ -233,23 +234,24 @@ public class MyPanel extends JPanel {
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
 
-        if (inGioco) {
-            // Nemici, proiettili e fuoco solo se il gioco è iniziato
-            stampaNemici(g);
-            stampaBullets(g);
-            stampaFuoco(g);
-        } else {
-            // Scritta lampeggiante
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime / 500) % 2 == 0) {
-                g.setColor(Color.WHITE);
-                g.setFont(g.getFont().deriveFont(20f));
-                String messaggio = "Press SPACE to start the game...";
-                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
-                int y = getHeight() / 2;
-                g.drawString(messaggio, x, y);
-            }
-        }
+        // if (inGioco) {
+        // Nemici, proiettili e fuoco solo se il gioco è iniziato
+        stampaNemici(g);
+        stampaBullets(g);
+        stampaFuoco(g);
+        // }
+        // else {
+        // Scritta lampeggiante
+        // long currentTime = System.currentTimeMillis();
+        // if ((currentTime / 500) % 2 == 0) {
+        // g.setColor(Color.WHITE);
+        // g.setFont(g.getFont().deriveFont(20f));
+        // String messaggio = "Press SPACE to start the game...";
+        // int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
+        // int y = getHeight() / 2;
+        // g.drawString(messaggio, x, y);
+        // }
+        // }
     }
 
     // Metodi privati chiamati nel PiantComponent
