@@ -119,6 +119,12 @@ public class MyPanel extends JPanel {
     /** stato del gioco */
     boolean gameOver;
 
+    /**
+     * stato se il gioco è in corso, all'inizio del gioco è false, quando il player
+     * preme SPACE diventa true ed inizia il gioco
+     */
+    boolean inGioco = false;
+
     /** layout e contenitore del pannello */
     CardLayout cl;
     JPanel contenitore;
@@ -146,7 +152,6 @@ public class MyPanel extends JPanel {
         sfondo = new Sfondo(this);
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-        inizializzaNemici();
         NPianeti = 10;
         xNave = 200;
         movimento = 3;
@@ -169,6 +174,8 @@ public class MyPanel extends JPanel {
         NpngPerDettagliImmagini = 8;
         uploadPianeti();
         uploadDettagli();
+        inizializzaNemici();
+        new SpostaNemici(MyPanel.this).start();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -198,6 +205,7 @@ public class MyPanel extends JPanel {
                 MyPanel.this.requestFocusInWindow();
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
+
                 if (!sfondo.isAlive())
                     sfondo.start();
                 if (!game.isAlive())
@@ -218,12 +226,30 @@ public class MyPanel extends JPanel {
         super.paintComponent(g);
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
+
+        // Grafica di sfondo sempre
         stampaStelle(g);
         stampaDettagli(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
-        stampaBullets(g);
-        stampaFuoco(g);
+
+        if (inGioco) {
+            // Nemici, proiettili e fuoco solo se il gioco è iniziato
+            stampaNemici(g);
+            stampaBullets(g);
+            stampaFuoco(g);
+        } else {
+            // Scritta lampeggiante
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime / 500) % 2 == 0) {
+                g.setColor(Color.WHITE);
+                g.setFont(g.getFont().deriveFont(20f));
+                String messaggio = "Press SPACE to start the game...";
+                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
+                int y = getHeight() / 2;
+                g.drawString(messaggio, x, y);
+            }
+        }
     }
 
     // Metodi privati chiamati nel PiantComponent
@@ -324,28 +350,42 @@ public class MyPanel extends JPanel {
      *        posiziona i nemici in righe e colonne sullo schermo
      */
     public void inizializzaNemici() {
-        int righe = 3; // numero di righe di nemici
-        int colonne = 6; // numero di nemici per riga
-        int spazioX = 60; // distanza orizzontale tra nemici
-        int spazioY = 50; // distanza verticale tra righe
+        int righe = 3;
+        int colonne = 6;
+        int spazioX = 60;
+        int spazioY = 50;
+
+        int larghezzaBlocco = colonne * spazioX;
+        int startX = Math.max(0, (getWidth() - larghezzaBlocco) / 2);
+        int startY = 40;
 
         BufferedImage imgNemico = null;
-        /**
-         * MESSO IN COMMENTO FINO A QUANDO NON HO LA CARTELLA NEMICI CON LE FOTO
-         * try {
-         * imgNemico = ImageIO.read(new File("Nemici/0.png"));
-         * } catch (IOException e) {
-         * e.printStackTrace();
-         * }
-         */
+        try {
+            imgNemico = ImageIO.read(new File("Astronavi Nemiche/0.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for (int r = 0; r < righe; r++) {
             for (int c = 0; c < colonne; c++) {
-                int x = 50 + c * spazioX;
-                int y = 50 + r * spazioY;
-                Nemico n = new Nemico(x, y, imgNemico);
-                nemici.add(n);
+                int x = startX + c * spazioX;
+                int y = startY + r * spazioY;
+                nemici.add(new Nemico(x, y, imgNemico));
             }
         }
     }
+
+    private void stampaNemici(Graphics g) {
+        synchronized (nemici) {
+            for (Nemico n : nemici) {
+                if (n.image != null) {
+                    g.drawImage(n.image, n.x, n.y, n.larghezza, n.altezza, null);
+                } else {
+                    g.setColor(Color.RED);
+                    g.fillRect(n.x, n.y, n.larghezza, n.altezza);
+                }
+            }
+        }
+    }
+
 }
