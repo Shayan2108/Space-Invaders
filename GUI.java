@@ -21,7 +21,7 @@ public class GUI extends Thread{
         frame.add(contenitore);
         frame.setSize(1259, 718);
         ImageIcon icona = new ImageIcon();
-        icona = new ImageIcon(getClass().getResource("Logo.jpeg"));
+        icona = new ImageIcon(getClass().getResource("Logo1.png"));
         frame.setIconImage(icona.getImage());
 
 
