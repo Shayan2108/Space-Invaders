@@ -243,12 +243,12 @@ public class MyPanel extends JPanel {
         stampaDettagli(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
+        stampaBullets(g);
+        stampaFuoco(g);
 
         if (inGioco) {
             // Nemici, proiettili e fuoco solo se il gioco è iniziato
             stampaNemici(g);
-            stampaBullets(g);
-            stampaFuoco(g);
             // aggiornamento e disegno esplosioni
             synchronized (esplosioni) {
                 for (int i = esplosioni.size() - 1; i >= 0; i--) {
