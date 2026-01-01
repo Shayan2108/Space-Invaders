@@ -1,48 +1,31 @@
 /**
- * @author Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
- * @version 0.1
+ * @author Statella Giuseppe Salvatore
+ * @version 0.2
  * @file SpostaNemici.java
  * 
  * @brief Thread per il movimento dei nemici nel gioco Space Invaders.
  *
- *        Gestisce il movimento orizzontale dei nemici e la loro discesa quando
- *        raggiungono
- *        i bordi dello schermo. Controlla inoltre se un nemico raggiunge il
- *        fondo dello
- *        schermo, impostando la variabile gameOver a true.
- *        Il movimento avviene in un thread separato per non bloccare il
- *        rendering del gioco.
+ *        Muove i nemici orizzontalmente, li fa scendere ai bordi dello schermo
+ *        e aumenta la velocità man mano che i nemici diminuiscono.
+ *        Controlla il game over se un nemico arriva alla nave.
  */
-
 public class SpostaNemici extends Thread {
 
-    /** Riferimento al pannello principale contenente nemici e variabili di gioco */
+    /** Riferimento al pannello principale */
     MyPanel m;
 
-    /**
-     * Costruisce il thread per muovere i nemici.
-     *
-     * Inizializza il riferimento al pannello principale, necessario per accedere
-     * all'array di nemici e alle variabili di stato del gioco.
-     *
-     * @param m Riferimento al pannello MyPanel che contiene i nemici.
-     */
+    /** numero totale iniziale di nemici */
+    int nemiciIniziali;
+
+    /** velocità minima e massima dei nemici */
+    int velocitaMin = 2;
+    int velocitaMax = 10;
+
     public SpostaNemici(MyPanel m) {
         this.m = m;
+        this.nemiciIniziali = m.nemici.size();
     }
 
-    /**
-     * Ciclo principale del thread.
-     *
-     * Controlla costantemente la posizione dei nemici e li muove:
-     * - Se un nemico raggiunge il bordo dello schermo, cambia direzione e li fa
-     * scendere.
-     * - Muove i nemici nella direzione corrente (destra o sinistra).
-     * - Controlla se un nemico raggiunge il fondo dello schermo e imposta gameOver
-     * a true.
-     *
-     * Il thread dorme per 1000 millisecondi dopo ogni passo di movimento.
-     */
     @Override
     public void run() {
         while (!m.gameOver) {
@@ -58,29 +41,44 @@ public class SpostaNemici extends Thread {
                     }
                 }
 
-                // Se serve cambia direzione e fai scendere i nemici
+                // Calcola velocità proporzionale
+                int numNemici = m.nemici.size();
+                int velocitaAttuale = velocitaMin;
+                if (numNemici > 0) {
+                    velocitaAttuale = velocitaMin
+                            + ((nemiciIniziali - numNemici) * (velocitaMax - velocitaMin)) / nemiciIniziali;
+                }
+
                 if (cambioDirezione) {
                     m.dirNemici *= -1;
                     for (Nemico n : m.nemici) {
                         n.y += m.passoDiscesaNemici;
-                        // Se un nemico arriva in fondo → game over
-                        if (n.y + n.altezza >= m.getHeight()) {
+
+                        // Game over se arriva alla nave
+                        if (n.y + n.altezza >= m.yNave) {
                             m.gameOver = true;
                         }
                     }
                 } else {
-                    // Muovi i nemici nella direzione corrente
+                    // Muovi i nemici con velocità proporzionale
                     for (Nemico n : m.nemici) {
-                        n.x += m.velocitaNemici * m.dirNemici;
+                        n.x += velocitaAttuale * m.dirNemici;
                     }
+                }
+
+                // Controlla vittoria
+                if (m.nemici.isEmpty()) {
+                    m.gameOver = true; // segna gameOver anche se il giocatore vince
                 }
             }
 
             try {
-                sleep(1000); // un passo ogni secondo
+                sleep(50); // aggiorna ogni 50ms per movimento fluido
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            m.repaint();
         }
     }
 }

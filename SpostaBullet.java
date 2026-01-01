@@ -36,10 +36,12 @@ class SpostaBullet extends Thread {
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
             }
+            if (m.gameOver)
+                break; // esci dal thread se GameOver
             synchronized (m.bullets) {
                 for (int i = m.bullets.size() - 1; i >= 0; i--) {
                     Bullets b = m.bullets.get(i);
-                    //b.sposta();
+                    // b.sposta();
 
                     // Controllo collisioni con i nemici
                     synchronized (m.nemici) {
@@ -52,20 +54,11 @@ class SpostaBullet extends Thread {
                                     b.y + b.image.getHeight() > n.y &&
                                     b.y < n.y + n.altezza) {
 
+                                // crea esplosione
+                                m.esplosioni.add(new Explosion(n.x, n.y, m.framesEsplosione));
                                 // rimuovi nemico e proiettile
                                 m.nemici.remove(j);
                                 m.bullets.remove(i);
-
-                                // TODO: aggiungere animazione esplosione qui
-                                new Thread(() -> {
-                                    // placeholder: semplice repaint per animazione
-                                    // in seguito potremo aggiungere immagini esplosione
-                                    try {
-                                        Thread.sleep(100); // durata esplosione
-                                    } catch (InterruptedException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }).start();
 
                                 break; // il proiettile è sparito, esci dal ciclo dei nemici
                             }

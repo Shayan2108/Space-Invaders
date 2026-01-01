@@ -54,6 +54,11 @@ public class MyPanel extends JPanel {
 
     /** lista dei nemici presenti sullo schermo */
     volatile ArrayList<Nemico> nemici = new ArrayList<>();
+    /** lista delle esplosioni attive */
+    volatile ArrayList<Explosion> esplosioni = new ArrayList<>();
+
+    /** immagini dei frame di esplosione */
+    BufferedImage[] framesEsplosione;
 
     /** frame corrente della fiamma */
     int frameFiamma;
@@ -165,6 +170,7 @@ public class MyPanel extends JPanel {
         velocitaNemici = 2;
         passoDiscesaNemici = 20;
         larghezzaFiamma = 20;
+        framesEsplosione = new BufferedImage[8];
         paddingBullet1 = 30;
         paddingBullet2 = 50;
         frequezaminimaPianeti = 10000;
@@ -175,7 +181,7 @@ public class MyPanel extends JPanel {
         uploadPianeti();
         uploadDettagli();
         inizializzaNemici();
-        new SpostaNemici(MyPanel.this).start();
+        InizializzaEplosioni();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -202,6 +208,7 @@ public class MyPanel extends JPanel {
             @Override
             public void componentShown(ComponentEvent e) {
                 MyPanel.this.requestFocusInWindow();
+                SpostaNemici spostaNemici = new SpostaNemici(MyPanel.this);
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
 
@@ -211,6 +218,8 @@ public class MyPanel extends JPanel {
                     game.start();
                 if (!spostaBullet.isAlive())
                     spostaBullet.start();
+                if (!spostaNemici.isAlive())
+                    spostaNemici.start();
             }
         });
     }
@@ -225,6 +234,7 @@ public class MyPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
 
@@ -234,24 +244,58 @@ public class MyPanel extends JPanel {
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
 
-        // if (inGioco) {
-        // Nemici, proiettili e fuoco solo se il gioco è iniziato
-        stampaNemici(g);
-        stampaBullets(g);
-        stampaFuoco(g);
-        // }
-        // else {
-        // Scritta lampeggiante
-        // long currentTime = System.currentTimeMillis();
-        // if ((currentTime / 500) % 2 == 0) {
-        // g.setColor(Color.WHITE);
-        // g.setFont(g.getFont().deriveFont(20f));
-        // String messaggio = "Press SPACE to start the game...";
-        // int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
-        // int y = getHeight() / 2;
-        // g.drawString(messaggio, x, y);
-        // }
-        // }
+        if (inGioco) {
+            // Nemici, proiettili e fuoco solo se il gioco è iniziato
+            stampaNemici(g);
+            stampaBullets(g);
+            stampaFuoco(g);
+            // aggiornamento e disegno esplosioni
+            synchronized (esplosioni) {
+                for (int i = esplosioni.size() - 1; i >= 0; i--) {
+                    Explosion e = esplosioni.get(i);
+                    e.aggiorna();
+                    e.disegna(g);
+                    if (e.finita) {
+                        esplosioni.remove(i);
+                    }
+                }
+            }
+        } else {
+            // Scritta lampeggiante
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime / 500) % 2 == 0) {
+                g.setColor(Color.WHITE);
+                g.setFont(g.getFont().deriveFont(20f));
+                String messaggio = "Press SPACE to start the game...";
+                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
+                int y = getHeight() / 2;
+                g.drawString(messaggio, x, y);
+            }
+        }
+
+        // Se il gioco è finito
+        if (gameOver) {
+            synchronized (bullets) {
+                bullets.clear();
+            }
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime / 500) % 2 == 0) { // lampeggio ogni 500ms
+                g.setColor(Color.RED);
+                g.setFont(g.getFont().deriveFont(40f));
+                String messaggio;
+
+                if (nemici.isEmpty()) {
+                    messaggio = "YOU WIN!";
+                } else {
+                    messaggio = "GAME OVER!";
+                }
+
+                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
+                int y = getHeight() / 2;
+                g.drawString(messaggio, x, y);
+            }
+            return; // non disegnare più nemici/proiettili
+        }
     }
 
     // Metodi privati chiamati nel PiantComponent
@@ -390,4 +434,13 @@ public class MyPanel extends JPanel {
         }
     }
 
+    private void InizializzaEplosioni() {
+        for (int i = 0; i < 8; i++) {
+            try {
+                framesEsplosione[i] = ImageIO.read(new File("Explosion/" + i + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
