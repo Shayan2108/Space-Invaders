@@ -32,6 +32,12 @@ public class Pianeti extends Stella {
 
     /** numero massimo di frame */
     int maxFrame;
+    /**velocita massima e minima per i pianeti */
+    int velocitaMinima;
+    int velocitaMassima;
+    /**valore massimi in pixel della grandezza massima del pianeta e minima */
+    int grandezzaMinima;
+    int grandezzaMassima;
 
     /**
      * @brief costruttore della classe Pianeti
@@ -48,8 +54,12 @@ public class Pianeti extends Stella {
      */
     public Pianeti(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image) {
         super(x, y, velocita, m);
-        super.velocita = m.r.nextInt(1, 5);
-        grandezzaPianeta = m.r.nextInt(80, 200);
+        velocitaMassima = 5;
+        velocitaMinima = 1;
+        super.velocita = m.r.nextInt(velocitaMinima, velocitaMassima);
+        grandezzaMassima = 200;
+        grandezzaMinima = 80;
+        grandezzaPianeta = m.r.nextInt(grandezzaMinima, grandezzaMassima);
         super.x = m.r.nextInt(0, 400 - grandezzaPianeta);
         super.y = 0 - grandezzaPianeta;
         this.image = image;

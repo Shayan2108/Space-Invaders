@@ -54,11 +54,14 @@ public class MyPanel extends JPanel {
 
     /** lista dei nemici presenti sullo schermo */
     volatile ArrayList<Nemico> nemici = new ArrayList<>();
-    /** lista delle esplosioni attive */
-    volatile ArrayList<Explosion> esplosioni = new ArrayList<>();
+
+    /** immagini dele navi nemiche */
+    volatile ArrayList<BufferedImage> immaginiNemici = new ArrayList<>();
 
     /** immagini dei frame di esplosione */
-    BufferedImage[] framesEsplosione;
+    ArrayList<BufferedImage> framesEsplosione = new ArrayList<>();
+    /** istanze delle esplozioni */
+    ArrayList<Esplosioni> esplosioni = new ArrayList<>();
 
     /** frame corrente della fiamma */
     int frameFiamma;
@@ -133,6 +136,8 @@ public class MyPanel extends JPanel {
     /** layout e contenitore del pannello */
     CardLayout cl;
     JPanel contenitore;
+    /** numero di immagini delle navi nemiche */
+    int NImmaginiNemici;
 
     /**
      * @brief costruttore del pannello
@@ -170,7 +175,6 @@ public class MyPanel extends JPanel {
         velocitaNemici = 2;
         passoDiscesaNemici = 20;
         larghezzaFiamma = 20;
-        framesEsplosione = new BufferedImage[8];
         paddingBullet1 = 30;
         paddingBullet2 = 50;
         frequezaminimaPianeti = 10000;
@@ -178,10 +182,11 @@ public class MyPanel extends JPanel {
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
+        this.NImmaginiNemici = 7;
         uploadPianeti();
         uploadDettagli();
         inizializzaNemici();
-        InizializzaEplosioni();
+        InizializzaImmaginiEsplosioni();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -208,7 +213,6 @@ public class MyPanel extends JPanel {
             @Override
             public void componentShown(ComponentEvent e) {
                 MyPanel.this.requestFocusInWindow();
-                SpostaNemici spostaNemici = new SpostaNemici(MyPanel.this);
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
 
@@ -218,8 +222,6 @@ public class MyPanel extends JPanel {
                     game.start();
                 if (!spostaBullet.isAlive())
                     spostaBullet.start();
-                if (!spostaNemici.isAlive())
-                    spostaNemici.start();
             }
         });
     }
@@ -245,57 +247,8 @@ public class MyPanel extends JPanel {
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
         stampaBullets(g);
         stampaFuoco(g);
-
-        if (inGioco) {
-            // Nemici, proiettili e fuoco solo se il gioco è iniziato
-            stampaNemici(g);
-            // aggiornamento e disegno esplosioni
-            synchronized (esplosioni) {
-                for (int i = esplosioni.size() - 1; i >= 0; i--) {
-                    Explosion e = esplosioni.get(i);
-                    e.aggiorna();
-                    e.disegna(g);
-                    if (e.finita) {
-                        esplosioni.remove(i);
-                    }
-                }
-            }
-        } else {
-            // Scritta lampeggiante
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime / 500) % 2 == 0) {
-                g.setColor(Color.WHITE);
-                g.setFont(g.getFont().deriveFont(20f));
-                String messaggio = "Press SPACE to start the game...";
-                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
-                int y = getHeight() / 2;
-                g.drawString(messaggio, x, y);
-            }
-        }
-
-        // Se il gioco è finito
-        if (gameOver) {
-            synchronized (bullets) {
-                bullets.clear();
-            }
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime / 500) % 2 == 0) { // lampeggio ogni 500ms
-                g.setColor(Color.RED);
-                g.setFont(g.getFont().deriveFont(40f));
-                String messaggio;
-
-                if (nemici.isEmpty()) {
-                    messaggio = "YOU WIN!";
-                } else {
-                    messaggio = "GAME OVER!";
-                }
-
-                int x = (getWidth() - g.getFontMetrics().stringWidth(messaggio)) / 2;
-                int y = getHeight() / 2;
-                g.drawString(messaggio, x, y);
-            }
-            return; // non disegnare più nemici/proiettili
-        }
+        stampaNemici(g);
+        stampaEsplosioni(g);
     }
 
     // Metodi privati chiamati nel PiantComponent
@@ -396,50 +349,46 @@ public class MyPanel extends JPanel {
      *        posiziona i nemici in righe e colonne sullo schermo
      */
     public void inizializzaNemici() {
-        int righe = 3;
-        int colonne = 6;
-        int spazioX = 60;
-        int spazioY = 50;
 
-        int larghezzaBlocco = colonne * spazioX;
-        int startX = Math.max(0, (getWidth() - larghezzaBlocco) / 2);
-        int startY = 40;
-
-        BufferedImage imgNemico = null;
         try {
-            imgNemico = ImageIO.read(new File("Astronavi Nemiche/0.png"));
+            for (int i = 0; i < NImmaginiNemici; i++) {
+                immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        for (int r = 0; r < righe; r++) {
-            for (int c = 0; c < colonne; c++) {
-                int x = startX + c * spazioX;
-                int y = startY + r * spazioY;
-                nemici.add(new Nemico(x, y, imgNemico));
-            }
         }
     }
 
     private void stampaNemici(Graphics g) {
         synchronized (nemici) {
             for (Nemico n : nemici) {
-                if (n.image != null) {
-                    g.drawImage(n.image, n.x, n.y, n.larghezza, n.altezza, null);
-                } else {
-                    g.setColor(Color.RED);
-                    g.fillRect(n.x, n.y, n.larghezza, n.altezza);
-                }
+                n.stampaOggettiClasse(g);
             }
         }
     }
 
-    private void InizializzaEplosioni() {
-        for (int i = 0; i < 8; i++) {
+    private void InizializzaImmaginiEsplosioni() {
+        for (int i = 0; i < 70; i++) {
             try {
-                framesEsplosione[i] = ImageIO.read(new File("Explosion/" + i + ".png"));
+                framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void stampaEsplosioni(Graphics g) {
+        for (int i = 0; i < esplosioni.size(); i++) {
+            if (esplosioni.get(i).frameinEseguzione < esplosioni.get(i).maxFrame) {
+                g.drawImage(framesEsplosione.get(esplosioni.get(i).frameinEseguzione), esplosioni.get(i).x,
+                        esplosioni.get(i).y, null);
+                esplosioni.get(i).frameinEseguzione++;
+                esplosioni.get(i).y += esplosioni.get(i).avanzamento;
+            } else {
+                synchronized (esplosioni) {
+                    esplosioni.remove(esplosioni.get(i));
+                }
+                
             }
         }
     }

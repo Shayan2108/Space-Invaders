@@ -36,8 +36,6 @@ class SpostaBullet extends Thread {
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
             }
-            if (m.gameOver)
-                break; // esci dal thread se GameOver
             synchronized (m.bullets) {
                 for (int i = m.bullets.size() - 1; i >= 0; i--) {
                     Bullets b = m.bullets.get(i);
@@ -49,18 +47,26 @@ class SpostaBullet extends Thread {
                             Nemico n = m.nemici.get(j);
 
                             // semplice bounding box collision
-                            if (b.x + b.image.getWidth() > n.x &&
-                                    b.x < n.x + n.larghezza &&
-                                    b.y + b.image.getHeight() > n.y &&
-                                    b.y < n.y + n.altezza) {
+                            if (b.x > n.x && b.x < n.x + n.grandezzaPianeta && b.y > n.y
+                                    && b.y < n.y + n.grandezzaPianeta) {
+                                for (int z = 0; z < b.movimento; z++) {
+                                    if (n.image.getRGB((b.x - n.x), (b.y - n.y) + z) >>> 24 != 0) // rimuovi nemico e
+                                    // proiettile
+                                    {
+                                        if (n.dardiNecessariPerMorte - 1 == 0) {
+                                            m.esplosioni.add(new Esplosioni(b.x, n.y + z, n.velocita));
+                                            m.nemici.remove(j);
+                                        } else {
+                                            m.esplosioni.add(new Esplosioni(b.x, b.y + z, n.velocita));
+                                            n.dardiNecessariPerMorte--;
+                                        }
 
-                                // crea esplosione
-                                m.esplosioni.add(new Explosion(n.x, n.y, m.framesEsplosione));
-                                // rimuovi nemico e proiettile
-                                m.nemici.remove(j);
-                                m.bullets.remove(i);
+                                            m.bullets.remove(i);
 
-                                break; // il proiettile è sparito, esci dal ciclo dei nemici
+
+                                        break;
+                                    }
+                                } // il proiettile è sparito, esci dal ciclo dei nemici
                             }
                         }
                     }
@@ -73,8 +79,6 @@ class SpostaBullet extends Thread {
                 e.printStackTrace();
             }
 
-            // ridisegna il pannello
-            m.repaint();
         }
     }
 }
