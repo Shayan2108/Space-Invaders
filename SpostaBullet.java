@@ -37,6 +37,7 @@ class SpostaBullet extends Thread {
                 m.bullets.get(i).sposta();
             }
             synchronized (m.bullets) {
+                cicloBullet:
                 for (int i = 0; i < m.bullets.size(); i++) {
                     for (int j = 0; j < m.nemici.size(); j++) {
                         if (m.bullets.get(i).x > m.nemici.get(j).x
@@ -48,13 +49,13 @@ class SpostaBullet extends Thread {
                                         m.nemici.get(j).velocita));
                                 synchronized (m.nemici) {
                                     m.nemici.remove(m.nemici.get(j));
-                                    m.nemici.get(j);
                                 }
                             } else {
                                 m.esplosioni.add(new Esplosioni(m.bullets.get(i).x - 50, m.bullets.get(i).y -50,
                                         m.nemici.get(j).velocita));
                                 m.nemici.get(j).dardiNecessariPerMorte--;
                                 m.bullets.remove(m.bullets.get(i));
+                                continue cicloBullet;
                             }
 
                         }
