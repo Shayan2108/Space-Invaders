@@ -46,6 +46,20 @@ public class Nemico extends Pianeti {
     public void stampaOggettiClasse(Graphics g) {
         g.drawImage(image, x, y, grandezzaPianeta, grandezzaPianeta, null);
     }
+    @Override
+    public void run() {
+                while (y <= super.m.getHeight()) {
+            y += velocita;
+            try {
+                sleep(33);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        synchronized (super.m.nemici) {
+            m.nemici.remove(this);
+        }
+    }
 
 
 

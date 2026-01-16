@@ -37,48 +37,35 @@ class SpostaBullet extends Thread {
                 m.bullets.get(i).sposta();
             }
             synchronized (m.bullets) {
-                for (int i = m.bullets.size() - 1; i >= 0; i--) {
-                    Bullets b = m.bullets.get(i);
-                    // b.sposta();
-
-                    // Controllo collisioni con i nemici
-                    synchronized (m.nemici) {
-                        for (int j = m.nemici.size() - 1; j >= 0; j--) {
-                            Nemico n = m.nemici.get(j);
-
-                            // semplice bounding box collision
-                            if (b.x > n.x && b.x < n.x + n.grandezzaPianeta && b.y > n.y
-                                    && b.y < n.y + n.grandezzaPianeta) {
-                                for (int z = 0; z < b.movimento; z++) {
-                                    if (n.image.getRGB((b.x - n.x), (b.y - n.y) + z) >>> 24 != 0) // rimuovi nemico e
-                                    // proiettile
-                                    {
-                                        if (n.dardiNecessariPerMorte - 1 == 0) {
-                                            m.esplosioni.add(new Esplosioni(b.x, n.y + z, n.velocita));
-                                            m.nemici.remove(j);
-                                        } else {
-                                            m.esplosioni.add(new Esplosioni(b.x, b.y + z, n.velocita));
-                                            n.dardiNecessariPerMorte--;
-                                        }
-
-                                            m.bullets.remove(i);
-
-
-                                        break;
-                                    }
-                                } // il proiettile è sparito, esci dal ciclo dei nemici
+                for (int i = 0; i < m.bullets.size(); i++) {
+                    for (int j = 0; j < m.nemici.size(); j++) {
+                        if (m.bullets.get(i).x > m.nemici.get(j).x
+                                && m.bullets.get(i).x < (m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta)
+                                && m.bullets.get(i).y > m.nemici.get(j).y
+                                && m.bullets.get(i).y < (m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta)) {
+                            if (m.nemici.get(j).dardiNecessariPerMorte - 1 == 0) {
+                                m.esplosioni.add(new Esplosioni(m.bullets.get(i).x - 50, m.bullets.get(i).y - 50,
+                                        m.nemici.get(j).velocita));
+                                synchronized (m.nemici) {
+                                    m.nemici.remove(m.nemici.get(j));
+                                    m.nemici.get(j);
+                                }
+                            } else {
+                                m.esplosioni.add(new Esplosioni(m.bullets.get(i).x - 50, m.bullets.get(i).y -50,
+                                        m.nemici.get(j).velocita));
+                                m.nemici.get(j).dardiNecessariPerMorte--;
+                                m.bullets.remove(m.bullets.get(i));
                             }
+
                         }
                     }
                 }
             }
-
             try {
                 sleep(33);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

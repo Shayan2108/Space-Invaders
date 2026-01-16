@@ -55,7 +55,7 @@ public class Bullets {
      *        viene rimosso dalla lista dei proiettili.
      */
     public void sposta() {
-        synchronized (m.dettagli) {
+        synchronized (m.bullets) {
             if (y - movimento > 0) {
                 y -= movimento;
             } else {
