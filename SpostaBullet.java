@@ -55,6 +55,7 @@ class SpostaBullet extends Thread {
                                         m.nemici.get(j).velocita));
                                 m.nemici.get(j).dardiNecessariPerMorte--;
                                 m.bullets.remove(m.bullets.get(i));
+                                i--;
                                 continue cicloBullet;
                             }
 
