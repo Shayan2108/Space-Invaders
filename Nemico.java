@@ -1,4 +1,3 @@
-
 /**
 * @author  Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
 * @version 0.1
@@ -16,20 +15,47 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- * @class Nemico
- *
- * @brief Rappresenta un nemico singolo nel gioco.
- *
- *        Ogni nemico ha una posizione, dimensione e immagine. Viene gestito
- *        insieme agli altri
- *        nemici dal pannello di gioco per disegnarlo e spostarlo.
- */
-public class Nemico extends Pianeti {
+<<<<<<< HEAD
+* @class Nemico
+*
+* @brief Rappresenta un nemico singolo nel gioco.
+*
+*        Ogni nemico ha una posizione, dimensione e immagine. Viene gestito
+*        insieme agli altri nemici dal pannello di gioco per disegnarlo e spostarlo.
+*/
+public class Nemico {
 
-    static int frequenzaAggiuntaNemicoMinima = 1000;
-    static int frequenzaAggiuntaNemicoMassima = 5000;
-    int dardiNecessariPerMorte;
+    /** Coordinata X del nemico sullo schermo */
+    public int x;
+
+    /** Coordinata Y del nemico sullo schermo */
+    public int y;
+
+    /** Larghezza del nemico in pixel */
+    public int larghezza = 40;
+
+    /** Altezza del nemico in pixel */
+    public int altezza = 30;
+
+    /** Immagine associata al nemico per il rendering */
     public BufferedImage image;
+
+    /**
+     * @brief Costruisce un nuovo nemico con posizione e immagine specificata.
+     *
+     *        Inizializza le coordinate e l'immagine del nemico. Questa istanza può
+     *        essere poi gestita dal pannello di gioco o dal thread SpostaNemici
+     *        per il movimento e il disegno.
+     *
+     * @param x     Coordinata X iniziale del nemico.
+     * @param y     Coordinata Y iniziale del nemico.
+     * @param image Immagine da usare per disegnare il nemico.
+     */
+    public Nemico(int x, int y, BufferedImage image) {
+        this.x = x;
+        this.y = y;
+        this.image = image;
+=======
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
         super.grandezzaMassima = 100;
@@ -41,6 +67,7 @@ public class Nemico extends Pianeti {
         super.maxFrame = 1;
         dardiNecessariPerMorte = m.r.nextInt(6, 20);
         this.image = images.get(m.r.nextInt(0,images.size()));
+>>>>>>> aa294413387b792408c3e150f1d72aa90777e77e
     }
     @Override
     public void stampaOggettiClasse(Graphics g) {
