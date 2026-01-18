@@ -1,4 +1,3 @@
-
 /**
 * @author  Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
 * @version 0.1
@@ -14,14 +13,13 @@
 import java.awt.image.BufferedImage;
 
 /**
- * @class Nemico
- *
- * @brief Rappresenta un nemico singolo nel gioco.
- *
- *        Ogni nemico ha una posizione, dimensione e immagine. Viene gestito
- *        insieme agli altri
- *        nemici dal pannello di gioco per disegnarlo e spostarlo.
- */
+* @class Nemico
+*
+* @brief Rappresenta un nemico singolo nel gioco.
+*
+*        Ogni nemico ha una posizione, dimensione e immagine. Viene gestito
+*        insieme agli altri nemici dal pannello di gioco per disegnarlo e spostarlo.
+*/
 public class Nemico {
 
     /** Coordinata X del nemico sullo schermo */
@@ -43,9 +41,8 @@ public class Nemico {
      * @brief Costruisce un nuovo nemico con posizione e immagine specificata.
      *
      *        Inizializza le coordinate e l'immagine del nemico. Questa istanza può
-     *        essere poi
-     *        gestita dal pannello di gioco o dal thread SpostaNemici per il
-     *        movimento e il disegno.
+     *        essere poi gestita dal pannello di gioco o dal thread SpostaNemici
+     *        per il movimento e il disegno.
      *
      * @param x     Coordinata X iniziale del nemico.
      * @param y     Coordinata Y iniziale del nemico.
