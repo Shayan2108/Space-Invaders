@@ -11,6 +11,11 @@
  */
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MyMouse implements MouseListener {
 
@@ -41,9 +46,23 @@ public class MyMouse implements MouseListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (m.bulletMassime - m.bullets.size() > 0) {
+        if (m.bulletMassime - m.bullets.size() > 1) {
             m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1, m.yNave, 8));
             m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 8));
+            try {
+                try {
+                    m.audio = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
+                } catch (UnsupportedAudioFileException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                m.sparoClip.add(AudioSystem.getClip());
+                m.sparoClip.getLast().open(m.audio);
+                m.sparoClip.getLast().start();
+            } catch (LineUnavailableException | IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
 

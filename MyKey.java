@@ -48,16 +48,6 @@ public class MyKey implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        // avvio della partita con spazio
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (!m.inGioco) {
-                m.inGioco = true;
-                m.nemici.clear();
-                m.inizializzaNemici();
-                new SpostaNemici(m).start();
-            }
-        }
-
         // movimento verso destra
         if (e.getKeyCode() == KeyEvent.VK_D) {
             m.isPressed = true;

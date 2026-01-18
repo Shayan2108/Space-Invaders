@@ -10,9 +10,12 @@
 * thread dedicato SpostaNemici.
 */
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
+<<<<<<< HEAD
 * @class Nemico
 *
 * @brief Rappresenta un nemico singolo nel gioco.
@@ -52,5 +55,41 @@ public class Nemico {
         this.x = x;
         this.y = y;
         this.image = image;
+=======
+    public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
+        super(x, y, velocita, m, images);
+        super.grandezzaMassima = 100;
+        super.grandezzaMinima = 50;
+        grandezzaPianeta = m.r.nextInt(grandezzaMinima, grandezzaMassima);
+        super.y = 0 - grandezzaPianeta;
+        velocitaMinima = 10;
+        super.velocitaMassima = 50;
+        super.maxFrame = 1;
+        dardiNecessariPerMorte = m.r.nextInt(6, 20);
+        this.image = images.get(m.r.nextInt(0,images.size()));
+>>>>>>> aa294413387b792408c3e150f1d72aa90777e77e
     }
+    @Override
+    public void stampaOggettiClasse(Graphics g) {
+        g.drawImage(image, x, y, grandezzaPianeta, grandezzaPianeta, null);
+    }
+    @Override
+    public void run() {
+                while (y <= super.m.getHeight()) {
+            y += velocita;
+            try {
+                sleep(33);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        synchronized (super.m.nemici) {
+            m.nemici.remove(this);
+        }
+    }
+
+
+
+
+
 }
