@@ -22,12 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class MyPanel extends JPanel {
 
+    AudioInputStream audio;
+    ArrayList<Clip> sparoClip = new ArrayList<>();
     /** lista di stelle presenti sullo sfondo */
     volatile ArrayList<Stella> stelle = new ArrayList<>();
 
@@ -187,6 +192,15 @@ public class MyPanel extends JPanel {
         uploadDettagli();
         inizializzaNemici();
         InizializzaImmaginiEsplosioni();
+            try {
+                audio = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
+            } catch (UnsupportedAudioFileException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -388,7 +402,7 @@ public class MyPanel extends JPanel {
                 synchronized (esplosioni) {
                     esplosioni.remove(esplosioni.get(i));
                 }
-                
+
             }
         }
     }
