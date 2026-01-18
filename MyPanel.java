@@ -23,16 +23,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class MyPanel extends JPanel {
-
-    AudioInputStream audio;
+    /** variabili necessari per il Audio di quando spara la nave */
+    AudioInputStream audioSparatoria;
     ArrayList<Clip> sparoClip = new ArrayList<>();
+
+    AudioInputStream audioColpito;
+    ArrayList<Clip> colpitoClip = new ArrayList<>();
     /** lista di stelle presenti sullo sfondo */
     volatile ArrayList<Stella> stelle = new ArrayList<>();
 
@@ -65,9 +66,11 @@ public class MyPanel extends JPanel {
 
     /** immagini dei frame di esplosione */
     ArrayList<BufferedImage> framesEsplosione = new ArrayList<>();
+    ArrayList<BufferedImage> framesEsplosione1 = new ArrayList<>();
+
     /** istanze delle esplozioni */
     ArrayList<Esplosioni> esplosioni = new ArrayList<>();
-
+    ArrayList<Esplosioni1> esplosioni1 = new ArrayList<>();
     /** frame corrente della fiamma */
     int frameFiamma;
 
@@ -192,15 +195,7 @@ public class MyPanel extends JPanel {
         uploadDettagli();
         inizializzaNemici();
         InizializzaImmaginiEsplosioni();
-            try {
-                audio = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
-            } catch (UnsupportedAudioFileException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        InizializzaImmaginiEsplosioni1();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -263,6 +258,7 @@ public class MyPanel extends JPanel {
         stampaFuoco(g);
         stampaNemici(g);
         stampaEsplosioni(g);
+        stampaEsplosioni1(g);
     }
 
     // Metodi privati chiamati nel PiantComponent
@@ -391,6 +387,16 @@ public class MyPanel extends JPanel {
         }
     }
 
+    private void InizializzaImmaginiEsplosioni1() {
+        for (int i = 0; i < 16; i++) {
+            try {
+                framesEsplosione1.add(ImageIO.read(new File("Esplosioni1/" + i + ".png")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void stampaEsplosioni(Graphics g) {
         for (int i = 0; i < esplosioni.size(); i++) {
             if (esplosioni.get(i).frameinEseguzione < esplosioni.get(i).maxFrame) {
@@ -401,6 +407,22 @@ public class MyPanel extends JPanel {
             } else {
                 synchronized (esplosioni) {
                     esplosioni.remove(esplosioni.get(i));
+                }
+
+            }
+        }
+    }
+
+    private void stampaEsplosioni1(Graphics g) {
+        for (int i = 0; i < esplosioni1.size(); i++) {
+            if (esplosioni1.get(i).frameinEseguzione < esplosioni1.get(i).maxFrame) {
+                g.drawImage(framesEsplosione1.get(esplosioni1.get(i).frameinEseguzione), esplosioni1.get(i).x,
+                        esplosioni1.get(i).y, 200, 200, null);
+                esplosioni1.get(i).frameinEseguzione++;
+                esplosioni1.get(i).y += esplosioni1.get(i).avanzamento;
+            } else {
+                synchronized (esplosioni1) {
+                    esplosioni1.remove(esplosioni1.get(i));
                 }
 
             }

@@ -51,16 +51,14 @@ public class MyMouse implements MouseListener {
             m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 8));
             try {
                 try {
-                    m.audio = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
+                    m.audioSparatoria = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
                 } catch (UnsupportedAudioFileException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
                 m.sparoClip.add(AudioSystem.getClip());
-                m.sparoClip.getLast().open(m.audio);
+                m.sparoClip.getLast().open(m.audioSparatoria);
                 m.sparoClip.getLast().start();
             } catch (LineUnavailableException | IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
