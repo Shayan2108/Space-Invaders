@@ -13,7 +13,6 @@
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
