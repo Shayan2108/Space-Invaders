@@ -29,6 +29,7 @@ public class Nemico extends Pianeti {
     static int frequenzaAggiuntaNemicoMinima = 1000;
     static int frequenzaAggiuntaNemicoMassima = 5000;
     int dardiNecessariPerMorte;
+    int dardiMaxUccisione;
     public BufferedImage image;
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -40,6 +41,7 @@ public class Nemico extends Pianeti {
         super.velocitaMassima = 50;
         super.maxFrame = 1;
         dardiNecessariPerMorte = m.r.nextInt(6, 20);
+        dardiMaxUccisione = dardiNecessariPerMorte;
         this.image = images.get(m.r.nextInt(0,images.size()));
     }
     @Override

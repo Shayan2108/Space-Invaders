@@ -18,7 +18,9 @@ import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -79,6 +81,8 @@ public class MyPanel extends JPanel {
 
     /** thread per lo sfondo */
     Sfondo sfondo;
+    /** numero di punti del giocatore */
+    public static int score = 0;
 
     /** immagine della nave */
     BufferedImage nave;
@@ -103,6 +107,10 @@ public class MyPanel extends JPanel {
 
     /** JLabel per mostrare proiettili disponibili */
     public JLabel bulletDisponibili;
+    /** label per mostrare i punti */
+    public JLabel scorePoint;
+    /** label per mostrare i punti massimi mai fatti */
+    public JLabel maxPoint;
 
     /** numero massimo di proiettili */
     public volatile int bulletMassime;
@@ -146,6 +154,8 @@ public class MyPanel extends JPanel {
     JPanel contenitore;
     /** numero di immagini delle navi nemiche */
     int NImmaginiNemici;
+    /** score piu alto fatto dul gioco */
+    static int scoreMassimo;
 
     /**
      * @brief costruttore del pannello
@@ -166,6 +176,12 @@ public class MyPanel extends JPanel {
         this.bulletDisponibili = new JLabel();
         bulletDisponibili.setForeground(Color.WHITE);
         this.add(bulletDisponibili);
+        this.scorePoint = new JLabel();
+        scorePoint.setForeground(Color.WHITE);
+        this.add(scorePoint);
+        this.maxPoint = new JLabel();
+        maxPoint.setForeground(Color.WHITE);
+        this.add(maxPoint);
         r = new Random();
         sfondo = new Sfondo(this);
         game = new GameLoop(this);
@@ -191,7 +207,15 @@ public class MyPanel extends JPanel {
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
-        uploadPianeti();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("gr.txt"));
+            scoreMassimo = Integer.parseInt(br.readLine());
+            br.close();
+        } catch (NumberFormatException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        uploadPianeti(); 
         uploadDettagli();
         inizializzaNemici();
         InizializzaImmaginiEsplosioni();
@@ -245,10 +269,8 @@ public class MyPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
-                getHeight() - bulletDisponibili.getHeight());
-
+        // setto il text e position delle label
+        setLabel();
         // Grafica di sfondo sempre
         stampaStelle(g);
         stampaDettagli(g);
@@ -259,6 +281,16 @@ public class MyPanel extends JPanel {
         stampaNemici(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
+    }
+
+    private void setLabel() {
+        bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
+                getHeight() - bulletDisponibili.getHeight());
+        scorePoint.setLocation((this.getWidth() - scorePoint.getWidth()) / 2, 0);
+        scorePoint.setText(("score:" + Integer.toString(score) + " "));
+
+        maxPoint.setLocation((this.getWidth() - maxPoint.getWidth()), 0);
+        maxPoint.setText(("score:" + Integer.toString(scoreMassimo) + " "));
     }
 
     // Metodi privati chiamati nel PiantComponent

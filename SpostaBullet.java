@@ -44,39 +44,44 @@ class SpostaBullet extends Thread {
                 m.bullets.get(i).sposta();
             }
             synchronized (m.bullets) {
-                cicloBullet: for (int i = 0; i < m.bullets.size(); i++) {
-                    for (int j = 0; j < m.nemici.size(); j++) {
-                        if (m.bullets.get(i).x > m.nemici.get(j).x
-                                && m.bullets.get(i).x < (m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta)
-                                && m.bullets.get(i).y > m.nemici.get(j).y
-                                && m.bullets.get(i).y < (m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta)) {
-                            if (m.nemici.get(j).dardiNecessariPerMorte - 1 == 0) {
-                                m.esplosioni1.add(new Esplosioni1(m.bullets.get(i).x - 100, m.bullets.get(i).y - 100,
-                                        m.nemici.get(j).velocita));
-                                synchronized (m.nemici) {
-                                    m.nemici.remove(m.nemici.get(j));
-                                }
-                                try {
+                synchronized (m.nemici) {
+                    cicloBullet: for (int i = 0; i < m.bullets.size(); i++) {
+                        for (int j = 0; j < m.nemici.size(); j++) {
+                            if (m.bullets.get(i).x > m.nemici.get(j).x
+                                    && m.bullets.get(i).x < (m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta)
+                                    && m.bullets.get(i).y > m.nemici.get(j).y
+                                    && m.bullets.get(i).y < (m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta)) {
+                                if (m.nemici.get(j).dardiNecessariPerMorte - 1 == 0) {
+                                    m.esplosioni1
+                                            .add(new Esplosioni1(m.bullets.get(i).x - 100, m.bullets.get(i).y - 100,
+                                                    m.nemici.get(j).velocita));
+                                    synchronized (m.nemici) {
+                                        MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
+                                        m.nemici.remove(m.nemici.get(j));
+                                    }
                                     try {
-                                        m.audioColpito = AudioSystem.getAudioInputStream(new File("esplosioneSoundGrande.wav"));
-                                    } catch (UnsupportedAudioFileException e1) {
+                                        try {
+                                            m.audioColpito = AudioSystem
+                                                    .getAudioInputStream(new File("esplosioneSoundGrande.wav"));
+                                        } catch (UnsupportedAudioFileException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                        m.colpitoClip.add(AudioSystem.getClip());
+                                        m.colpitoClip.getLast().open(m.audioColpito);
+                                        m.colpitoClip.getLast().start();
+                                    } catch (LineUnavailableException | IOException e1) {
                                         e1.printStackTrace();
                                     }
-                                    m.colpitoClip.add(AudioSystem.getClip());
-                                    m.colpitoClip.getLast().open(m.audioColpito);
-                                    m.colpitoClip.getLast().start();
-                                } catch (LineUnavailableException | IOException e1) {
-                                    e1.printStackTrace();
+                                } else {
+                                    m.esplosioni.add(new Esplosioni(m.bullets.get(i).x - 50, m.bullets.get(i).y - 50,
+                                            m.nemici.get(j).velocita));
+                                    m.nemici.get(j).dardiNecessariPerMorte--;
+                                    m.bullets.remove(m.bullets.get(i));
+                                    i--;
+                                    continue cicloBullet;
                                 }
-                            } else {
-                                m.esplosioni.add(new Esplosioni(m.bullets.get(i).x - 50, m.bullets.get(i).y - 50,
-                                        m.nemici.get(j).velocita));
-                                m.nemici.get(j).dardiNecessariPerMorte--;
-                                m.bullets.remove(m.bullets.get(i));
-                                i--;
-                                continue cicloBullet;
-                            }
 
+                            }
                         }
                     }
                 }

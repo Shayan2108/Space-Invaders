@@ -11,6 +11,13 @@
  * delle schermate di gioco.
  */
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class GUI extends Thread {
@@ -52,7 +59,23 @@ public class GUI extends Thread {
         // impostazioni della finestra
         frame.setTitle("Space Invaders");
         frame.setLocation(new Point(100, 100));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+         @Override
+             public void windowClosing(WindowEvent e)
+            {
+                if(MyPanel.score > MyPanel.scoreMassimo){try {
+                    BufferedWriter bw = new BufferedWriter(new FileWriter("gr.txt"));
+                    bw.write(Integer.toString(MyPanel.score));
+                    bw.close();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }}
+                frame.dispose();
+                System.exit(0);
+            }
+        });
         frame.setResizable(false);
         frame.setSize(1259, 718);
 
