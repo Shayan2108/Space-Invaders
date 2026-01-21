@@ -1,10 +1,10 @@
 
 /**
-* @author  Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
-* @version 0.1
+* @author  mohammad Shayan Attari Bin Mohammad Zeshan Attari
+* @version 1.0
 * @file Nemico.java 
 *
-* @brief Classe per rappresentare un nemico nel gioco Space Invaders.
+* @brief Classe per rappresentare un nemico nel gioco star destroyer.
 *
 * Contiene le informazioni necessarie per gestire un nemico, come posizione, dimensioni
 * e immagine. La logica di movimento e discesa viene gestita dal pannello MyPanel o dal
