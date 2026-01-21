@@ -56,7 +56,7 @@ public class GUI extends Thread {
         cl.show(contenitore, "START");
 
         // impostazioni della finestra
-        frame.setTitle("Space Invaders");
+        frame.setTitle("Star Destroyer");
         frame.setLocation(new Point(100, 100));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
