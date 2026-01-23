@@ -9,7 +9,7 @@
  * Questo file contiene la classe Stella che rappresenta
  * un punto bianco che si muove verso il basso nello schermo.
  */
-public class Stella extends Thread {
+public class OggettiScendenti extends Thread {
 
     /**
      * @brief coordinata x della stella
@@ -43,7 +43,7 @@ public class Stella extends Thread {
      * @param velocita velocità di movimento
      * @param m pannello principale del gioco
      */
-    public Stella(int x, int y, int velocita, MyPanel m) {
+    public OggettiScendenti(int x, int y, int velocita, MyPanel m) {
         this.x = x;
         this.y = y;
         this.velocita = velocita;

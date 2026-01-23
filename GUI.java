@@ -82,7 +82,7 @@ public class GUI extends Thread {
         frame.add(contenitore);
 
         // impostazione dell'icona della finestra
-        ImageIcon icona = new ImageIcon(getClass().getResource("Logo1.png"));
+        ImageIcon icona = new ImageIcon(getClass().getResource("LogoFrat.png"));
         frame.setIconImage(icona.getImage());
 
         // rende visibile la finestra

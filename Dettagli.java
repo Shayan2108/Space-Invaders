@@ -11,7 +11,7 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Dettagli extends Stella {
+public class Dettagli extends OggettiScendenti {
 
     /** frequenza di aggiornamento del movimento */
     int frequenzaAggiornamento;
@@ -46,7 +46,7 @@ public class Dettagli extends Stella {
         super.y = -100; // per evitare che ci sia una improvvisa apparizione
         this.image = image;
         frequenzaAggiornamento = 10;
-        super.velocita = 7;
+        super.velocita = 5;
         grandezzaDettaglio = 50;
         this.start();
     }

@@ -13,7 +13,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Pianeti extends Stella {
+public class Pianeti extends OggettiScendenti {
 
     /** lista di immagini per l'animazione del pianeta */
     ArrayList<BufferedImage> image;

@@ -37,7 +37,7 @@ public class MyPanel extends JPanel {
     AudioInputStream audioColpito;
     ArrayList<Clip> colpitoClip = new ArrayList<>();
     /** lista di stelle presenti sullo sfondo */
-    volatile ArrayList<Stella> stelle = new ArrayList<>();
+    volatile ArrayList<Sfondo> sfondi = new ArrayList<>();
 
     /** immagini dei proiettili */
     volatile ArrayList<BufferedImage> immaginiBullet = new ArrayList<>();
@@ -80,7 +80,9 @@ public class MyPanel extends JPanel {
     Random r;
 
     /** thread per lo sfondo */
-    Sfondo sfondo;
+    ManagerGenerale managerGenerale;
+    /**immagine per lo sfondo */
+    BufferedImage immagineSfondo;
     /** numero di punti del giocatore */
     public static int score = 0;
 
@@ -183,7 +185,8 @@ public class MyPanel extends JPanel {
         maxPoint.setForeground(Color.WHITE);
         this.add(maxPoint);
         r = new Random();
-        sfondo = new Sfondo(this);
+        managerGenerale = new ManagerGenerale(this);
+        sfondi.add(new Sfondo(0, 0, this));
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
         NPianeti = 10;
@@ -212,6 +215,12 @@ public class MyPanel extends JPanel {
             scoreMassimo = Integer.parseInt(br.readLine());
             br.close();
         } catch (NumberFormatException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            immagineSfondo = ImageIO.read(new File("Sfondo.png"));
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -249,12 +258,14 @@ public class MyPanel extends JPanel {
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
 
-                if (!sfondo.isAlive())
-                    sfondo.start();
+                if (!managerGenerale.isAlive())
+                    managerGenerale.start();
                 if (!game.isAlive())
                     game.start();
                 if (!spostaBullet.isAlive())
                     spostaBullet.start();
+                if(!sfondi.getLast().isAlive())
+                sfondi.getLast().start();
             }
         });
     }
@@ -272,7 +283,7 @@ public class MyPanel extends JPanel {
         // setto il text e position delle label
         setLabel();
         // Grafica di sfondo sempre
-        stampaStelle(g);
+        StampaSfondo(g);
         stampaDettagli(g);
         stampaPianeti(g);
         g.drawImage(nave, xNave, yNave, larghezzaNave, altezzaNave, null);
@@ -310,11 +321,10 @@ public class MyPanel extends JPanel {
      * @brief disegna tutte le stelle sullo sfondo
      * @param g oggetto grafico
      */
-    private void stampaStelle(Graphics g) {
-        synchronized (stelle) {
-            for (Stella stella : stelle) {
-                g.setColor(Color.WHITE);
-                g.fillOval(stella.x, stella.y, 2, 2);
+    private void StampaSfondo(Graphics g) {
+        synchronized (sfondi) {
+            for (int i = 0; i < sfondi.size();i++) {
+                g.drawImage(immagineSfondo, sfondi.get(i).x, sfondi.get(i).y,400,800, null);
             }
         }
     }
