@@ -79,7 +79,7 @@ class ManagerGenerale extends Thread {
         // }
 
         // Ciclo principale del gioco
-        while (true) {
+        while (true && !m.gameOver) {
 
             // Gestione movimento nave
             if (m.isPressed) {

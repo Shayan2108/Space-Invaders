@@ -31,6 +31,8 @@ public class Nemico extends Pianeti {
     int dardiNecessariPerMorte;
     int dardiMaxUccisione;
     public BufferedImage image;
+    volatile boolean isVivo;
+
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
         super.grandezzaMassima = 100;
@@ -42,15 +44,18 @@ public class Nemico extends Pianeti {
         super.maxFrame = 1;
         dardiNecessariPerMorte = m.r.nextInt(6, 20);
         dardiMaxUccisione = dardiNecessariPerMorte;
-        this.image = images.get(m.r.nextInt(0,images.size()));
+        this.image = images.get(m.r.nextInt(0, images.size()));
+        isVivo = true;
     }
+
     @Override
     public void stampaOggettiClasse(Graphics g) {
         g.drawImage(image, x, y, grandezzaPianeta, grandezzaPianeta, null);
     }
+
     @Override
     public void run() {
-                while (y <= super.m.getHeight()) {
+        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
             y += velocita;
             try {
                 sleep(33);
@@ -58,13 +63,15 @@ public class Nemico extends Pianeti {
                 e.printStackTrace();
             }
         }
-        synchronized (super.m.nemici) {
+        synchronized (m.nemici) {
             m.nemici.remove(this);
         }
+        if (isVivo) {
+            m.cl.show(m.contenitore, "GAMEOVER");
+            m.gameOver = true;
+            GUI.scriviPunteggio();
+            MyPanel.score = 0;
+        }
     }
-
-
-
-
 
 }

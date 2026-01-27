@@ -1,3 +1,4 @@
+
 /**
  * @file SchermataIniziale.java
  *
@@ -15,6 +16,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,21 +31,21 @@ public class SchermataIniziale extends JPanel {
     /**
      * @brief layout per il cambio schermata
      *
-     * Serve per passare dalla schermata iniziale al gioco.
+     *        Serve per passare dalla schermata iniziale al gioco.
      */
     CardLayout cl;
 
     /**
      * @brief pannello contenitore principale
      *
-     * Contiene tutte le schermate del gioco.
+     *        Contiene tutte le schermate del gioco.
      */
     JPanel contenitore;
 
     /**
      * @brief bottone di avvio del gioco
      *
-     * Quando viene premuto fa partire il gioco.
+     *        Quando viene premuto fa partire il gioco.
      */
     JButton bottone;
 
@@ -53,10 +57,10 @@ public class SchermataIniziale extends JPanel {
     /**
      * @brief costruttore della schermata iniziale
      *
-     * Inizializza lo sfondo, il bottone start e collega
-     * il pannello al CardLayout.
+     *        Inizializza lo sfondo, il bottone start e collega
+     *        il pannello al CardLayout.
      *
-     * @param cl layout per il cambio schermata
+     * @param cl          layout per il cambio schermata
      * @param contenitore pannello che contiene le schermate
      */
     public SchermataIniziale(CardLayout cl, JPanel contenitore) {
@@ -78,6 +82,13 @@ public class SchermataIniziale extends JPanel {
         bottone.setOpaque(false);
         bottone.setContentAreaFilled(false);
         bottone.setFocusPainted(false);
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
+                frame.setSize(1259, 718);
+            }
+        });
 
         this.add(bottone);
 
@@ -95,7 +106,7 @@ public class SchermataIniziale extends JPanel {
     /**
      * @brief disegno della schermata iniziale
      *
-     * Disegna l'immagine di sfondo del menu iniziale.
+     *        Disegna l'immagine di sfondo del menu iniziale.
      *
      * @param g oggetto Graphics per il disegno
      */

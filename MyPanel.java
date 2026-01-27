@@ -81,7 +81,7 @@ public class MyPanel extends JPanel {
 
     /** thread per lo sfondo */
     ManagerGenerale managerGenerale;
-    /**immagine per lo sfondo */
+    /** immagine per lo sfondo */
     BufferedImage immagineSfondo;
     /** numero di punti del giocatore */
     public static int score = 0;
@@ -143,7 +143,7 @@ public class MyPanel extends JPanel {
     int NpngPerDettagliImmagini;
 
     /** stato del gioco */
-    boolean gameOver;
+    volatile boolean gameOver;
 
     /**
      * stato se il gioco è in corso, all'inizio del gioco è false, quando il player
@@ -210,21 +210,14 @@ public class MyPanel extends JPanel {
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("gr.txt"));
-            scoreMassimo = Integer.parseInt(br.readLine());
-            br.close();
-        } catch (NumberFormatException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        gameOver = false;
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        uploadPianeti(); 
+        uploadPianeti();
         uploadDettagli();
         inizializzaNemici();
         InizializzaImmaginiEsplosioni();
@@ -254,18 +247,41 @@ public class MyPanel extends JPanel {
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader("gr.txt"));
+                    scoreMassimo = Integer.parseInt(br.readLine());
+                    br.close();
+                } catch (NumberFormatException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                gameOver = false;
                 MyPanel.this.requestFocusInWindow();
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
-
-                if (!managerGenerale.isAlive())
+                managerGenerale = new ManagerGenerale(MyPanel.this);
+                spostaBullet = new SpostaBullet(MyPanel.this);
+                //if (!managerGenerale.isAlive())
                     managerGenerale.start();
                 if (!game.isAlive())
                     game.start();
-                if (!spostaBullet.isAlive())
+                //if (!spostaBullet.isAlive())
                     spostaBullet.start();
-                if(!sfondi.getLast().isAlive())
-                sfondi.getLast().start();
+                if (!sfondi.getLast().isAlive())
+                    sfondi.getLast().start();
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                for (int i = 0; i < nemici.size(); i++) {
+                    nemici.get(i).isVivo = false;
+                }
+                nemici.clear();
+                pianeti.clear();
+                dettagli.clear();
+                bullets.clear();
+                esplosioni.clear();
+                esplosioni1.clear();
             }
         });
     }
@@ -323,8 +339,8 @@ public class MyPanel extends JPanel {
      */
     private void StampaSfondo(Graphics g) {
         synchronized (sfondi) {
-            for (int i = 0; i < sfondi.size();i++) {
-                g.drawImage(immagineSfondo, sfondi.get(i).x, sfondi.get(i).y,400,800, null);
+            for (int i = 0; i < sfondi.size(); i++) {
+                g.drawImage(immagineSfondo, sfondi.get(i).x, sfondi.get(i).y, 400, 800, null);
             }
         }
     }

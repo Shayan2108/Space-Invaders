@@ -1,3 +1,4 @@
+
 /**
  * @file GUI.java
  *
@@ -25,7 +26,7 @@ public class GUI extends Thread {
     static volatile String statoAttuale = "";
 
     /**
-     * @brief metodo principale del thread 
+     * @brief metodo principale del thread
      *
      *        Crea la finestra principale, inizializza il CardLayout,
      *        aggiunge le schermate e imposta le proprietà della finestra.
@@ -51,6 +52,7 @@ public class GUI extends Thread {
         // aggiunta dei pannelli al CardLayout
         contenitore.add(game, "GAME");
         contenitore.add(schermataIniziale, "START");
+        contenitore.add(new GameOver(cl, contenitore), "GAMEOVER");
 
         // mostra la schermata iniziale
         cl.show(contenitore, "START");
@@ -60,17 +62,9 @@ public class GUI extends Thread {
         frame.setLocation(new Point(100, 100));
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
-         @Override
-             public void windowClosing(WindowEvent e)
-            {
-                if(MyPanel.score > MyPanel.scoreMassimo){try {
-                    BufferedWriter bw = new BufferedWriter(new FileWriter("gr.txt"));
-                    bw.write(Integer.toString(MyPanel.score));
-                    bw.close();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }}
+            @Override
+            public void windowClosing(WindowEvent e) {
+                scriviPunteggio();
                 frame.dispose();
                 System.exit(0);
             }
@@ -88,4 +82,16 @@ public class GUI extends Thread {
         // rende visibile la finestra
         frame.setVisible(true);
     }
+                public static void scriviPunteggio() {
+                if (MyPanel.score > MyPanel.scoreMassimo) {
+                    try {
+                        BufferedWriter bw = new BufferedWriter(new FileWriter("gr.txt"));
+                        bw.write(Integer.toString(MyPanel.score));
+                        bw.close();
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
+            }
 }

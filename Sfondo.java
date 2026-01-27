@@ -15,11 +15,13 @@ public class Sfondo extends Thread {
     @Override
     public void run() {
         while (y < m.getHeight()) {
-            y += 5;
-            if (y > 0 && aggiungi) {
-                m.sfondi.add(new Sfondo(0,-800, m));
-                m.sfondi.getLast().start();
-                aggiungi = false;
+            synchronized (m.sfondi) {
+                y += 5;
+                if (y > 0 && aggiungi) {
+                    m.sfondi.add(new Sfondo(0, -800, m));
+                    m.sfondi.getLast().start();
+                    aggiungi = false;
+                }
             }
             try {
                 sleep(33);
@@ -28,6 +30,8 @@ public class Sfondo extends Thread {
                 e.printStackTrace();
             }
         }
-        m.sfondi.remove(this);
+        synchronized (m.sfondi) {
+            m.sfondi.remove(this);
+        }
     }
 }

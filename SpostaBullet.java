@@ -39,7 +39,7 @@ class SpostaBullet extends Thread {
      */
     @Override
     public void run() {
-        while (true) {
+        while (true && !m.gameOver) {
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
             }
@@ -57,6 +57,7 @@ class SpostaBullet extends Thread {
                                                     m.nemici.get(j).velocita));
                                     synchronized (m.nemici) {
                                         MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
+                                        m.nemici.get(j).isVivo = false;
                                         m.nemici.remove(m.nemici.get(j));
                                     }
                                     try {
