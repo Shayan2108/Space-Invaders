@@ -12,20 +12,40 @@ public class GameOver extends JPanel {
     JPanel contenitore;
     BufferedImage sfondo;
     JButton bottoneRitorna;
+    JButton bottoneQuit;
 
     public GameOver(CardLayout cl, JPanel contenitore) {
         this.cl = cl;
         this.contenitore = contenitore;
+        this.setLayout(null);
         bottoneRitorna = new JButton();
+        bottoneRitorna.setContentAreaFilled(false);
+        bottoneRitorna.setBounds(390, 335, 170, 40);
+        bottoneRitorna.setBorder(null);
         bottoneRitorna.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 cl.show(contenitore, "START");
             }
-            
+
         });
         this.add(bottoneRitorna);
+        bottoneQuit = new JButton();
+        bottoneQuit.setContentAreaFilled(false);
+        bottoneQuit.setBounds(450, 400, 100, 50);
+        bottoneQuit.setBorder(null);
+        bottoneQuit.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(GameOver.this);
+                frame.dispose();
+                System.exit(0);
+            }
+            
+        });
+        this.add(bottoneQuit);
         try {
             sfondo = ImageIO.read(new File("GameOver.jpeg"));
         } catch (IOException e) {
@@ -40,9 +60,10 @@ public class GameOver extends JPanel {
             }
         });
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(sfondo, 0, 0,600,600, null);
+        g.drawImage(sfondo, 0, 0, 600, 600, null);
     }
 }
