@@ -210,12 +210,8 @@ public class MyPanel extends JPanel {
         sfondi.add(new Sfondo(0, 0, this));
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-<<<<<<< HEAD
         spostaPowerUp = new SpostaPowerUp(this);
         NPianeti = 10;
-=======
-        NPianeti = 11;
->>>>>>> 404097ed7e1483892ce68c7a3ce6825d133d0a74
         xNave = 200;
         movimento = 3;
         paddingX = 90;
@@ -235,7 +231,7 @@ public class MyPanel extends JPanel {
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
-        this.NImmaginiNemici = 8;
+        this.NImmaginiNemici = 7;
         gameOver = false;
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));

@@ -73,9 +73,6 @@ public class MyPanel extends JPanel {
     /** istanze delle esplozioni */
     ArrayList<Esplosioni> esplosioni = new ArrayList<>();
     ArrayList<Esplosioni1> esplosioni1 = new ArrayList<>();
-
-    // lista dei powerup attivi
-    volatile ArrayList<PowerUp> powerUps = new ArrayList<>();
     /** frame corrente della fiamma */
     int frameFiamma;
 
@@ -110,8 +107,6 @@ public class MyPanel extends JPanel {
     /** thread per muovere i proiettili */
     SpostaBullet spostaBullet;
 
-    /** thread per muovere i power-up */
-    SpostaPowerUp spostaPowerUp;
     /** JLabel per mostrare proiettili disponibili */
     public JLabel bulletDisponibili;
     /** label per mostrare i punti */
@@ -164,22 +159,6 @@ public class MyPanel extends JPanel {
     /** score piu alto fatto dul gioco */
     static int scoreMassimo;
 
-    boolean sparoMultiplo = false;
-
-    long fineSparoMultiplo;
-
-    boolean scudoAttivo = false;
-    long fineScudo;
-
-    boolean respingiAttivo = false;
-    long fineRespingi;
-
-    public boolean rallentaAttivo = false;
-    public long fineRallenta;
-
-    boolean proiettiliPenetrantiAttivi = false;
-    long fineProiettiliPenetranti;
-
     /**
      * @brief costruttore del pannello
      *
@@ -210,12 +189,7 @@ public class MyPanel extends JPanel {
         sfondi.add(new Sfondo(0, 0, this));
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-<<<<<<< HEAD
-        spostaPowerUp = new SpostaPowerUp(this);
-        NPianeti = 10;
-=======
         NPianeti = 11;
->>>>>>> 404097ed7e1483892ce68c7a3ce6825d133d0a74
         xNave = 200;
         movimento = 3;
         paddingX = 90;
@@ -287,15 +261,14 @@ public class MyPanel extends JPanel {
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
                 spostaBullet = new SpostaBullet(MyPanel.this);
-                // if (!managerGenerale.isAlive())
-                managerGenerale.start();
+                //if (!managerGenerale.isAlive())
+                    managerGenerale.start();
                 if (!game.isAlive())
                     game.start();
-                // if (!spostaBullet.isAlive())
-                spostaBullet.start();
+                //if (!spostaBullet.isAlive())
+                    spostaBullet.start();
                 if (!sfondi.getLast().isAlive())
                     sfondi.getLast().start();
-                spostaPowerUp.start();
             }
 
             @Override
@@ -335,11 +308,6 @@ public class MyPanel extends JPanel {
         stampaNemici(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
-        stampaPowerUps(g);
-        stampaEffettoScudo(g);
-        stampaEffettoRespingi(g);
-        stampaEffettoRallenta(g);
-        stampaEffettoProiettiliPenetranti(g);
     }
 
     private void setLabel() {
@@ -408,52 +376,6 @@ public class MyPanel extends JPanel {
         synchronized (bullets) {
             for (int i = 0; i < bullets.size(); i++) {
                 g.drawImage(bullets.get(i).image, bullets.get(i).x, bullets.get(i).y, 20, 60, null);
-            }
-        }
-    }
-
-    /**
-     * @brief disegna i power-ups e aggiorna JLabel
-     * @param g oggetto grafico
-     */
-    private void stampaPowerUps(Graphics g) {
-        synchronized (powerUps) {
-            for (PowerUp p : powerUps) {
-                // Disegna l'immagine giusta che è stata impostata in base al tipo
-                p.stampaOggettiClasse(g);
-            }
-        }
-    }
-
-    private void stampaEffettoScudo(Graphics g) {
-        if (scudoAttivo) {
-            // Disegna un cerchio intorno alla nave per indicare lo scudo attivo
-            g.setColor(new Color(0, 0, 255, 100)); // Colore blu trasparente
-            g.fillOval(xNave - 10, yNave - 10, larghezzaNave + 20, altezzaNave + 20);
-        }
-    }
-
-    private void stampaEffettoRespingi(Graphics g) {
-        if (respingiAttivo) {
-            g.setColor(new Color(255, 100, 0, 120));
-            g.drawOval(xNave - 20, yNave - 20, larghezzaNave + 40, altezzaNave + 40);
-        }
-    }
-
-    private void stampaEffettoRallenta(Graphics g) {
-        if (rallentaAttivo) {
-            g.setColor(new Color(0, 0, 255, 120)); // blu trasparente
-            g.fillRect(0, 0, getWidth(), getHeight());
-        }
-    }
-
-    private void stampaEffettoProiettiliPenetranti(Graphics g) {
-        if (proiettiliPenetrantiAttivi) {
-            g.setColor(new Color(0, 255, 255, 150)); // alone ciano
-            synchronized (bullets) {
-                for (Bullets b : bullets) {
-                    g.fillOval(b.x - 5, b.y - 5, 30, 30);
-                }
             }
         }
     }
@@ -563,30 +485,5 @@ public class MyPanel extends JPanel {
 
             }
         }
-    }
-
-    public void attivaSparoMultiplo() {
-        sparoMultiplo = true;
-        fineSparoMultiplo = System.currentTimeMillis() + 8000;
-    }
-
-    public void attivaScudo() {
-        scudoAttivo = true;
-        fineScudo = System.currentTimeMillis() + 6000;
-    }
-
-    public void attivaRespingi() {
-        respingiAttivo = true;
-        fineRespingi = System.currentTimeMillis() + 5000; // 5 sec
-    }
-
-    public void attivaRallenta() {
-        rallentaAttivo = true;
-        fineRallenta = System.currentTimeMillis() + 5000; // dura 5 secondi
-    }
-
-    public void attivaProiettiliPenetranti() {
-        proiettiliPenetrantiAttivi = true;
-        fineProiettiliPenetranti = System.currentTimeMillis() + 5000; // 5 sec
     }
 }
