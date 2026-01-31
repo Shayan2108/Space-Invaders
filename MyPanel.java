@@ -189,7 +189,7 @@ public class MyPanel extends JPanel {
         sfondi.add(new Sfondo(0, 0, this));
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-        NPianeti = 10;
+        NPianeti = 11;
         xNave = 200;
         movimento = 3;
         paddingX = 90;
