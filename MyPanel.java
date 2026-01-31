@@ -209,7 +209,7 @@ public class MyPanel extends JPanel {
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
-        this.NImmaginiNemici = 7;
+        this.NImmaginiNemici = 8;
         gameOver = false;
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));
