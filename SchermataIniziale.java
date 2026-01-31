@@ -12,6 +12,7 @@
  */
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -92,14 +93,25 @@ public class SchermataIniziale extends JPanel {
 
         this.add(bottone);
 
-        bottone.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(contenitore, "GAME");
-                GUI.statoAttuale = "GAME";
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
-                frame.setSize(new Dimension(400, 800));
-            }
+        bottone.addActionListener(e -> {
+            // Mostra il pannello del gioco
+            cl.show(contenitore, "GAME");
+            GUI.statoAttuale = "GAME";
+
+            // Dai il focus al pannello di gioco (importantissimo)
+            SwingUtilities.invokeLater(() -> {
+                for (Component c : contenitore.getComponents()) {
+                    if (c instanceof MyPanel) {
+                        MyPanel gioco = (MyPanel) c;
+                        gioco.requestFocusInWindow(); // focus per i tasti
+                    }
+                }
+            });
+
+            // Ridimensiona e centra la finestra
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setSize(400, 800);
+            frame.setLocationRelativeTo(null);
         });
     }
 

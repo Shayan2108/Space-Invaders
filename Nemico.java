@@ -48,6 +48,13 @@ public class Nemico extends Pianeti {
         isVivo = true;
     }
 
+    private boolean collisioneConNave() {
+        return x < m.xNave + m.larghezzaNave &&
+                x + grandezzaPianeta > m.xNave &&
+                y < m.yNave + m.altezzaNave &&
+                y + grandezzaPianeta > m.yNave;
+    }
+
     @Override
     public void stampaOggettiClasse(Graphics g) {
         g.drawImage(image, x, y, grandezzaPianeta, grandezzaPianeta, null);
@@ -57,21 +64,41 @@ public class Nemico extends Pianeti {
     public void run() {
         while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
             y += velocita;
-            try {
-                sleep(33);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            // controllo per i power up attivi
+            if (collisioneConNave()) {
+                if (m.scudoAttivo)
+                    continue;
+                if (m.respingiAttivo) {
+                    // respingi: il nemico viene spinto in alto
+                    y = -grandezzaPianeta;
+                    continue;
+                }
+
+                // power up rallenta
+                int velocitaEffettiva = this.velocita;
+                if (m.rallentaAttivo) {
+                    velocitaEffettiva /= 2; // nemici rallentati del 50%
+                }
+                this.y += velocitaEffettiva;
+
+                try {
+                    sleep(33);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            synchronized (m.nemici) {
+                m.nemici.remove(this);
+            }
+            if (isVivo) {
+
+                m.cl.show(m.contenitore, "GAMEOVER");
+                m.gameOver = true;
+                GUI.scriviPunteggio();
+                MyPanel.score = 0;
             }
         }
-        synchronized (m.nemici) {
-            m.nemici.remove(this);
-        }
-        if (isVivo) {
-            m.cl.show(m.contenitore, "GAMEOVER");
-            m.gameOver = true;
-            GUI.scriviPunteggio();
-            MyPanel.score = 0;
-        }
-    }
 
+    }
 }
