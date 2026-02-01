@@ -31,9 +31,15 @@ public class PowerUp extends Thread {
                 e.printStackTrace();
             }
         }
+<<<<<<< Updated upstream
         synchronized (m.powerUps) {
             m.powerUps.remove(this);
         }
+=======
+        // synchronized (m.powerUps) {
+        //     m.powerUps.remove(this);
+        // }
+>>>>>>> Stashed changes
     }
 
     public void stampaOggettiClasse(Graphics g) {
