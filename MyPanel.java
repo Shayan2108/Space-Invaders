@@ -189,10 +189,6 @@ public class MyPanel extends JPanel {
         sfondi.add(new Sfondo(0, 0, this));
         game = new GameLoop(this);
         spostaBullet = new SpostaBullet(this);
-<<<<<<< Updated upstream
-        spostaPowerUp = new SpostaPowerUp(this);
-=======
->>>>>>> Stashed changes
         NPianeti = 10;
         xNave = 200;
         movimento = 3;
