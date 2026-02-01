@@ -57,8 +57,8 @@ public class MyKey implements KeyListener {
 
         // movimento verso sinistra
         if (e.getKeyCode() == KeyEvent.VK_A) {
-            m.isPressed = true;
-            m.movimento = -((m.getWidth() + 16) / 400 * 6);
+            m.isPressed =true;
+            m.movimento =-((m.getWidth() + 16)/ 400 * 6);
             isA = true;
         }
     }
@@ -80,8 +80,8 @@ public class MyKey implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_A)
             isA = false;
 
-        if (!isA && !isD)
-            m.isPressed = false;
+        if (!isA &&!isD)
+            m.isPressed =false;
     }
 
     /**

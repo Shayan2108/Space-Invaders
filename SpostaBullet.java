@@ -43,7 +43,7 @@ class SpostaBullet extends Thread {
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
             }
-            synchronized (m.bullets) {
+            synchronized  (m.bullets) {
                 synchronized (m.nemici) {
                     cicloBullet: for (int i = 0; i < m.bullets.size(); i++) {
                         for (int j = 0; j < m.nemici.size(); j++) {
@@ -59,9 +59,9 @@ class SpostaBullet extends Thread {
                                         MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
                                         m.nemici.get(j).isVivo = false;
                                         m.nemici.remove(m.nemici.get(j));
-                                    }
-                                    try {
+                                        }
                                         try {
+                                            try {
                                             m.audioColpito = AudioSystem
                                                     .getAudioInputStream(new File("esplosioneSoundGrande.wav"));
                                         } catch (UnsupportedAudioFileException e1) {
@@ -80,13 +80,13 @@ class SpostaBullet extends Thread {
                                     m.bullets.remove(m.bullets.get(i));
                                     i--;
                                     continue cicloBullet;
-                                }
+                                 }
 
+                            }
                             }
                         }
                     }
                 }
-            }
             try {
                 sleep(33);
             } catch (InterruptedException e) {
@@ -94,4 +94,4 @@ class SpostaBullet extends Thread {
             }
         }
     }
-}
+ }

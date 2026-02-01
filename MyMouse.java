@@ -22,7 +22,7 @@ public class MyMouse implements MouseListener {
     /**
      * riferimento al pannello di gioco
      */
-    MyPanel m;
+     MyPanel m;
 
     /**
      * @brief costruttore della classe MyMouse
@@ -31,10 +31,9 @@ public class MyMouse implements MouseListener {
      *
      * @param m pannello principale del gioco
      */
-    public MyMouse(MyPanel m) {
+    public MyMouse( MyPanel m) {
         this.m = m;
     }
-
     /**
      * @brief gestione click del mouse
      *
@@ -47,8 +46,8 @@ public class MyMouse implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (m.bulletMassime - m.bullets.size() > 1) {
-            m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1, m.yNave, 8));
-            m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 8));
+            m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1,m.yNave, 8));
+            m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2,m.yNave, 8));
             try {
                 try {
                     m.audioSparatoria = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));

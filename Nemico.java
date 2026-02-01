@@ -1,21 +1,19 @@
 
-/**
+ /**
 * @author  mohammad Shayan Attari Bin Mohammad Zeshan Attari
 * @version 1.0
-* @file Nemico.java 
+* @file Nemico.java  
 *
 * @brief Classe per rappresentare un nemico nel gioco star destroyer.
 *
-* Contiene le informazioni necessarie per gestire un nemico, come posizione, dimensioni
-* e immagine. La logica di movimento e discesa viene gestita dal pannello MyPanel o dal
-* thread dedicato SpostaNemici.
-*/
+* la classe estende pianeti e cambia le variabili
+e riscrive la stampaOgetti e il run della classe thread
+**/
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-/**
+import  java.awt.Graphics;
+import  java.awt.image.BufferedImage;
+import  java.util.ArrayList;
+ /**
  * @class Nemico
  *
  * @brief Rappresenta un nemico singolo nel gioco.
@@ -25,12 +23,11 @@ import java.util.ArrayList;
  *        nemici dal pannello di gioco per disegnarlo e spostarlo.
  */
 public class Nemico extends Pianeti {
-
     static int frequenzaAggiuntaNemicoMinima = 1000;
     static int frequenzaAggiuntaNemicoMassima = 5000;
     int dardiNecessariPerMorte;
     int dardiMaxUccisione;
-    public BufferedImage image;
+    public BufferedImage  image;
     volatile boolean isVivo;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
@@ -46,7 +43,7 @@ public class Nemico extends Pianeti {
         dardiMaxUccisione = dardiNecessariPerMorte;
         this.image = images.get(m.r.nextInt(0, images.size()));
         isVivo = true;
-    }
+     }
 
     @Override
     public void stampaOggettiClasse(Graphics g) {
@@ -70,8 +67,7 @@ public class Nemico extends Pianeti {
             m.cl.show(m.contenitore, "GAMEOVER");
             m.gameOver = true;
             GUI.scriviPunteggio();
-            MyPanel.score = 0;
         }
-    }
+     }
 
 }

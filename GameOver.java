@@ -13,11 +13,15 @@ public class GameOver extends JPanel {
     BufferedImage sfondo;
     JButton bottoneRitorna;
     JButton bottoneQuit;
+    JLabel score;
+    JLabel scoreMassimo;
 
     public GameOver(CardLayout cl, JPanel contenitore) {
         this.cl = cl;
         this.contenitore = contenitore;
         this.setLayout(null);
+        score = new JLabel();
+        scoreMassimo = new JLabel();
         bottoneRitorna = new JButton();
         bottoneRitorna.setContentAreaFilled(false);
         bottoneRitorna.setBounds(390, 335, 170, 40);
@@ -39,11 +43,11 @@ public class GameOver extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(GameOver.this);
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(GameOver.this);
                 frame.dispose();
                 System.exit(0);
             }
-            
+
         });
         this.add(bottoneQuit);
         try {
@@ -55,10 +59,23 @@ public class GameOver extends JPanel {
         super.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
+                score.setLocation(240, 349);
+                score.setForeground(new Color(188, 0, 0));
+                score.setFont(new Font("Arial", ALLBITS, 32));
+                score.setSize(new Dimension(100, 25));
+                score.setText(Integer.toString(MyPanel.score));
+                scoreMassimo.setText(Integer.toString(MyPanel.scoreMassimo));
+                scoreMassimo.setLocation(258, 423);
+                scoreMassimo.setForeground(new Color(188, 0, 0));
+                scoreMassimo.setFont(new Font("Arial", ALLBITS, 32));
+                scoreMassimo.setSize(new Dimension(100, 25));
+                MyPanel.score = 0;
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(GameOver.this);
                 frame.setSize(600, 600);
             }
         });
+        this.add(score);
+        this.add(scoreMassimo);
     }
 
     @Override

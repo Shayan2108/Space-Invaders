@@ -92,6 +92,7 @@ public class GUI extends Thread {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
+                    MyPanel.scoreMassimo = MyPanel.score;
                 }
             }
 }

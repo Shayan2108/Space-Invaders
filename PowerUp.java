@@ -31,9 +31,9 @@ public class PowerUp extends Thread {
                 e.printStackTrace();
             }
         }
-        synchronized (m.powerUps) {
-            m.powerUps.remove(this);
-        }
+        // synchronized (m.powerUps) {
+        //     m.powerUps.remove(this);
+        // }
     }
 
     public void stampaOggettiClasse(Graphics g) {

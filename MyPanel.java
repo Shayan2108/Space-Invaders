@@ -61,12 +61,11 @@ public class MyPanel extends JPanel {
     volatile ArrayList<Dettagli> dettagli = new ArrayList<>();
 
     /** lista dei nemici presenti sullo schermo */
-    volatile ArrayList<Nemico> nemici = new ArrayList<>();
+    volatile  ArrayList<Nemico> nemici = new ArrayList<>();
 
     /** immagini dele navi nemiche */
     volatile ArrayList<BufferedImage> immaginiNemici = new ArrayList<>();
-
-    /** immagini dei frame di esplosione */
+     /** immagini dei frame di esplosione */
     ArrayList<BufferedImage> framesEsplosione = new ArrayList<>();
     ArrayList<BufferedImage> framesEsplosione1 = new ArrayList<>();
 
@@ -106,7 +105,6 @@ public class MyPanel extends JPanel {
 
     /** thread per muovere i proiettili */
     SpostaBullet spostaBullet;
-
     /** JLabel per mostrare proiettili disponibili */
     public JLabel bulletDisponibili;
     /** label per mostrare i punti */
@@ -123,9 +121,6 @@ public class MyPanel extends JPanel {
 
     /** direzione e velocità dei nemici */
     int dirNemici, velocitaNemici, passoDiscesaNemici = 20;
-
-    /** tempo dell'ultimo sparo nemici */
-    long ultimoSparoNemici;
 
     /** timer per spawn pianeti */
     Long timer;
@@ -144,13 +139,6 @@ public class MyPanel extends JPanel {
 
     /** stato del gioco */
     volatile boolean gameOver;
-
-    /**
-     * stato se il gioco è in corso, all'inizio del gioco è false, quando il player
-     * preme SPACE diventa true ed inizia il gioco
-     */
-    boolean inGioco = false;
-
     /** layout e contenitore del pannello */
     CardLayout cl;
     JPanel contenitore;
@@ -198,9 +186,6 @@ public class MyPanel extends JPanel {
         altezzaNave = 150;
         larghezzaNave = 100;
         altezzaFiamma = 50;
-        dirNemici = 1;
-        velocitaNemici = 2;
-        passoDiscesaNemici = 20;
         larghezzaFiamma = 20;
         paddingBullet1 = 30;
         paddingBullet2 = 50;
@@ -219,7 +204,7 @@ public class MyPanel extends JPanel {
         }
         uploadPianeti();
         uploadDettagli();
-        inizializzaNemici();
+         inizializzaNemici();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
         try {
@@ -241,8 +226,8 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
-                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
+        dettagli.add(new Dettagli(r.nextInt(0, 400), 0 , 6, MyPanel.this,
+                immaginiDettagli.get(r.nextInt(0 , NpngPerDettagliImmagini))));
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -263,7 +248,7 @@ public class MyPanel extends JPanel {
                 spostaBullet = new SpostaBullet(MyPanel.this);
                 //if (!managerGenerale.isAlive())
                     managerGenerale.start();
-                if (!game.isAlive())
+                if (!game.isAlive() )
                     game.start();
                 //if (!spostaBullet.isAlive())
                     spostaBullet.start();
@@ -298,7 +283,6 @@ public class MyPanel extends JPanel {
         super.paintComponent(g);
         // setto il text e position delle label
         setLabel();
-        // Grafica di sfondo sempre
         StampaSfondo(g);
         stampaDettagli(g);
         stampaPianeti(g);
@@ -309,7 +293,6 @@ public class MyPanel extends JPanel {
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
     }
-
     private void setLabel() {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
@@ -354,7 +337,6 @@ public class MyPanel extends JPanel {
             p.stampaOggettiClasse(g);
         }
     }
-
     /**
      * @brief disegna gli asteroidi/dettagli sullo schermo
      * @param g oggetto grafico
@@ -397,53 +379,52 @@ public class MyPanel extends JPanel {
             }
         }
     }
-
     /**
      * @brief carica le immagini degli asteroidi/dettagli
      */
-    private void uploadDettagli() {
-        for (int j = 0; j < NpngPerDettagliImmagini; j++) {
-            try {
-                immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
-            } catch (IOException e) {
-                System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
+        private void uploadDettagli() {
+            for (int j = 0; j < NpngPerDettagliImmagini; j++) {
+                try {
+                    immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
+                } catch (IOException e) {
+                    System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
+                }
             }
         }
-    }
 
     /**
      * @brief inizializza i nemici
      *
      *        posiziona i nemici in righe e colonne sullo schermo
      */
-    public void inizializzaNemici() {
+        public void inizializzaNemici() {
 
-        try {
-            for (int i = 0; i < NImmaginiNemici; i++) {
-                immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void stampaNemici(Graphics g) {
-        synchronized (nemici) {
-            for (Nemico n : nemici) {
-                n.stampaOggettiClasse(g);
-            }
-        }
-    }
-
-    private void InizializzaImmaginiEsplosioni() {
-        for (int i = 0; i < 70; i++) {
             try {
-                framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
+                for (int i = 0; i < NImmaginiNemici; i++) {
+                    immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
+
+        private void stampaNemici(Graphics g) {
+            synchronized (nemici) {
+                for (Nemico n : nemici) {
+                    n.stampaOggettiClasse(g);
+                }
+            }
+        }
+
+    private void InizializzaImmaginiEsplosioni() {
+        for (int i = 0; i < 70; i++) {
+            try  {
+                framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
+            } catch (IOException e) {
+                e.printStackTrace();
+                }
+            }
+        }
 
     private void InizializzaImmaginiEsplosioni1() {
         for (int i = 0; i < 16; i++) {
