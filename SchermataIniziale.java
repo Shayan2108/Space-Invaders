@@ -12,13 +12,13 @@
  */
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -92,25 +92,14 @@ public class SchermataIniziale extends JPanel {
 
         this.add(bottone);
 
-        bottone.addActionListener(e -> {
-            // Mostra il pannello del gioco
-            cl.show(contenitore, "GAME");
-            GUI.statoAttuale = "GAME";
-
-            // Dai il focus al pannello di gioco (importantissimo)
-            SwingUtilities.invokeLater(() -> {
-                for (Component c : contenitore.getComponents()) {
-                    if (c instanceof MyPanel) {
-                        MyPanel gioco = (MyPanel) c;
-                        gioco.requestFocusInWindow(); // focus per i tasti
-                    }
-                }
-            });
-
-            // Ridimensiona e centra la finestra
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.setSize(400, 800);
-            frame.setLocationRelativeTo(null);
+        bottone.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cl.show(contenitore, "GAME");
+                GUI.statoAttuale = "GAME";
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
+                frame.setSize(new Dimension(400, 800));
+            }
         });
     }
 

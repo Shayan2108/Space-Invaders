@@ -1,4 +1,3 @@
-
 /**
  * @file MyMouse.java
  *
@@ -28,7 +27,7 @@ public class MyMouse implements MouseListener {
     /**
      * @brief costruttore della classe MyMouse
      *
-     *        Collega il listener del mouse al pannello di gioco
+     * Collega il listener del mouse al pannello di gioco
      *
      * @param m pannello principale del gioco
      */
@@ -39,23 +38,17 @@ public class MyMouse implements MouseListener {
     /**
      * @brief gestione click del mouse
      *
-     *        Quando il mouse viene cliccato, se ci sono
-     *        proiettili disponibili, ne vengono creati due
-     *        ai lati della nave.
+     * Quando il mouse viene cliccato, se ci sono
+     * proiettili disponibili, ne vengono creati due
+     * ai lati della nave.
      *
      * @param e evento del mouse
      */
     @Override
     public void mouseClicked(MouseEvent e) {
         if (m.bulletMassime - m.bullets.size() > 1) {
-            // sparo base (2 proiettili)
             m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1, m.yNave, 8));
             m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2, m.yNave, 8));
-            // sparo potenziato
-            if (m.sparoMultiplo) {
-                m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet1 - 20, m.yNave, -10));
-                m.bullets.add(new Bullets(m, m.xNave + m.paddingBullet2 + 20, m.yNave, -10));
-            }
             try {
                 try {
                     m.audioSparatoria = AudioSystem.getAudioInputStream(new File("SuonoSparo.wav"));
