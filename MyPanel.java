@@ -61,17 +61,19 @@ public class MyPanel extends JPanel {
     volatile ArrayList<Dettagli> dettagli = new ArrayList<>();
 
     /** lista dei nemici presenti sullo schermo */
-    volatile  ArrayList<Nemico> nemici = new ArrayList<>();
+    volatile ArrayList<Nemico> nemici = new ArrayList<>();
 
     /** immagini dele navi nemiche */
     volatile ArrayList<BufferedImage> immaginiNemici = new ArrayList<>();
-     /** immagini dei frame di esplosione */
+    /** immagini dei frame di esplosione */
     ArrayList<BufferedImage> framesEsplosione = new ArrayList<>();
     ArrayList<BufferedImage> framesEsplosione1 = new ArrayList<>();
 
     /** istanze delle esplozioni */
     ArrayList<Esplosioni> esplosioni = new ArrayList<>();
     ArrayList<Esplosioni1> esplosioni1 = new ArrayList<>();
+
+    ArrayList<PowerUp> powerUps = new ArrayList<>();
     /** frame corrente della fiamma */
     int frameFiamma;
 
@@ -105,6 +107,7 @@ public class MyPanel extends JPanel {
 
     /** thread per muovere i proiettili */
     SpostaBullet spostaBullet;
+
     /** JLabel per mostrare proiettili disponibili */
     public JLabel bulletDisponibili;
     /** label per mostrare i punti */
@@ -122,11 +125,23 @@ public class MyPanel extends JPanel {
     /** direzione e velocità dei nemici */
     int dirNemici, velocitaNemici, passoDiscesaNemici = 20;
 
+    // ** velocità base dei nemici (serve per i power up)*/
+    int velocitaNemiciBase = velocitaNemici;
+
     /** timer per spawn pianeti */
     Long timer;
 
     /** timer per stampare pianeta */
     long timerStampaPianeta;
+
+    // **timer per il power up multi */
+    long timerMulti = 0;
+    // **timer per il power up scudo */
+    long timerScudo = 0;
+    // **timer per il power up proiettili penetranti */
+    long timerPenetrante = 0;
+    // ** timer per il power up rallenta nemici */
+    long timerRallenta = 0;
 
     /** intervalli per spawn pianeti */
     int frequezaminimaPianeti, frequezaMassimaPianeti;
@@ -146,6 +161,14 @@ public class MyPanel extends JPanel {
     int NImmaginiNemici;
     /** score piu alto fatto dul gioco */
     static int scoreMassimo;
+
+    // POWER UPS
+    // **questa variabile se è true attiva lo sparo multiplo */
+    boolean sparoMultiplo = false;
+    // **questa variabile se è true attiva lo scudo */
+    boolean scudoAttivo = false;
+    // **questa variabile se è true attiva i proiettili penetranti */
+    boolean proiettiliPenetranti = false;
 
     /**
      * @brief costruttore del pannello
@@ -204,7 +227,7 @@ public class MyPanel extends JPanel {
         }
         uploadPianeti();
         uploadDettagli();
-         inizializzaNemici();
+        inizializzaNemici();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
         try {
@@ -226,8 +249,8 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        dettagli.add(new Dettagli(r.nextInt(0, 400), 0 , 6, MyPanel.this,
-                immaginiDettagli.get(r.nextInt(0 , NpngPerDettagliImmagini))));
+        dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -246,12 +269,12 @@ public class MyPanel extends JPanel {
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
                 spostaBullet = new SpostaBullet(MyPanel.this);
-                //if (!managerGenerale.isAlive())
-                    managerGenerale.start();
-                if (!game.isAlive() )
+                // if (!managerGenerale.isAlive())
+                managerGenerale.start();
+                if (!game.isAlive())
                     game.start();
-                //if (!spostaBullet.isAlive())
-                    spostaBullet.start();
+                // if (!spostaBullet.isAlive())
+                spostaBullet.start();
                 if (!sfondi.getLast().isAlive())
                     sfondi.getLast().start();
             }
@@ -267,6 +290,7 @@ public class MyPanel extends JPanel {
                 bullets.clear();
                 esplosioni.clear();
                 esplosioni1.clear();
+                powerUps.clear();
             }
         });
     }
@@ -292,7 +316,9 @@ public class MyPanel extends JPanel {
         stampaNemici(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
+        stampaPowerUps(g);
     }
+
     private void setLabel() {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
@@ -337,6 +363,7 @@ public class MyPanel extends JPanel {
             p.stampaOggettiClasse(g);
         }
     }
+
     /**
      * @brief disegna gli asteroidi/dettagli sullo schermo
      * @param g oggetto grafico
@@ -345,6 +372,26 @@ public class MyPanel extends JPanel {
         synchronized (dettagli) {
             for (int i = 0; i < dettagli.size(); i++) {
                 dettagli.get(i).stampaDettagli(g);
+            }
+        }
+    }
+
+    private void stampaPowerUps(Graphics g) {
+        synchronized (powerUps) {
+            for (int i = 0; i < powerUps.size(); i++) {
+                PowerUp p = powerUps.get(i);
+                p.sposta();
+
+                if (p.collideConNave(this)) {
+                    p.applicaPowerUp(this);
+                    powerUps.remove(i);
+                    i--;
+                } else if (p.y > getHeight()) {
+                    powerUps.remove(i);
+                    i--;
+                } else {
+                    p.stampaOggettiClasse(g); // disegna il power-up
+                }
             }
         }
     }
@@ -379,52 +426,53 @@ public class MyPanel extends JPanel {
             }
         }
     }
+
     /**
      * @brief carica le immagini degli asteroidi/dettagli
      */
-        private void uploadDettagli() {
-            for (int j = 0; j < NpngPerDettagliImmagini; j++) {
-                try {
-                    immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
-                } catch (IOException e) {
-                    System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
-                }
+    private void uploadDettagli() {
+        for (int j = 0; j < NpngPerDettagliImmagini; j++) {
+            try {
+                immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
+            } catch (IOException e) {
+                System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
             }
         }
+    }
 
     /**
      * @brief inizializza i nemici
      *
      *        posiziona i nemici in righe e colonne sullo schermo
      */
-        public void inizializzaNemici() {
+    public void inizializzaNemici() {
 
-            try {
-                for (int i = 0; i < NImmaginiNemici; i++) {
-                    immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            for (int i = 0; i < NImmaginiNemici; i++) {
+                immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stampaNemici(Graphics g) {
+        synchronized (nemici) {
+            for (Nemico n : nemici) {
+                n.stampaOggettiClasse(g);
             }
         }
-
-        private void stampaNemici(Graphics g) {
-            synchronized (nemici) {
-                for (Nemico n : nemici) {
-                    n.stampaOggettiClasse(g);
-                }
-            }
-        }
+    }
 
     private void InizializzaImmaginiEsplosioni() {
         for (int i = 0; i < 70; i++) {
-            try  {
+            try {
                 framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
             } catch (IOException e) {
                 e.printStackTrace();
-                }
             }
         }
+    }
 
     private void InizializzaImmaginiEsplosioni1() {
         for (int i = 0; i < 16; i++) {

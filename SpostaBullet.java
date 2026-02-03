@@ -1,41 +1,33 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * @file SpostaBullet.java
- * 
- * @author Mohammad Shayan Attari Bin Mohammad Zeshan Attari
- * @version 1.0
- * 
- * @brief Thread per aggiornare continuamente la posizione dei proiettili
- *
- *        La classe gestisce il movimento di tutti i proiettili presenti
- *        nel pannello ogni 33ms
+ * * @file SpostaBullet.java * * @author Mohammad Shayan Attari Bin Mohammad
+ * Zeshan Attari * @version 1.0 * * @brief Thread per aggiornare continuamente
+ * la posizione dei proiettili * * La classe gestisce il movimento di tutti i
+ * proiettili presenti * nel pannello ogni 33ms
  */
 class SpostaBullet extends Thread {
-
     /**
-     * pannello principale del gioco, usato per accedere alla lista dei proiettili
+     * * pannello principale del gioco, usato per accedere alla lista dei proiettili
      */
     MyPanel m;
 
-    /**
-     * @brief costruttore del thread
-     * @param m pannello principale del gioco
-     */
+    Random r = new Random();
+
+    /** * @brief costruttore del thread * @param m pannello principale del gioco */
     SpostaBullet(MyPanel m) {
         this.m = m;
     }
 
     /**
-     * @brief metodo principale del thread Ovvero run()
-     *
-     *        Per ogni proiettile nella lista, chiama il metodo sposta().
-     *        Il thread dorme per 33ms.
+     * * @brief metodo principale del thread Ovvero run() * * Per ogni proiettile
+     * nella lista, chiama il metodo sposta(). * Il thread dorme per 33ms.
      */
     @Override
     public void run() {
@@ -43,7 +35,7 @@ class SpostaBullet extends Thread {
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
             }
-            synchronized  (m.bullets) {
+            synchronized (m.bullets) {
                 synchronized (m.nemici) {
                     cicloBullet: for (int i = 0; i < m.bullets.size(); i++) {
                         for (int j = 0; j < m.nemici.size(); j++) {
@@ -52,16 +44,23 @@ class SpostaBullet extends Thread {
                                     && m.bullets.get(i).y > m.nemici.get(j).y
                                     && m.bullets.get(i).y < (m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta)) {
                                 if (m.nemici.get(j).dardiNecessariPerMorte - 1 == 0) {
-                                    m.esplosioni1
-                                            .add(new Esplosioni1(m.bullets.get(i).x - 100, m.bullets.get(i).y - 100,
-                                                    m.nemici.get(j).velocita));
+                                    m.esplosioni1.add(new Esplosioni1(m.bullets.get(i).x - 100,
+                                            m.bullets.get(i).y - 100, m.nemici.get(j).velocita));
                                     synchronized (m.nemici) {
                                         MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
+                                        int nx = m.nemici.get(j).x;
+                                        int ny = m.nemici.get(j).y;
                                         m.nemici.get(j).isVivo = false;
                                         m.nemici.remove(m.nemici.get(j));
+
+                                        // 20% di probabilità di spawnare un power-up
+                                        if (r.nextInt(100) < 20) {
+                                            spawnPowerUp(nx, ny);
                                         }
+
+                                    }
+                                    try {
                                         try {
-                                            try {
                                             m.audioColpito = AudioSystem
                                                     .getAudioInputStream(new File("esplosioneSoundGrande.wav"));
                                         } catch (UnsupportedAudioFileException e1) {
@@ -80,13 +79,12 @@ class SpostaBullet extends Thread {
                                     m.bullets.remove(m.bullets.get(i));
                                     i--;
                                     continue cicloBullet;
-                                 }
-
-                            }
+                                }
                             }
                         }
                     }
                 }
+            }
             try {
                 sleep(33);
             } catch (InterruptedException e) {
@@ -94,4 +92,19 @@ class SpostaBullet extends Thread {
             }
         }
     }
- }
+
+    public void spawnPowerUp(int x, int y) {
+        try {
+            // sceglie un tipo casuale
+            PowerUp.Tipo tipo = PowerUp.Tipo.values()[r.nextInt(PowerUp.Tipo.values().length)];
+            PowerUp pu = new PowerUp(x, y, 5, m, tipo); // velocità 5
+            synchronized (m.powerUps) {
+                m.powerUps.add(pu); // aggiunge alla lista
+            }
+            pu.start(); // avvia il thread del power-up
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
