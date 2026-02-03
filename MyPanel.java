@@ -300,7 +300,7 @@ public class MyPanel extends JPanel {
         scorePoint.setText(("score:" + Integer.toString(score) + " "));
 
         maxPoint.setLocation((this.getWidth() - maxPoint.getWidth()), 0);
-        maxPoint.setText(("score:" + Integer.toString(scoreMassimo) + " "));
+        maxPoint.setText(("Max Score:" + Integer.toString(scoreMassimo) + " "));
     }
 
     // Metodi privati chiamati nel PiantComponent
