@@ -30,6 +30,7 @@ class ManagerGenerale extends Thread {
      * Frequenza di spawn degli asteroidi espressa in millisecondi.
      */
     int frequenzaDettagliSpawn;
+
     /**
      * @brief Costruttore della classe Sfondo.
      *
@@ -100,8 +101,9 @@ class ManagerGenerale extends Thread {
                 m.timer = System.currentTimeMillis() + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
             if (System.currentTimeMillis() >= timerNemici) {
-                m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, 0, m,
-                        m.immaginiNemici));
+                boolean intelligente = m.r.nextInt(100) < 30; // 40% di probabilità
+                m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
+                        m.immaginiNemici, intelligente));
                 timerNemici = System.currentTimeMillis()
                         + m.r.nextInt(Nemico.frequenzaAggiuntaNemicoMinima, Nemico.frequenzaAggiuntaNemicoMassima);
             }
