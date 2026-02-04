@@ -1,24 +1,16 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-public class PowerUp extends Thread {
+public class PowerUp extends Pianeti {
+
     public enum Tipo {
         MULTI, SCUDO, RESPINGI, RALLENTA, PENETRANTE
     }
-
-    public int x, y;
-    public int velocita;
-    public MyPanel m;
-    public BufferedImage image;
-    public Tipo tipo;
-
-    public PowerUp(int x, int y, int velocita, MyPanel m, BufferedImage image, Tipo tipo) {
-        this.x = x;
-        this.y = y;
-        this.velocita = velocita;
-        this.m = m;
-        this.image = image;
-        this.tipo = tipo;
+    public PowerUp(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image) {
+        super(x, y, velocita, m, image);
+        maxFrame = 60;
+        //TODO Auto-generated constructor stub
     }
 
     @Override
@@ -31,12 +23,15 @@ public class PowerUp extends Thread {
                 e.printStackTrace();
             }
         }
-        // synchronized (m.powerUps) {
-        //     m.powerUps.remove(this);
-        // }
     }
 
     public void stampaOggettiClasse(Graphics g) {
-        g.drawImage(image, x, y, 50, 50, null); // dimensione standard
+        g.drawImage(image.get(frameAttuale), x, y, 50, 50, null); // dimensione standard
+            if (System.currentTimeMillis() >= timer) {
+            frameAttuale++;
+            timer += frequenzaAggiornamento;
+            if (frameAttuale > maxFrame)
+                frameAttuale = 0;
+        }
     }
 }

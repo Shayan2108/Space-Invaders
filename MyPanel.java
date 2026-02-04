@@ -61,11 +61,11 @@ public class MyPanel extends JPanel {
     volatile ArrayList<Dettagli> dettagli = new ArrayList<>();
 
     /** lista dei nemici presenti sullo schermo */
-    volatile  ArrayList<Nemico> nemici = new ArrayList<>();
+    volatile ArrayList<Nemico> nemici = new ArrayList<>();
 
     /** immagini dele navi nemiche */
     volatile ArrayList<BufferedImage> immaginiNemici = new ArrayList<>();
-     /** immagini dei frame di esplosione */
+    /** immagini dei frame di esplosione */
     ArrayList<BufferedImage> framesEsplosione = new ArrayList<>();
     ArrayList<BufferedImage> framesEsplosione1 = new ArrayList<>();
 
@@ -147,6 +147,12 @@ public class MyPanel extends JPanel {
     /** score piu alto fatto dul gioco */
     static int scoreMassimo;
 
+    ArrayList<ArrayList<BufferedImage>> immaginiPowerUp = new ArrayList<>();
+    ArrayList<PowerUp> powerUps = new ArrayList<>();
+
+    int framePerPoweUp;
+    int nPowerUp;
+
     /**
      * @brief costruttore del pannello
      *
@@ -191,6 +197,8 @@ public class MyPanel extends JPanel {
         paddingBullet2 = 50;
         frequezaminimaPianeti = 10000;
         frequezaMassimaPianeti = 20000;
+        framePerPoweUp = 60;
+        nPowerUp = 5;
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
@@ -204,7 +212,8 @@ public class MyPanel extends JPanel {
         }
         uploadPianeti();
         uploadDettagli();
-         inizializzaNemici();
+        inizializzaNemici();
+        inizializzaPowerUp();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
         try {
@@ -226,8 +235,8 @@ public class MyPanel extends JPanel {
                 e.printStackTrace();
             }
         }
-        dettagli.add(new Dettagli(r.nextInt(0, 400), 0 , 6, MyPanel.this,
-                immaginiDettagli.get(r.nextInt(0 , NpngPerDettagliImmagini))));
+        dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -246,12 +255,12 @@ public class MyPanel extends JPanel {
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
                 spostaBullet = new SpostaBullet(MyPanel.this);
-                //if (!managerGenerale.isAlive())
-                    managerGenerale.start();
-                if (!game.isAlive() )
+                // if (!managerGenerale.isAlive())
+                managerGenerale.start();
+                if (!game.isAlive())
                     game.start();
-                //if (!spostaBullet.isAlive())
-                    spostaBullet.start();
+                // if (!spostaBullet.isAlive())
+                spostaBullet.start();
                 if (!sfondi.getLast().isAlive())
                     sfondi.getLast().start();
             }
@@ -269,6 +278,20 @@ public class MyPanel extends JPanel {
                 esplosioni1.clear();
             }
         });
+    }
+
+    private void inizializzaPowerUp() {
+        for (int i = 0; i < nPowerUp; i++) {
+            ArrayList<BufferedImage> cavia = new ArrayList<>();
+            for (int j = 0; j < framePerPoweUp; j++) {
+                try {
+                    cavia.add(ImageIO.read(new File("PowerUps/" + i +"/" + j+ ".png")));
+                } catch (IOException e) {
+                    System.out.println("file non trovato " + i + " / " + j);
+                }
+            }
+            immaginiPowerUp.add(cavia);
+        }
     }
 
     /**
@@ -290,9 +313,17 @@ public class MyPanel extends JPanel {
         stampaBullets(g);
         stampaFuoco(g);
         stampaNemici(g);
+        stampaPowerUp(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
     }
+
+    private void stampaPowerUp(Graphics g) {
+        for (PowerUp p : powerUps) {
+            p.stampaOggettiClasse(g);
+        }
+    }
+
     private void setLabel() {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
@@ -337,6 +368,7 @@ public class MyPanel extends JPanel {
             p.stampaOggettiClasse(g);
         }
     }
+
     /**
      * @brief disegna gli asteroidi/dettagli sullo schermo
      * @param g oggetto grafico
@@ -379,52 +411,53 @@ public class MyPanel extends JPanel {
             }
         }
     }
+
     /**
      * @brief carica le immagini degli asteroidi/dettagli
      */
-        private void uploadDettagli() {
-            for (int j = 0; j < NpngPerDettagliImmagini; j++) {
-                try {
-                    immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
-                } catch (IOException e) {
-                    System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
-                }
+    private void uploadDettagli() {
+        for (int j = 0; j < NpngPerDettagliImmagini; j++) {
+            try {
+                immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
+            } catch (IOException e) {
+                System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
             }
         }
+    }
 
     /**
      * @brief inizializza i nemici
      *
      *        posiziona i nemici in righe e colonne sullo schermo
      */
-        public void inizializzaNemici() {
+    public void inizializzaNemici() {
 
-            try {
-                for (int i = 0; i < NImmaginiNemici; i++) {
-                    immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            for (int i = 0; i < NImmaginiNemici; i++) {
+                immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stampaNemici(Graphics g) {
+        synchronized (nemici) {
+            for (Nemico n : nemici) {
+                n.stampaOggettiClasse(g);
             }
         }
-
-        private void stampaNemici(Graphics g) {
-            synchronized (nemici) {
-                for (Nemico n : nemici) {
-                    n.stampaOggettiClasse(g);
-                }
-            }
-        }
+    }
 
     private void InizializzaImmaginiEsplosioni() {
         for (int i = 0; i < 70; i++) {
-            try  {
+            try {
                 framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
             } catch (IOException e) {
                 e.printStackTrace();
-                }
             }
         }
+    }
 
     private void InizializzaImmaginiEsplosioni1() {
         for (int i = 0; i < 16; i++) {
