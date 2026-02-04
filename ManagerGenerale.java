@@ -30,6 +30,7 @@ class ManagerGenerale extends Thread {
      * Frequenza di spawn degli asteroidi espressa in millisecondi.
      */
     int frequenzaDettagliSpawn;
+
     /**
      * @brief Costruttore della classe Sfondo.
      *
@@ -83,21 +84,36 @@ class ManagerGenerale extends Thread {
 
             // Gestione movimento nave
             if (m.isPressed) {
-                if (m.xNave + m.paddingX + m.movimento <= m.getWidth() && m.xNave + m.movimento >= 0)
+                if (m.xNave + m.paddingX + m.movimento <= m.getWidth() && m.xNave + m.movimento >= 0) {
                     m.xNave += m.movimento;
-                else if (m.xNave + m.paddingX + m.movimento > m.getWidth())
+                    m.hitboxNave.x += m.movimento;
+                } else if (m.xNave + m.paddingX + m.movimento > m.getWidth()) {
                     m.xNave = m.getWidth() - m.paddingX + 1;
-                else if (m.xNave + m.movimento < 0)
+                    m.hitboxNave.x = m.getWidth() - m.paddingX + 1;
+                } else if (m.xNave + m.movimento < 0) {
+                    m.hitboxNave.x = 0;
                     m.xNave = 0;
+                }
             } else {
                 m.yNave = m.getHeight() - m.paddingY;
+                m.hitboxNave.y = m.getHeight() - m.paddingY;
             }
-
+            for (int i = 0; i < m.powerUps.size();i++) {
+                if(m.powerUps.get(i).hitbox.intersects(m.hitboxNave))
+                {   
+                    synchronized(m.powerUps)
+                    {
+                        m.powerUps.remove(m.powerUps.get(i));
+                    }
+                    System.out.println("colpito");
+                }
+            }
             // Spawn pianeti
             if (System.currentTimeMillis() >= m.timer) {
                 m.pianeti.add(new Pianeti(m.r.nextInt(0, m.getWidth()), 0, 0, m,
                         m.immaginiPianeti.get(m.r.nextInt(1, m.NPianeti))));
-                m.timer = System.currentTimeMillis() + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
+                m.timer = System.currentTimeMillis()
+                        + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
             if (System.currentTimeMillis() >= timerNemici) {
                 m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, 0, m,

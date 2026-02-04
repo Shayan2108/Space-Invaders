@@ -15,6 +15,7 @@
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -153,6 +154,8 @@ public class MyPanel extends JPanel {
     int framePerPoweUp;
     int nPowerUp;
 
+    Rectangle hitboxNave;
+
     /**
      * @brief costruttore del pannello
      *
@@ -204,6 +207,7 @@ public class MyPanel extends JPanel {
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
         gameOver = false;
+        hitboxNave = new Rectangle(xNave, yNave, larghezzaNave, altezzaNave);
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));
         } catch (IOException e) {
@@ -276,6 +280,7 @@ public class MyPanel extends JPanel {
                 bullets.clear();
                 esplosioni.clear();
                 esplosioni1.clear();
+                powerUps.clear();
             }
         });
     }
@@ -285,7 +290,7 @@ public class MyPanel extends JPanel {
             ArrayList<BufferedImage> cavia = new ArrayList<>();
             for (int j = 0; j < framePerPoweUp; j++) {
                 try {
-                    cavia.add(ImageIO.read(new File("PowerUps/" + i +"/" + j+ ".png")));
+                    cavia.add(ImageIO.read(new File("PowerUps/" + i + "/" + j + ".png")));
                 } catch (IOException e) {
                     System.out.println("file non trovato " + i + " / " + j);
                 }
