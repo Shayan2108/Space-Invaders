@@ -51,7 +51,7 @@ public class MyKey implements KeyListener {
         // movimento verso destra
         if (e.getKeyCode() == KeyEvent.VK_D) {
             m.isPressed = true;
-            m.movimento = ((m.getWidth() + 16) / 400 * 6);
+            m.movimento =((m.getWidth() + 16) / 400 * 6);
             isD = true;
         }
 

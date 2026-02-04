@@ -1,20 +1,20 @@
 
-/**
+ /**
 * @author  mohammad Shayan Attari Bin Mohammad Zeshan Attari
 * @version 1.0
 * @file Nemico.java  
-*
+ *
 * @brief Classe per rappresentare un nemico nel gioco star destroyer.
-*
+ *
 * la classe estende pianeti e cambia le variabili
 e riscrive la stampaOgetti e il run della classe thread
 **/
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+    import java.awt.Graphics;
+    import java.awt.image.BufferedImage;
+    import java.util.ArrayList;
 
-/**
+    /**
  * @class Nemico
  *
  * @brief Rappresenta un nemico singolo nel gioco.
@@ -28,12 +28,10 @@ public class Nemico extends Pianeti {
     static int frequenzaAggiuntaNemicoMassima = 5000;
     int dardiNecessariPerMorte;
     int dardiMaxUccisione;
-    boolean intelligente; // se true, il nemico seguirà la nave
-    int velocitaX; // velocità orizzontale
-    public BufferedImage image;
+     public BufferedImage image;
     volatile boolean isVivo;
 
-    public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images, boolean intelligente) {
+    public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
         super.grandezzaMassima = 100;
         super.grandezzaMinima = 50;
@@ -46,8 +44,6 @@ public class Nemico extends Pianeti {
         dardiMaxUccisione = dardiNecessariPerMorte;
         this.image = images.get(m.r.nextInt(0, images.size()));
         isVivo = true;
-        this.intelligente = intelligente;
-        this.velocitaX = 2 + m.r.nextInt(3); // velocità orizzontale casuale tra 2 e 4
     }
 
     @Override
@@ -58,31 +54,29 @@ public class Nemico extends Pianeti {
     @Override
     public void run() {
         while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
-
-            // Muove il nemico verso il basso
             y += velocita;
 
             // Se è un nemico intelligente, segue la nave
-            if (intelligente) {
-                int centroNave = m.xNave + m.larghezzaNave / 2;
-                int centroNemico = x + grandezzaPianeta / 2;
+            // if (intelligente) {
+            //     int centroNave = m.xNave + m.larghezzaNave / 2;
+            //     int centroNemico = x + grandezzaPianeta / 2;
 
-                // Movimento proporzionale alla distanza (sempre fluido)
-                int delta = centroNave - centroNemico;
+            //     // Movimento proporzionale alla distanza (sempre fluido)
+            //     int delta = centroNave - centroNemico;
 
-                // Aggiorna x con una piccola frazione di delta per un movimento lento e
-                // costante
-                x += delta / 10;
+            //     // Aggiorna x con una piccola frazione di delta per un movimento lento e
+            //     // costante
+            //     x += delta / 10;
 
-                // Limiti dello schermo
-                if (x < 0)
-                    x = 0;
-                if (x + grandezzaPianeta > m.getWidth())
-                    x = m.getWidth() - grandezzaPianeta;
-            }
+            //     // Limiti dello schermo
+            //     if (x < 0)
+            //         x = 0;
+            //     if (x + grandezzaPianeta > m.getWidth())
+            //         x = m.getWidth() - grandezzaPianeta;
+            // }
 
             try {
-                sleep(33); // ~30 frame al secondo
+                sleep(33); // quasi 30 fps
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -99,6 +93,6 @@ public class Nemico extends Pianeti {
             m.gameOver = true;
             GUI.scriviPunteggio();
         }
-    }
+        }
 
 }

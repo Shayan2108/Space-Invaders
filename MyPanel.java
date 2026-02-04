@@ -137,7 +137,6 @@ public class MyPanel extends JPanel {
 
     /** numero di immagini per dettagli */
     int NpngPerDettagliImmagini;
-
     /** stato del gioco */
     volatile boolean gameOver;
     /** layout e contenitore del pannello */
@@ -241,7 +240,6 @@ public class MyPanel extends JPanel {
         }
         dettagli.add(new Dettagli(r.nextInt(0, 400), 0, 6, MyPanel.this,
                 immaginiDettagli.get(r.nextInt(0, NpngPerDettagliImmagini))));
-
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -255,16 +253,14 @@ public class MyPanel extends JPanel {
                 }
                 gameOver = false;
                 MyPanel.this.requestFocusInWindow();
-                pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
-                        immaginiPianeti.get(r.nextInt(0, NPianeti))));
+                    pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                            immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
                 spostaBullet = new SpostaBullet(MyPanel.this);
-                // if (!managerGenerale.isAlive())
                 managerGenerale.start();
                 if (!game.isAlive())
-                    game.start();
-                // if (!spostaBullet.isAlive())
-                spostaBullet.start();
+                     game.start();
+                 spostaBullet.start();
                 if (!sfondi.getLast().isAlive())
                     sfondi.getLast().start();
             }
@@ -412,8 +408,8 @@ public class MyPanel extends JPanel {
                     immaginiPianeti.get(i).add(ImageIO.read(new File("Planets/" + (i + 1) + "/" + j + ".png")));
                 } catch (IOException e) {
                     e.printStackTrace();
+                    }
                 }
-            }
         }
     }
 
@@ -436,14 +432,13 @@ public class MyPanel extends JPanel {
      *        posiziona i nemici in righe e colonne sullo schermo
      */
     public void inizializzaNemici() {
-
         try {
             for (int i = 0; i < NImmaginiNemici; i++) {
                 immaginiNemici.add(ImageIO.read(new File("Astronavi Nemiche/" + i + ".png")));
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+            }
     }
 
     private void stampaNemici(Graphics g) {
@@ -476,10 +471,10 @@ public class MyPanel extends JPanel {
 
     private void stampaEsplosioni(Graphics g) {
         for (int i = 0; i < esplosioni.size(); i++) {
-            if (esplosioni.get(i).frameinEseguzione < esplosioni.get(i).maxFrame) {
-                g.drawImage(framesEsplosione.get(esplosioni.get(i).frameinEseguzione), esplosioni.get(i).x,
+            if (esplosioni.get(i).frameInEseguzione < esplosioni.get(i).maxFrame) {
+                g.drawImage(framesEsplosione.get(esplosioni.get(i).frameInEseguzione), esplosioni.get(i).x,
                         esplosioni.get(i).y, null);
-                esplosioni.get(i).frameinEseguzione++;
+                esplosioni.get(i).frameInEseguzione++;
                 esplosioni.get(i).y += esplosioni.get(i).avanzamento;
             } else {
                 synchronized (esplosioni) {
@@ -492,10 +487,10 @@ public class MyPanel extends JPanel {
 
     private void stampaEsplosioni1(Graphics g) {
         for (int i = 0; i < esplosioni1.size(); i++) {
-            if (esplosioni1.get(i).frameinEseguzione < esplosioni1.get(i).maxFrame) {
-                g.drawImage(framesEsplosione1.get(esplosioni1.get(i).frameinEseguzione), esplosioni1.get(i).x,
+            if (esplosioni1.get(i).frameInEseguzione < esplosioni1.get(i).maxFrame) {
+                g.drawImage(framesEsplosione1.get(esplosioni1.get(i).frameInEseguzione), esplosioni1.get(i).x,
                         esplosioni1.get(i).y, 200, 200, null);
-                esplosioni1.get(i).frameinEseguzione++;
+                esplosioni1.get(i).frameInEseguzione++;
                 esplosioni1.get(i).y += esplosioni1.get(i).avanzamento;
             } else {
                 synchronized (esplosioni1) {
