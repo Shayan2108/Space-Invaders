@@ -82,17 +82,18 @@ public class GUI extends Thread {
         // rende visibile la finestra
         frame.setVisible(true);
     }
-                public static void scriviPunteggio() {
-                if (MyPanel.score > MyPanel.scoreMassimo) {
-                    try {
-                        BufferedWriter bw = new BufferedWriter(new FileWriter("gr.txt"));
-                        bw.write(Integer.toString(MyPanel.score));
-                        bw.close();
-                    } catch (IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                    MyPanel.scoreMassimo = MyPanel.score;
-                }
+
+    public static void scriviPunteggio() {
+        if (MyPanel.score > MyPanel.scoreMassimo) {
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter("gr.txt"));
+                bw.write(Integer.toString(MyPanel.score));
+                bw.close();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
             }
+            MyPanel.scoreMassimo = MyPanel.score;
+        }
+    }
 }

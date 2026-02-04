@@ -98,11 +98,9 @@ class ManagerGenerale extends Thread {
                 m.yNave = m.getHeight() - m.paddingY;
                 m.hitboxNave.y = m.getHeight() - m.paddingY;
             }
-            for (int i = 0; i < m.powerUps.size();i++) {
-                if(m.powerUps.get(i).hitbox.intersects(m.hitboxNave))
-                {   
-                    synchronized(m.powerUps)
-                    {
+            for (int i = 0; i < m.powerUps.size(); i++) {
+                if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
+                    synchronized (m.powerUps) {
                         m.powerUps.remove(m.powerUps.get(i));
                     }
                     System.out.println("colpito");
@@ -116,7 +114,7 @@ class ManagerGenerale extends Thread {
                         + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
             if (System.currentTimeMillis() >= timerNemici) {
-                 m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
+                m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
                         m.immaginiNemici));
                 timerNemici = System.currentTimeMillis()
                         + m.r.nextInt(Nemico.frequenzaAggiuntaNemicoMinima, Nemico.frequenzaAggiuntaNemicoMassima);

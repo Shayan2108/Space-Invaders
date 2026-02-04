@@ -1,3 +1,4 @@
+
 /**
  * @file Main.java
  *
@@ -11,13 +12,14 @@
  * usando il thread corretto di Swing.
  */
 import javax.swing.SwingUtilities;
+
 public class Main {
 
     /**
      * @brief metodo di avvio del programma
      *
-     * Il metodo main crea e avvia il thread della GUI
-     * tramite SwingUtilities.invokeLater
+     *        Il metodo main crea e avvia il thread della GUI
+     *        tramite SwingUtilities.invokeLater
      *
      * @param args argomenti
      */

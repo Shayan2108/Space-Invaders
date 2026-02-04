@@ -6,20 +6,20 @@
  *
  * @brief Gestisce una stella di sfondo del gioco
  *
- * Questo file contiene la classe Stella che rappresenta
- * un punto bianco che si muove verso il basso nello schermo.
+ *        Questo file contiene la classe Stella che rappresenta
+ *        un punto bianco che si muove verso il basso nello schermo.
  */
 public class OggettiScendenti extends Thread {
 
     /**
      * @brief coordinata x della stella
      */
-    public int x;
+    public volatile int x;
 
     /**
      * @brief coordinata y della stella
      */
-    public int y;
+    public volatile int y;
 
     /**
      * @brief velocità di movimento della stella
@@ -29,19 +29,19 @@ public class OggettiScendenti extends Thread {
     /**
      * @brief riferimento al pannello di gioco
      *
-     * Serve per controllare i limiti dello schermo.
+     *        Serve per controllare i limiti dello schermo.
      */
     public MyPanel m;
 
     /**
      * @brief costruttore della classe Stella
      *
-     * Inizializza posizione, velocità e pannello di gioco.
+     *        Inizializza posizione, velocità e pannello di gioco.
      *
-     * @param x coordinata iniziale x
-     * @param y coordinata iniziale y
+     * @param x        coordinata iniziale x
+     * @param y        coordinata iniziale y
      * @param velocita velocità di movimento
-     * @param m pannello principale del gioco
+     * @param m        pannello principale del gioco
      */
     public OggettiScendenti(int x, int y, int velocita, MyPanel m) {
         this.x = x;
@@ -53,7 +53,7 @@ public class OggettiScendenti extends Thread {
     /**
      * @brief sposta la stella verso il basso
      *
-     * Aumenta la coordinata y usando la velocità.
+     *        Aumenta la coordinata y usando la velocità.
      */
     public void sposta() {
         y += velocita;
@@ -62,7 +62,7 @@ public class OggettiScendenti extends Thread {
     /**
      * @brief controlla se la stella è uscita dallo schermo
      *
-     * Verifica se la coordinata y supera l'altezza del pannello.
+     *        Verifica se la coordinata y supera l'altezza del pannello.
      *
      * @return true se la stella è fuori dallo schermo
      */

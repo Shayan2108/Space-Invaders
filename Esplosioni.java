@@ -6,8 +6,8 @@
  *
  * @brief Classe che rappresenta un'esplosione nel gioco.
  *
- * La classe gestisce la posizione dell'esplosione e
- * l'avanzamento dei frame dell'animazione.
+ *        La classe gestisce la posizione dell'esplosione e
+ *        l'avanzamento dei frame dell'animazione.
  */
 
 public class Esplosioni {
@@ -21,8 +21,8 @@ public class Esplosioni {
     /**
      * Costruttore della classe Esplosioni.
      *
-     * @param x posizione x dell'esplosione
-     * @param y posizione y dell'esplosione
+     * @param x           posizione x dell'esplosione
+     * @param y           posizione y dell'esplosione
      * @param avanzamento velocità di avanzamento dei frame
      */
     public Esplosioni(int x, int y, int avanzamento) {

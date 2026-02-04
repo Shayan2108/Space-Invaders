@@ -1,3 +1,4 @@
+
 /**
  * @file MyKey.java
  *
@@ -26,8 +27,8 @@ public class MyKey implements KeyListener {
     /**
      * @brief costruttore della classe MyKey
      *
-     * inizializza il listener della tastiera
-     * e collega il pannello di gioco
+     *        inizializza il listener della tastiera
+     *        e collega il pannello di gioco
      *
      * @param m pannello principale del gioco
      */
@@ -40,8 +41,8 @@ public class MyKey implements KeyListener {
     /**
      * @brief gestione pressione tasti
      *
-     * spazio avvia il gioco
-     * A e D muovono la nave a sinistra e destra
+     *        spazio avvia il gioco
+     *        A e D muovono la nave a sinistra e destra
      *
      * @param e evento della tastiera
      */
@@ -51,14 +52,14 @@ public class MyKey implements KeyListener {
         // movimento verso destra
         if (e.getKeyCode() == KeyEvent.VK_D) {
             m.isPressed = true;
-            m.movimento =((m.getWidth() + 16) / 400 * 6);
+            m.movimento = ((m.getWidth() + 16) / 400 * 6);
             isD = true;
         }
 
         // movimento verso sinistra
         if (e.getKeyCode() == KeyEvent.VK_A) {
-            m.isPressed =true;
-            m.movimento =-((m.getWidth() + 16)/ 400 * 6);
+            m.isPressed = true;
+            m.movimento = -((m.getWidth() + 16) / 400 * 6);
             isA = true;
         }
     }
@@ -66,8 +67,8 @@ public class MyKey implements KeyListener {
     /**
      * @brief gestione rilascio tasti
      *
-     * quando A e D non sono premuti
-     * la nave si ferma
+     *        quando A e D non sono premuti
+     *        la nave si ferma
      *
      * @param e evento della tastiera
      */
@@ -80,14 +81,14 @@ public class MyKey implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_A)
             isA = false;
 
-        if (!isA &&!isD)
-            m.isPressed =false;
+        if (!isA && !isD)
+            m.isPressed = false;
     }
 
     /**
      * @brief metodo non utilizzato
      *
-     * richiesto dall'interfaccia KeyListener
+     *        richiesto dall'interfaccia KeyListener
      *
      * @param e evento della tastiera
      */

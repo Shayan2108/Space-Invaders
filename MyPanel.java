@@ -253,14 +253,14 @@ public class MyPanel extends JPanel {
                 }
                 gameOver = false;
                 MyPanel.this.requestFocusInWindow();
-                    pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
-                            immaginiPianeti.get(r.nextInt(0, NPianeti))));
+                pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
+                        immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
                 spostaBullet = new SpostaBullet(MyPanel.this);
                 managerGenerale.start();
                 if (!game.isAlive())
-                     game.start();
-                 spostaBullet.start();
+                    game.start();
+                spostaBullet.start();
                 if (!sfondi.getLast().isAlive())
                     sfondi.getLast().start();
             }
@@ -365,8 +365,10 @@ public class MyPanel extends JPanel {
      * @param g oggetto grafico
      */
     private void stampaPianeti(Graphics g) {
-        for (Pianeti p : pianeti) {
-            p.stampaOggettiClasse(g);
+        synchronized (pianeti) {
+            for (Pianeti p : pianeti) {
+                p.stampaOggettiClasse(g);
+            }
         }
     }
 
@@ -408,8 +410,8 @@ public class MyPanel extends JPanel {
                     immaginiPianeti.get(i).add(ImageIO.read(new File("Planets/" + (i + 1) + "/" + j + ".png")));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    }
                 }
+            }
         }
     }
 
@@ -438,7 +440,7 @@ public class MyPanel extends JPanel {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            }
+        }
     }
 
     private void stampaNemici(Graphics g) {

@@ -1,3 +1,4 @@
+
 /**
  * @file SpostaBullet.java
  *
@@ -23,15 +24,15 @@ class SpostaBullet extends Thread {
     /**
      * @brief pannello principale del gioco
      *
-     * Serve per accedere alle liste di proiettili, nemici,
-     * esplosioni e punteggio.
+     *        Serve per accedere alle liste di proiettili, nemici,
+     *        esplosioni e punteggio.
      */
     MyPanel m;
 
     /**
      * @brief costruttore del thread SpostaBullet
      *
-     * Inizializza il riferimento al pannello di gioco.
+     *        Inizializza il riferimento al pannello di gioco.
      *
      * @param m pannello principale del gioco
      */
@@ -42,14 +43,14 @@ class SpostaBullet extends Thread {
     /**
      * @brief metodo principale del thread
      *
-     * Il metodo run viene eseguito in ciclo continuo.
-     * Sposta i proiettili, controlla le collisioni con i nemici
-     * e aggiorna punteggio, esplosioni e suoni.
+     *        Il metodo run viene eseguito in ciclo continuo.
+     *        Sposta i proiettili, controlla le collisioni con i nemici
+     *        e aggiorna punteggio, esplosioni e suoni.
      *
-     * Attributi utilizzati/modificati:
-     * - m.bullets
-     * - m.nemici
-     * - MyPanel.score
+     *        Attributi utilizzati/modificati:
+     *        - m.bullets
+     *        - m.nemici
+     *        - MyPanel.score
      */
     @Override
     public void run() {
@@ -63,8 +64,7 @@ class SpostaBullet extends Thread {
             synchronized (m.bullets) {
                 synchronized (m.nemici) {
 
-                    cicloBullet:
-                    for (int i = 0; i < m.bullets.size(); i++) {
+                    cicloBullet: for (int i = 0; i < m.bullets.size(); i++) {
                         for (int j = 0; j < m.nemici.size(); j++) {
 
                             // controllo collisione bullet - nemico
@@ -77,27 +77,23 @@ class SpostaBullet extends Thread {
                                 if (m.nemici.get(j).dardiNecessariPerMorte - 1 == 0) {
 
                                     m.esplosioni1.add(
-                                        new Esplosioni1(
-                                            m.bullets.get(i).x - 100,
-                                            m.bullets.get(i).y - 100,
-                                            m.nemici.get(j).velocita
-                                        )
-                                    );
+                                            new Esplosioni1(
+                                                    m.bullets.get(i).x - 100,
+                                                    m.bullets.get(i).y - 100,
+                                                    m.nemici.get(j).velocita));
 
                                     MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
                                     m.nemici.get(j).isVivo = false;
 
                                     int cavia = m.r.nextInt(0, m.nPowerUp - 1);
                                     m.powerUps.add(
-                                        new PowerUp(
-                                            m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,
-                                            m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta / 2,
-                                            m.nemici.get(j).velocita,
-                                            m,
-                                            m.immaginiPowerUp.get(cavia),
-                                            cavia
-                                        )
-                                    );
+                                            new PowerUp(
+                                                    m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,
+                                                    m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta / 2,
+                                                    m.nemici.get(j).velocita,
+                                                    m,
+                                                    m.immaginiPowerUp.get(cavia),
+                                                    cavia));
 
                                     m.nemici.remove(m.nemici.get(j));
 
@@ -108,21 +104,17 @@ class SpostaBullet extends Thread {
                                         m.colpitoClip.add(AudioSystem.getClip());
                                         m.colpitoClip.getLast().open(m.audioColpito);
                                         m.colpitoClip.getLast().start();
-                                    } catch (UnsupportedAudioFileException |
-                                             LineUnavailableException |
-                                             IOException e) {
+                                    } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
                                         e.printStackTrace();
                                     }
 
                                 } else {
                                     // nemico colpito ma non distrutto
                                     m.esplosioni.add(
-                                        new Esplosioni(
-                                            m.bullets.get(i).x - 50,
-                                            m.bullets.get(i).y - 50,
-                                            m.nemici.get(j).velocita
-                                        )
-                                    );
+                                            new Esplosioni(
+                                                    m.bullets.get(i).x - 50,
+                                                    m.bullets.get(i).y - 50,
+                                                    m.nemici.get(j).velocita));
 
                                     m.nemici.get(j).dardiNecessariPerMorte--;
                                     m.bullets.remove(m.bullets.get(i));

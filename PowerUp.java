@@ -6,7 +6,8 @@ import java.util.ArrayList;
 public class PowerUp extends Pianeti {
     int tipo;
     Rectangle hitbox;
-    public PowerUp(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image,int tipo) {
+
+    public PowerUp(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image, int tipo) {
         super(x, y, velocita, m, image);
         super.x = x;
         super.y = y;
@@ -27,15 +28,14 @@ public class PowerUp extends Pianeti {
                 e.printStackTrace();
             }
         }
-        synchronized(m.powerUps)
-        {
+        synchronized (m.powerUps) {
             m.powerUps.remove(this);
         }
     }
 
     public void stampaOggettiClasse(Graphics g) {
         g.drawImage(image.get(frameAttuale), x, y, 25, 25, null); // dimensione standard
-            if (System.currentTimeMillis() >= timer) {
+        if (System.currentTimeMillis() >= timer) {
             frameAttuale++;
             timer += frequenzaAggiornamento;
             if (frameAttuale >= maxFrame)

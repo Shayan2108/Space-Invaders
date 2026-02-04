@@ -1,3 +1,4 @@
+
 /**
  * @file Pianeti.java
  *
@@ -32,25 +33,25 @@ public class Pianeti extends OggettiScendenti {
 
     /** numero massimo di frame */
     int maxFrame;
-    /**velocita massima e minima per i pianeti */
+    /** velocita massima e minima per i pianeti */
     int velocitaMinima;
     int velocitaMassima;
-    /**valore massimi in pixel della grandezza massima del pianeta e minima */
+    /** valore massimi in pixel della grandezza massima del pianeta e minima */
     int grandezzaMinima;
     int grandezzaMassima;
 
     /**
      * @brief costruttore della classe Pianeti
      *
-     * Inizializza il pianeta con velocità, posizione casuale,
-     * dimensione e immagini per l'animazione.
-     * Avvia anche il thread del pianeta.
+     *        Inizializza il pianeta con velocità, posizione casuale,
+     *        dimensione e immagini per l'animazione.
+     *        Avvia anche il thread del pianeta.
      *
-     * @param x posizione iniziale x
-     * @param y posizione iniziale y
+     * @param x        posizione iniziale x
+     * @param y        posizione iniziale y
      * @param velocita velocità di discesa
-     * @param m pannello principale del gioco
-     * @param image lista di immagini del pianeta
+     * @param m        pannello principale del gioco
+     * @param image    lista di immagini del pianeta
      */
     public Pianeti(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> image) {
         super(x, y, velocita, m);
@@ -73,12 +74,12 @@ public class Pianeti extends OggettiScendenti {
     /**
      * @brief movimento del pianeta
      *
-     * Fa scendere il pianeta verso il basso finché non esce
-     * dallo schermo. Quando esce viene rimosso dalla lista.
+     *        Fa scendere il pianeta verso il basso finché non esce
+     *        dallo schermo. Quando esce viene rimosso dalla lista.
      *
-     * Attributi utilizzati:
-     * - y
-     * - velocita
+     *        Attributi utilizzati:
+     *        - y
+     *        - velocita
      */
     @Override
     public void run() {
@@ -98,8 +99,8 @@ public class Pianeti extends OggettiScendenti {
     /**
      * @brief disegna il pianeta
      *
-     * Disegna il pianeta sullo schermo e aggiorna il frame
-     * dell'animazione in base al timer.
+     *        Disegna il pianeta sullo schermo e aggiorna il frame
+     *        dell'animazione in base al timer.
      *
      * @param g oggetto Graphics per il disegno
      */
