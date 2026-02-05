@@ -10,6 +10,7 @@
  * La classe rappresenta un singolo proiettile sparato dalla nave.
  * Contiene posizione, movimento e l'immagine del proiettile.
  */
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Bullets {
@@ -29,6 +30,8 @@ public class Bullets {
     /** velocità di movimento verticale */
     int movimento;
 
+    Rectangle hitBox;
+
     /**
      * @brief costruttore della classe Bullets
      *
@@ -46,6 +49,7 @@ public class Bullets {
         this.y = y;
         this.movimento = movimento;
         this.image = m.immaginiBullet.get(m.r.nextInt(1, 66));
+        hitBox = new Rectangle(x, y - 60, 20, 60);
     }
 
     /**
@@ -58,6 +62,7 @@ public class Bullets {
         synchronized (m.bullets) {
             if (y - movimento > 0) {
                 y -= movimento;
+                hitBox.y -= movimento;
             } else {
                 m.bullets.remove(this);
             }

@@ -10,7 +10,10 @@
 e riscrive la stampaOgetti e il run della classe thread
 **/
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -33,6 +36,10 @@ public class Nemico extends Pianeti {
     int velocitaMassima;
     boolean isMovimento;
     volatile boolean isVivo;
+    ArrayList<Bullets> bullet = new ArrayList<>();
+    Long timerSpawn;
+    int frequenzaSpawn;
+    int passo;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -49,11 +56,26 @@ public class Nemico extends Pianeti {
         isVivo = true;
         velocitaMassima = 1;
         velocitaX = 0;
+        frequenzaSpawn = 2000;
+        timerSpawn = System.currentTimeMillis() + frequenzaSpawn;
+        passo = 10;
     }
 
     @Override
     public void stampaOggettiClasse(Graphics g) {
         g.drawImage(image, x, y, grandezzaPianeta, grandezzaPianeta, null);
+        if (bullet.size() > 0) {
+            Graphics2D g2 = (Graphics2D) g;
+            AffineTransform old = g2.getTransform();
+            for (int i = 0; i < bullet.size(); i++) {
+                g2.rotate(Math.toRadians(180), bullet.get(i).x + 10, bullet.get(i).y + 10);
+                g2.drawImage(bullet.get(i).image, bullet.get(i).x, bullet.get(i).y, 20, 60, null);
+                g2.setTransform(old);
+                // g.setColor(Color.red);
+                // g.drawRect(bullet.get(i).hitBox.x, bullet.get(i).hitBox.y,
+                // bullet.get(i).hitBox.width, bullet.get(i).hitBox.height);
+            }
+        }
     }
 
     @Override
@@ -94,6 +116,43 @@ public class Nemico extends Pianeti {
                 isMovimento = false;
             }
             x += velocitaX;
+
+            if (timerSpawn < System.currentTimeMillis()) {
+                bullet.add(new Bullets(m, x + grandezzaPianeta / 2 - 10, y + grandezzaPianeta / 2 + 30, 8));
+                timerSpawn = System.currentTimeMillis() + frequenzaSpawn;
+            }
+            for (int i = 0; i < bullet.size(); i++) {
+                if (bullet.get(i).y + passo < m.getHeight()) {
+                    bullet.get(i).y += passo;
+                    bullet.get(i).hitBox.y += passo;
+                } else {
+                    bullet.remove(i);
+                    i--;
+                    continue;
+                }
+                if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
+                    m.cl.show(m.contenitore, "GAMEOVER");
+                    m.gameOver = true;
+                    GUI.scriviPunteggio();
+
+                }
+            }
+            synchronized (m.bullets) {
+                for (int i = 0; i < m.bullets.size(); i++) {
+                    {
+                        for (int j = 0; j < bullet.size(); j++) {
+                            if (m.bullets.get(i).hitBox.intersects(bullet.get(j).hitBox)) {
+                                m.esplosioni.add(new Esplosioni(bullet.get(j).x - 50, bullet.get(j).y - 50, 0));
+                                m.bullets.remove(i);
+                                bullet.remove(j);
+                                j--;
+                                i--;
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
             try {
                 sleep(33); // quasi 30 fps
             } catch (InterruptedException e) {
