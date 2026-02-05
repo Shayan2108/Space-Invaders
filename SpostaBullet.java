@@ -85,15 +85,18 @@ class SpostaBullet extends Thread {
                                     MyPanel.score += m.nemici.get(j).dardiMaxUccisione;
                                     m.nemici.get(j).isVivo = false;
 
-                                    int cavia = m.r.nextInt(0, m.nPowerUp - 1);
-                                    m.powerUps.add(
-                                            new PowerUp(
-                                                    m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,
-                                                    m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta / 2,
-                                                    m.nemici.get(j).velocita,
-                                                    m,
-                                                    m.immaginiPowerUp.get(cavia),
-                                                    cavia));
+                                    int cavia = m.r.nextInt(0, m.nPowerUp);
+                                    if (m.r.nextInt(0, 100) > 50) {
+                                        System.out.println(cavia);
+                                        m.powerUps.add(
+                                                new PowerUp(
+                                                        m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,
+                                                        m.nemici.get(j).y + m.nemici.get(j).grandezzaPianeta / 2,
+                                                        m.nemici.get(j).velocita,
+                                                        m,
+                                                        m.immaginiPowerUp.get(cavia),
+                                                        cavia));
+                                    }
 
                                     m.nemici.remove(m.nemici.get(j));
 

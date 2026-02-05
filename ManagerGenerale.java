@@ -101,9 +101,9 @@ class ManagerGenerale extends Thread {
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
                     synchronized (m.powerUps) {
+                        m.powerUps.get(i).effettoIniziato = true;
                         m.powerUps.remove(m.powerUps.get(i));
                     }
-                    System.out.println("colpito");
                 }
             }
             // Spawn pianeti

@@ -30,6 +30,8 @@ public class Nemico extends Pianeti {
     int dardiMaxUccisione;
     public BufferedImage image;
     int velocitaX;
+    int velocitaMassima;
+    boolean isMovimento;
     volatile boolean isVivo;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
@@ -45,7 +47,8 @@ public class Nemico extends Pianeti {
         dardiMaxUccisione = dardiNecessariPerMorte;
         this.image = images.get(m.r.nextInt(0, images.size()));
         isVivo = true;
-        velocitaX = 20;
+        velocitaMassima = 1;
+        velocitaX = 0;
     }
 
     @Override
@@ -57,6 +60,40 @@ public class Nemico extends Pianeti {
     public void run() {
         while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
             y += velocita;
+            int sinistro = 0, destro = 0;
+            synchronized (m.bullets) {
+                for (int i = 0; i < m.bullets.size(); i++) {
+                    if (m.bullets.get(i).x > this.x && m.bullets.get(i).x < this.x + this.grandezzaPianeta / 2) {
+                        destro++;
+                    } else if (m.bullets.get(i).x > this.x + this.grandezzaPianeta / 2
+                            && m.bullets.get(i).x < this.x + this.grandezzaPianeta) {
+                        sinistro++;
+                    }
+                }
+            }
+            if (sinistro == 0 && destro == 0) {
+                isMovimento = true;
+            }
+            if (isMovimento) {
+                if (destro > sinistro) {
+                    velocitaX = Math.abs(velocitaMassima);
+                    isMovimento = false;
+                } else if (sinistro > destro) {
+                    velocitaX = -Math.abs(velocitaMassima);
+                    isMovimento = false;
+                } else {
+                    velocitaX = 0;
+                }
+            }
+            if (x + velocitaMassima + grandezzaPianeta > m.getWidth() || x - velocitaMassima < 0) {
+                if (x + velocitaMassima + grandezzaPianeta > m.getWidth()) {
+                    velocitaX = -Math.abs(velocitaMassima);
+                } else {
+                    velocitaX = Math.abs(velocitaMassima);
+                }
+                isMovimento = false;
+            }
+            x += velocitaX;
             try {
                 sleep(33); // quasi 30 fps
             } catch (InterruptedException e) {

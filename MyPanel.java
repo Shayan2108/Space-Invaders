@@ -200,7 +200,7 @@ public class MyPanel extends JPanel {
         frequezaminimaPianeti = 10000;
         frequezaMassimaPianeti = 20000;
         framePerPoweUp = 60;
-        nPowerUp = 5;
+        nPowerUp = 2;
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
         NpngPerDettagliImmagini = 8;
