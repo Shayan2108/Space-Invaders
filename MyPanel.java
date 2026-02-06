@@ -549,4 +549,14 @@ public class MyPanel extends JPanel {
     public void startTimer() {
         startTime = System.currentTimeMillis(); // parte da zero
     }
+
+    public int getDifficolta() {
+        long elapsedMillis = System.currentTimeMillis() - startTime;
+        int secondi = (int) (elapsedMillis / 1000);
+
+        // Ogni 30 secondi aumenta il livello
+        int livello = secondi / 30 + 1;
+        return Math.min(livello, 10); // Limite massimo
+    }
+
 }

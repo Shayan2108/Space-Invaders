@@ -105,8 +105,8 @@ class ManagerGenerale extends Thread {
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
                     synchronized (m.powerUps) {
-                        if(!m.powerUps.get(i).iniziatoUnaVolta)
-                        m.powerUps.get(i).effettoIniziato = true;
+                        if (!m.powerUps.get(i).iniziatoUnaVolta)
+                            m.powerUps.get(i).effettoIniziato = true;
                         m.powerUps.get(i).isDisegnare = false;
                     }
                 }
@@ -118,13 +118,39 @@ class ManagerGenerale extends Thread {
                 m.timer = System.currentTimeMillis()
                         + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
-            if (System.currentTimeMillis() >= timerNemici) {
-                m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
-                        m.immaginiNemici));
-                timerNemici = System.currentTimeMillis()
-                        + m.r.nextInt(Nemico.frequenzaAggiuntaNemicoMinima, Nemico.frequenzaAggiuntaNemicoMassima);
+            long elapsedSeconds = (System.currentTimeMillis() - MyPanel.startTime) / 1000;
+
+            // Imposta la difficoltà in base al tempo
+            int nemiciDaSpawnare = 1; // base
+            int velocitaVerticale = 5; // base
+            int frequenzaSpawn = 2000; // base in ms
+
+            // Dopo 30 secondi: spawn +1 nemico
+            if (elapsedSeconds >= 30) {
+                nemiciDaSpawnare = 2;
+            }
+            // Dopo 60 secondi: aumenta velocità verticale nemici
+            if (elapsedSeconds >= 60) {
+                velocitaVerticale = 8;
+            }
+            // Dopo 90 secondi: spawn +1 nemico e frequenza maggiore
+            if (elapsedSeconds >= 90) {
+                nemiciDaSpawnare = 3;
+                frequenzaSpawn = 1500; // spawn più frequente
             }
 
+            // SPAWN NEMICI SOLO SE È PASSATO IL TIMER
+            if (System.currentTimeMillis() >= timerNemici) {
+                for (int i = 0; i < nemiciDaSpawnare; i++) {
+                    m.nemici.add(new Nemico(
+                            m.r.nextInt(0, m.getWidth()),
+                            0,
+                            velocitaVerticale,
+                            m,
+                            m.immaginiNemici));
+                }
+                timerNemici = System.currentTimeMillis() + frequenzaSpawn;
+            }
             // Spawn Dettagli
             if (System.currentTimeMillis() >= timerDettagli) {
                 m.dettagli.add(new Dettagli(m.r.nextInt(0, m.getWidth()), 0, 0, m,
