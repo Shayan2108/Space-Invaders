@@ -113,6 +113,9 @@ public class MyPanel extends JPanel {
     /** label per mostrare i punti massimi mai fatti */
     public JLabel maxPoint;
 
+    // **label per mostrare il tempo di gioco */
+    public JLabel timerLabel;
+
     /** numero massimo di proiettili */
     public volatile int bulletMassime;
 
@@ -128,6 +131,8 @@ public class MyPanel extends JPanel {
 
     /** timer per stampare pianeta */
     long timerStampaPianeta;
+
+    public static long startTime;
 
     /** intervalli per spawn pianeti */
     int frequezaminimaPianeti, frequezaMassimaPianeti;
@@ -180,6 +185,9 @@ public class MyPanel extends JPanel {
         this.maxPoint = new JLabel();
         maxPoint.setForeground(Color.WHITE);
         this.add(maxPoint);
+        timerLabel = new JLabel("Tempo: 00:00:00");
+        timerLabel.setForeground(Color.WHITE);
+        this.add(timerLabel);
         r = new Random();
         managerGenerale = new ManagerGenerale(this);
         sfondi.add(new Sfondo(0, 0, this));
@@ -203,6 +211,7 @@ public class MyPanel extends JPanel {
         nPowerUp = 2;
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
+        startTime = System.currentTimeMillis();
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
         gameOver = false;
@@ -333,6 +342,8 @@ public class MyPanel extends JPanel {
 
         maxPoint.setLocation((this.getWidth() - maxPoint.getWidth()), 0);
         maxPoint.setText(("Max Score:" + Integer.toString(scoreMassimo) + " "));
+
+        aggiornaTempoDiGioco();
     }
 
     // Metodi privati chiamati nel PiantComponent
@@ -501,5 +512,15 @@ public class MyPanel extends JPanel {
 
             }
         }
+    }
+
+    private void aggiornaTempoDiGioco() {
+        long elapsedMillis = System.currentTimeMillis() - startTime;
+        long ore = elapsedMillis / 3600000;
+        long minuti = (elapsedMillis % 3600000) / 60000;
+        long secondi = (elapsedMillis % 60000) / 1000;
+        String tempo = String.format("%02d:%02d:%02d", ore, minuti, secondi);
+        timerLabel.setText("Tempo: " + tempo);
+        timerLabel.setLocation(10, 0);
     }
 }
