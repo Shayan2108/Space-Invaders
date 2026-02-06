@@ -157,6 +157,7 @@ public class MyPanel extends JPanel {
 
     int framePerPoweUp;
     int nPowerUp;
+    Rectangle hitBoxScudo;
 
     Rectangle hitboxNave;
 
@@ -215,7 +216,9 @@ public class MyPanel extends JPanel {
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
         gameOver = false;
-        hitboxNave = new Rectangle(xNave, yNave, larghezzaNave, altezzaNave);
+        hitboxNave = new Rectangle(xNave, yNave, larghezzaNave, altezzaNave - 40);
+        hitBoxScudo = new Rectangle(hitboxNave.x - 10, hitboxNave.y - 10, hitboxNave.width + 20,
+                hitboxNave.height + 20);
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));
         } catch (IOException e) {
@@ -279,13 +282,30 @@ public class MyPanel extends JPanel {
                 for (int i = 0; i < nemici.size(); i++) {
                     nemici.get(i).isVivo = false;
                 }
-                nemici.clear();
-                pianeti.clear();
-                dettagli.clear();
-                bullets.clear();
-                esplosioni.clear();
-                esplosioni1.clear();
-                powerUps.clear();
+                synchronized (nemici) {
+                    nemici.clear();
+                }
+                synchronized (pianeti) {
+                    pianeti.clear();
+                }
+                synchronized (dettagli) {
+                    dettagli.clear();
+                }
+                synchronized (bullets) {
+                    bullets.clear();
+                }
+                synchronized (esplosioni) {
+                    esplosioni.clear();
+                }
+                synchronized (esplosioni1) {
+                    esplosioni1.clear();
+                }
+                synchronized (powerUps) {
+                    powerUps.clear();
+                }
+                Nemico.isScudoOn = false;
+                bulletMassime = 16;
+                isPressed = false;
             }
         });
     }
@@ -330,7 +350,9 @@ public class MyPanel extends JPanel {
 
     private void stampaPowerUp(Graphics g) {
         for (PowerUp p : powerUps) {
-            p.stampaOggettiClasse(g);
+            if (p.isDisegnare) {
+                p.stampaOggettiClasse(g);
+            }
         }
     }
 

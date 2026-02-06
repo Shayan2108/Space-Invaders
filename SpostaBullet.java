@@ -86,8 +86,8 @@ class SpostaBullet extends Thread {
                                     m.nemici.get(j).isVivo = false;
 
                                     int cavia = m.r.nextInt(0, m.nPowerUp);
-                                    if (m.r.nextInt(0, 100) > 50) {
-                                        System.out.println(cavia);
+                                    if (m.r.nextInt(0, 100) < 45) 
+                                        {
                                         m.powerUps.add(
                                                 new PowerUp(
                                                         m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,

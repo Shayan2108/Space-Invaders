@@ -87,22 +87,27 @@ class ManagerGenerale extends Thread {
                 if (m.xNave + m.paddingX + m.movimento <= m.getWidth() && m.xNave + m.movimento >= 0) {
                     m.xNave += m.movimento;
                     m.hitboxNave.x += m.movimento;
+                    m.hitBoxScudo.x += m.movimento;
                 } else if (m.xNave + m.paddingX + m.movimento > m.getWidth()) {
                     m.xNave = m.getWidth() - m.paddingX + 1;
                     m.hitboxNave.x = m.getWidth() - m.paddingX + 1;
+                    m.hitBoxScudo.x = m.getWidth() - m.paddingX + 1 - 10;
                 } else if (m.xNave + m.movimento < 0) {
                     m.hitboxNave.x = 0;
                     m.xNave = 0;
+                    m.hitBoxScudo.x = 0 - 10;
                 }
             } else {
                 m.yNave = m.getHeight() - m.paddingY;
                 m.hitboxNave.y = m.getHeight() - m.paddingY;
+                m.hitBoxScudo.y = m.getHeight() - m.paddingY - 10;
             }
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
                     synchronized (m.powerUps) {
+                        if(!m.powerUps.get(i).iniziatoUnaVolta)
                         m.powerUps.get(i).effettoIniziato = true;
-                        m.powerUps.remove(m.powerUps.get(i));
+                        m.powerUps.get(i).isDisegnare = false;
                     }
                 }
             }

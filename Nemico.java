@@ -13,6 +13,7 @@ e riscrive la stampaOgetti e il run della classe thread
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class Nemico extends Pianeti {
     ArrayList<Bullets> bullet = new ArrayList<>();
     Long timerSpawn;
     int frequenzaSpawn;
-    int passo;
+    int passo; 
+    static volatile boolean isScudoOn = false;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -75,6 +77,11 @@ public class Nemico extends Pianeti {
                 // g.drawRect(bullet.get(i).hitBox.x, bullet.get(i).hitBox.y,
                 // bullet.get(i).hitBox.width, bullet.get(i).hitBox.height);
             }
+        }
+        if (isScudoOn) {
+            g.setColor(Color.RED);
+            g.drawRect(m.hitBoxScudo.x, m.hitBoxScudo.y, m.hitBoxScudo.width, m.hitBoxScudo.height);
+            g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width, m.hitboxNave.height);
         }
     }
 
@@ -121,20 +128,22 @@ public class Nemico extends Pianeti {
                 bullet.add(new Bullets(m, x + grandezzaPianeta / 2 - 10, y + grandezzaPianeta / 2 + 30, 8));
                 timerSpawn = System.currentTimeMillis() + frequenzaSpawn;
             }
-            for (int i = 0; i < bullet.size(); i++) {
-                if (bullet.get(i).y + passo < m.getHeight()) {
-                    bullet.get(i).y += passo;
-                    bullet.get(i).hitBox.y += passo;
-                } else {
-                    bullet.remove(i);
-                    i--;
-                    continue;
-                }
-                if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
-                    m.cl.show(m.contenitore, "GAMEOVER");
-                    m.gameOver = true;
-                    GUI.scriviPunteggio();
+            synchronized (bullet) {
+                for (int i = 0; i < bullet.size(); i++) {
+                    if (bullet.get(i).y + passo < m.getHeight()) {
+                        bullet.get(i).y += passo;
+                        bullet.get(i).hitBox.y += passo;
+                    } else {
+                        bullet.remove(i);
+                        i--;
+                        continue;
+                    }
+                    if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
+                        m.cl.show(m.contenitore, "GAMEOVER");
+                        m.gameOver = true;
+                        GUI.scriviPunteggio();
 
+                    }
                 }
             }
             synchronized (m.bullets) {
@@ -153,6 +162,16 @@ public class Nemico extends Pianeti {
                     }
                 }
             }
+            if (isScudoOn) {
+                synchronized (bullet) {
+                    for (int i = 0; i < bullet.size(); i++) {
+                        if (bullet.get(i).hitBox.intersects(m.hitBoxScudo)) {
+                            bullet.remove(i);
+                            i--;
+                        }
+                    }
+                }
+            }
             try {
                 sleep(33); // quasi 30 fps
             } catch (InterruptedException e) {
@@ -167,9 +186,9 @@ public class Nemico extends Pianeti {
 
         // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
-            m.cl.show(m.contenitore, "GAMEOVER");
-            m.gameOver = true;
-            GUI.scriviPunteggio();
+             m.cl.show(m.contenitore, "GAMEOVER");
+             m.gameOver = true;
+             GUI.scriviPunteggio();
         }
     }
 
