@@ -7,12 +7,12 @@
  *
  * @brief Classe PowerUp
  *
- * Rappresenta un power-up che scende dall’alto.
+ * Rappresenta un power-up che scende dall’alto quando si distrugge una nave nemica.
  * Quando viene preso, attiva un effetto temporaneo.
  */
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import  java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class PowerUp extends Pianeti {
@@ -45,7 +45,7 @@ public class PowerUp extends Pianeti {
         effettoIniziato = false;
         finireThread = false;
         iniziatoUnaVolta = false;
-    }
+     }
 
     @Override
     public void run() {
@@ -53,14 +53,14 @@ public class PowerUp extends Pianeti {
         while ((y <= m.getHeight() || iniziatoUnaVolta)
                 && !finireThread && !m.gameOver) {
 
-            y += velocita;
+            y +=  velocita;
             hitbox.translate(0, velocita);
 
-            try {
-                sleep(33);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                try {
+                    sleep(33);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             if (effettoIniziato) {
 
@@ -82,14 +82,14 @@ public class PowerUp extends Pianeti {
 
                 finireThread = true;
             }
-        }
+         }
 
         synchronized (m.powerUps) {
             m.powerUps.remove(this);
         }
-    }
+        }
 
-    public void stampaOggettiClasse(Graphics g) {
+        public void stampaOggettiClasse(Graphics g) {
 
         g.drawImage(
                 image.get(frameAttuale),
@@ -103,5 +103,5 @@ public class PowerUp extends Pianeti {
             if (frameAttuale >= maxFrame)
                 frameAttuale = 0;
         }
-    }
+     }
 }
