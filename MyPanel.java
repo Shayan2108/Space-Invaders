@@ -212,7 +212,6 @@ public class MyPanel extends JPanel {
         nPowerUp = 2;
         timer = System.currentTimeMillis() + r.nextLong(frequezaminimaPianeti, frequezaMassimaPianeti);
         timerStampaPianeta = System.currentTimeMillis() + 1000;
-        startTime = System.currentTimeMillis();
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
         gameOver = false;
@@ -265,6 +264,7 @@ public class MyPanel extends JPanel {
                 }
                 gameOver = false;
                 MyPanel.this.requestFocusInWindow();
+                startTimer();
                 pianeti.add(new Pianeti(r.nextInt(0, 400), 0, 6, MyPanel.this,
                         immaginiPianeti.get(r.nextInt(0, NPianeti))));
                 managerGenerale = new ManagerGenerale(MyPanel.this);
@@ -544,5 +544,9 @@ public class MyPanel extends JPanel {
         String tempo = String.format("%02d:%02d:%02d", ore, minuti, secondi);
         timerLabel.setText("Tempo: " + tempo);
         timerLabel.setLocation(10, 0);
+    }
+
+    public void startTimer() {
+        startTime = System.currentTimeMillis(); // parte da zero
     }
 }
