@@ -29,6 +29,8 @@ public class PowerUp extends Pianeti {
 
     Long timerPowerUp;
 
+    public volatile boolean running = true;
+
     public PowerUp(int x, int y, int velocita, MyPanel m,
             ArrayList<BufferedImage> image, int tipo) {
 
@@ -55,8 +57,15 @@ public class PowerUp extends Pianeti {
     public void run() {
 
         while ((y <= m.getHeight() || iniziatoUnaVolta)
-                && !finireThread && !m.gameOver) {
+                && !finireThread && running == true && !m.gameOver) {
 
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(33); // blocca loop ma non CPU
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             hitbox.translate(0, velocita);
 
@@ -96,7 +105,8 @@ public class PowerUp extends Pianeti {
                                 tuttiFiniti++;
                                 System.out.println("spengo tutti falsei");
                             }
-                            if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
+                            if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0
+                                    && m.powerUps.get(i).iniziatoUnaVolta) {
                                 finitoPerTutti = false;
                                 System.out.println("uno manca ancora");
                             }

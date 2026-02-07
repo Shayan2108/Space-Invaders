@@ -230,6 +230,7 @@ public class MyPanel extends JPanel {
         inizializzaNemici();
         inizializzaPowerUp();
         inizializzaScudo();
+        inizializzaScudo();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
         try {
@@ -310,6 +311,17 @@ public class MyPanel extends JPanel {
                 isPressed = false;
             }
         });
+    }
+
+    private void inizializzaScudo() {
+
+        try {
+            for (int i = 0; i < 32; i++) {
+                immagineScudo.add(ImageIO.read(new File("Scudo/" + i + ".png")));
+            }
+        } catch (IOException e) {
+            System.out.println("scudo non trovato");
+        }
     }
 
     private void inizializzaScudo() {
@@ -570,6 +582,113 @@ public class MyPanel extends JPanel {
         // Ogni 30 secondi aumenta il livello
         int livello = secondi / 30 + 1;
         return Math.min(livello, 10); // Limite massimo
+    }
+
+    public void restartGame() {
+
+        // 1️ Ferma tutti i nemici e thread vecchi
+        gameOver = true; // ferma i thread esistenti
+        if (managerGenerale != null)
+            managerGenerale.running = false;
+        if (spostaBullet != null)
+            spostaBullet.running = false;
+
+        synchronized (nemici) {
+            nemici.clear();
+        }
+        synchronized (pianeti) {
+            pianeti.clear();
+        }
+        synchronized (dettagli) {
+            dettagli.clear();
+        }
+        synchronized (bullets) {
+            bullets.clear();
+        }
+        synchronized (esplosioni) {
+            esplosioni.clear();
+        }
+        synchronized (esplosioni1) {
+            esplosioni1.clear();
+        }
+        synchronized (powerUps) {
+            powerUps.clear();
+        }
+
+        // 2️ Reset variabili di gioco
+        score = 0;
+        bulletMassime = 16;
+        xNave = getWidth() / 2;
+        yNave = getHeight() - paddingY;
+        hitboxNave.setLocation(xNave, yNave);
+        hitBoxScudo.setLocation(xNave - 10, yNave - 10);
+        Nemico.isScudoOn = false;
+        isPressed = false;
+        frameFiamma = 1;
+
+        // 3️ Reset timer e stato pause
+        startTimer(); // se avevi un metodo per il timer
+        isPaused = false;
+
+        // 4️ Reset gameOver prima di far partire i thread
+        gameOver = false;
+
+        // 5️ Ricrea e avvia i thread principali
+        managerGenerale = new ManagerGenerale(this);
+        spostaBullet = new SpostaBullet(this);
+
+        managerGenerale.start();
+        spostaBullet.start();
+
+        // 6️ Crea pianeti iniziali o sfondo
+        pianeti.add(new Pianeti(r.nextInt(0, getWidth()), 0, 6, this,
+                immaginiPianeti.get(r.nextInt(0, NPianeti))));
+
+        // delay breve prima di spawnare nemici
+        new Thread(() -> {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
+            }
+            // ora i nemici possono spawnare senza far apparire subito GAMEOVER
+        }).start();
+        // 7️ Repaint per aggiornare subito la grafica
+        repaint();
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int v) {
+        volume = v;
+    }
+
+    public void stopThreads() {
+        if (managerGenerale != null && managerGenerale.isAlive()) {
+            managerGenerale.running = false;
+            try {
+                managerGenerale.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (spostaBullet != null && spostaBullet.isAlive()) {
+            spostaBullet.running = false;
+            try {
+                spostaBullet.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (game != null && game.isAlive()) {
+            game.running = false;
+            try {
+                game.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
