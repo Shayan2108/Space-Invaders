@@ -160,6 +160,7 @@ public class MyPanel extends JPanel {
     Rectangle hitBoxScudo;
 
     Rectangle hitboxNave;
+    ArrayList<BufferedImage> immagineScudo = new ArrayList<>();
 
     /**
      * @brief costruttore del pannello
@@ -228,6 +229,7 @@ public class MyPanel extends JPanel {
         uploadDettagli();
         inizializzaNemici();
         inizializzaPowerUp();
+        inizializzaScudo();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
         try {
@@ -308,6 +310,17 @@ public class MyPanel extends JPanel {
                 isPressed = false;
             }
         });
+    }
+
+    private void inizializzaScudo() {
+
+        try {
+            for (int i = 0; i < 32; i++) {
+                immagineScudo.add(ImageIO.read(new File("Scudo/" + i + ".png")));
+            }
+        } catch (IOException e) {
+            System.out.println("scudo non trovato");
+        }
     }
 
     private void inizializzaPowerUp() {
