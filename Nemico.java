@@ -1,3 +1,4 @@
+
 /**
 * @author  mohammad Shayan Attari Bin Mohammad Zeshan Attari
 * @version 1.0
@@ -16,8 +17,6 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
-import javax.swing.SwingUtilities;
 
 /**
  * @class Nemico
@@ -89,14 +88,7 @@ public class Nemico extends Pianeti {
 
     @Override
     public void run() {
-        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo && running == true) {
-            if (m.isPaused) {
-                try {
-                    Thread.sleep(33); // blocca loop ma non CPU
-                } catch (InterruptedException e) {
-                }
-                continue;
-            }
+        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
             y += velocita;
             int sinistro = 0, destro = 0;
             synchronized (m.bullets) {
@@ -152,6 +144,7 @@ public class Nemico extends Pianeti {
                         m.cl.show(m.contenitore, "GAMEOVER");
                         m.gameOver = true;
                         GUI.scriviPunteggio();
+
                     }
                 }
             }

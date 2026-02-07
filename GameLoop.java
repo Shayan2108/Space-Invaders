@@ -16,8 +16,6 @@ public class GameLoop extends Thread {
      */
     MyPanel m;
 
-    public volatile boolean running = true;
-
     /**
      * @brief costruttore della classe GameLoop
      *
@@ -42,15 +40,7 @@ public class GameLoop extends Thread {
      */
     @Override
     public void run() {
-        while (running == true) {
-            if (m.isPaused) {
-                try {
-                    sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
-            }
+        while (true) {
             // aggiorna il pannello principale del gioco
             m.repaint();
 
