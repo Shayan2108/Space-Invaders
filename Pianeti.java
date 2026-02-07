@@ -40,6 +40,8 @@ public class Pianeti extends OggettiScendenti {
     int grandezzaMinima;
     int grandezzaMassima;
 
+    public volatile boolean running = true;
+
     /**
      * @brief costruttore della classe Pianeti
      *
@@ -83,7 +85,14 @@ public class Pianeti extends OggettiScendenti {
      */
     @Override
     public void run() {
-        while (y <= super.m.getHeight()) {
+        while (y <= super.m.getHeight() && running == true) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(33); // blocca loop ma non CPU
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             try {
                 sleep(33);
