@@ -12,6 +12,8 @@
  */
 import java.awt.event.*;
 
+import javax.swing.SwingUtilities;
+
 public class MyKey implements KeyListener {
 
     /**
@@ -62,6 +64,16 @@ public class MyKey implements KeyListener {
             m.movimento = -((m.getWidth() + 16) / 400 * 6);
             isA = true;
         }
+
+        if ((e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                && !m.isPaused) {
+
+            m.isPaused = true;
+
+            PauseMenuDialog dialog = new PauseMenuDialog(SwingUtilities.getWindowAncestor(m), m);
+            dialog.setVisible(true); // dialog MODELESS
+        }
+
     }
 
     /**
