@@ -31,6 +31,8 @@ class ManagerGenerale extends Thread {
      */
     int frequenzaDettagliSpawn;
 
+    public volatile boolean running = true;
+
     /**
      * @brief Costruttore della classe Sfondo.
      *
@@ -80,8 +82,15 @@ class ManagerGenerale extends Thread {
         // }
 
         // Ciclo principale del gioco
-        while (true && !m.gameOver) {
+        while (running == true && !m.gameOver) {
 
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(33); // blocca loop ma non CPU
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             // Gestione movimento nave
             if (m.isPressed) {
                 if (m.xNave + m.paddingX + m.movimento <= m.getWidth() && m.xNave + m.movimento >= 0) {
