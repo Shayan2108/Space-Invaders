@@ -40,8 +40,9 @@ public class Nemico extends Pianeti {
     ArrayList<Bullets> bullet = new ArrayList<>();
     Long timerSpawn;
     int frequenzaSpawn;
-    int passo; 
+    int passo;
     static volatile boolean isScudoOn = false;
+    static int frameScudo = 0;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -80,8 +81,8 @@ public class Nemico extends Pianeti {
         }
         if (isScudoOn) {
             g.setColor(Color.RED);
-            g.drawRect(m.hitBoxScudo.x, m.hitBoxScudo.y, m.hitBoxScudo.width, m.hitBoxScudo.height);
-            g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width, m.hitboxNave.height);
+            stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176,192);
+            //g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width, m.hitboxNave.height);
         }
     }
 
@@ -139,6 +140,7 @@ public class Nemico extends Pianeti {
                         continue;
                     }
                     if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
+                        System.out.println("sei stato colpito");
                         m.cl.show(m.contenitore, "GAMEOVER");
                         m.gameOver = true;
                         GUI.scriviPunteggio();
@@ -186,10 +188,16 @@ public class Nemico extends Pianeti {
 
         // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
-             m.cl.show(m.contenitore, "GAMEOVER");
-             m.gameOver = true;
-             GUI.scriviPunteggio();
+            System.out.println("la nave ha superato il limite");
+            m.cl.show(m.contenitore, "GAMEOVER");
+            m.gameOver = true;
+            GUI.scriviPunteggio();
         }
     }
-
+        public static void stampaOggettiClasse(Graphics g,ArrayList<BufferedImage> image,int x,int y,int maxFrame,int width,int height) {
+        g.drawImage(image.get(Nemico.frameScudo), x, y, width, height, null);
+            Nemico.frameScudo++;
+            if (Nemico.frameScudo > maxFrame)
+                Nemico.frameScudo = 0;
+    }
 }
