@@ -13,7 +13,6 @@ e riscrive la stampaOgetti e il run della classe thread
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -80,7 +79,6 @@ public class Nemico extends Pianeti {
             }
         }
         if (isScudoOn) {
-            g.setColor(Color.RED);
             stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176,192);
             //g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width, m.hitboxNave.height);
         }

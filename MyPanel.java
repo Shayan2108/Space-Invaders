@@ -359,6 +359,10 @@ public class MyPanel extends JPanel {
         stampaPowerUp(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
+        //g.setColor(Color.RED);
+        // g.drawRect(hitboxNave.x, hitboxNave.y, hitboxNave.width,hitboxNave.height);
+        // g.drawRect(hitBoxScudo.x, hitBoxScudo.y,
+        // hitBoxScudo.width,hitBoxScudo.height);
     }
 
     private void stampaPowerUp(Graphics g) {
