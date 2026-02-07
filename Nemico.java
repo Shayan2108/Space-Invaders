@@ -18,6 +18,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 /**
  * @class Nemico
  *
@@ -42,7 +44,11 @@ public class Nemico extends Pianeti {
     int frequenzaSpawn;
     int passo;
     static volatile boolean isScudoOn = false;
+<<<<<<< HEAD
     static int frameScudo = 0;
+=======
+    public volatile boolean running = true;
+>>>>>>> ff524d0c5687cdd3f2e81d36f207193db8ed269c
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -88,7 +94,14 @@ public class Nemico extends Pianeti {
 
     @Override
     public void run() {
-        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
+        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo && running == true) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(33); // blocca loop ma non CPU
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             int sinistro = 0, destro = 0;
             synchronized (m.bullets) {
@@ -139,12 +152,18 @@ public class Nemico extends Pianeti {
                         i--;
                         continue;
                     }
+<<<<<<< HEAD
                     if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
                         System.out.println("sei stato colpito");
                         m.cl.show(m.contenitore, "GAMEOVER");
+=======
+                    if (m.gameOver)
+                        break; // Se gioco finito, esci subito dal ciclo
+                    if (bullet.get(i).hitBox.intersects(m.hitboxNave) && !m.gameOver) {
+>>>>>>> ff524d0c5687cdd3f2e81d36f207193db8ed269c
                         m.gameOver = true;
                         GUI.scriviPunteggio();
-
+                        SwingUtilities.invokeLater(() -> m.cl.show(m.contenitore, "GAMEOVER"));
                     }
                 }
             }
@@ -188,7 +207,10 @@ public class Nemico extends Pianeti {
 
         // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
+<<<<<<< HEAD
             System.out.println("la nave ha superato il limite");
+=======
+>>>>>>> ff524d0c5687cdd3f2e81d36f207193db8ed269c
             m.cl.show(m.contenitore, "GAMEOVER");
             m.gameOver = true;
             GUI.scriviPunteggio();
