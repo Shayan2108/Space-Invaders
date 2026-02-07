@@ -18,6 +18,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 /**
  * @class Nemico
  *
@@ -40,8 +42,9 @@ public class Nemico extends Pianeti {
     ArrayList<Bullets> bullet = new ArrayList<>();
     Long timerSpawn;
     int frequenzaSpawn;
-    int passo; 
+    int passo;
     static volatile boolean isScudoOn = false;
+    public volatile boolean running = true;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -87,7 +90,14 @@ public class Nemico extends Pianeti {
 
     @Override
     public void run() {
-        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
+        while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo && running == true) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(33); // blocca loop ma non CPU
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             int sinistro = 0, destro = 0;
             synchronized (m.bullets) {
@@ -138,11 +148,12 @@ public class Nemico extends Pianeti {
                         i--;
                         continue;
                     }
-                    if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
-                        m.cl.show(m.contenitore, "GAMEOVER");
+                    if (m.gameOver)
+                        break; // Se gioco finito, esci subito dal ciclo
+                    if (bullet.get(i).hitBox.intersects(m.hitboxNave) && !m.gameOver) {
                         m.gameOver = true;
                         GUI.scriviPunteggio();
-
+                        SwingUtilities.invokeLater(() -> m.cl.show(m.contenitore, "GAMEOVER"));
                     }
                 }
             }
@@ -186,9 +197,9 @@ public class Nemico extends Pianeti {
 
         // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
-             m.cl.show(m.contenitore, "GAMEOVER");
-             m.gameOver = true;
-             GUI.scriviPunteggio();
+            m.cl.show(m.contenitore, "GAMEOVER");
+            m.gameOver = true;
+            GUI.scriviPunteggio();
         }
     }
 
