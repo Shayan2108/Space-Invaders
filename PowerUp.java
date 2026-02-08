@@ -73,8 +73,10 @@ public class PowerUp extends Pianeti {
                     timerPowerUp = System.currentTimeMillis() + 10000;
                 }
                 if (tipo == 0) {
+                    Nemico.accesiTipo0++;
                     Nemico.isScudoOn = true;
                     timerPowerUp = System.currentTimeMillis() + 10000;
+                    Nemico.tempoScudo = System.currentTimeMillis() + 10000;
                 }
 
                 effettoIniziato = false;
@@ -87,13 +89,12 @@ public class PowerUp extends Pianeti {
                 }
                 isTimerFinito = true;
                 if (tipo == 0) {
-                    int tuttiFiniti = 0;
+                    Nemico.accesiTipo0--;
                     boolean finitoPerTutti = true;
                     finireThread = true;
                     synchronized (m.powerUps) {
                         for (int i = 0; i < m.powerUps.size(); i++) {
                             if (m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
-                                tuttiFiniti++;
                                 System.out.println("spengo tutti falsei");
                             }
                             if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
@@ -102,10 +103,10 @@ public class PowerUp extends Pianeti {
                             }
                         }
                     }
-                    if (tuttiFiniti == 1 && finitoPerTutti) {
+                    if (Nemico.accesiTipo0 == 0 && finitoPerTutti) {
                         Nemico.isScudoOn = false;
+                        Nemico.tempoScudo = null;
                     }
-                    tuttiFiniti = 0;
                 }
             }
         }

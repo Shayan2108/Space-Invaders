@@ -13,6 +13,7 @@ e riscrive la stampaOgetti e il run della classe thread
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -40,8 +41,12 @@ public class Nemico extends Pianeti {
     Long timerSpawn;
     int frequenzaSpawn;
     int passo;
-    static volatile boolean isScudoOn = false;
+    public static volatile boolean isScudoOn = false;
     static int frameScudo = 0;
+    Rectangle hitBox;
+    public static volatile int accesiTipo0 = 0;
+    public static volatile Long tempoScudo = null;
+    boolean devoStampare = true;
 
     public Nemico(int x, int y, int velocita, MyPanel m, ArrayList<BufferedImage> images) {
         super(x, y, velocita, m, images);
@@ -61,6 +66,7 @@ public class Nemico extends Pianeti {
         frequenzaSpawn = 2000;
         timerSpawn = System.currentTimeMillis() + frequenzaSpawn;
         passo = 10;
+        this.hitBox = new Rectangle(this.x, this.y, grandezzaPianeta, grandezzaPianeta);
     }
 
     @Override
@@ -79,15 +85,28 @@ public class Nemico extends Pianeti {
             }
         }
         if (isScudoOn) {
-            stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176,192);
-            //g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width, m.hitboxNave.height);
+            if (tempoScudo == null || tempoScudo - 2000 > System.currentTimeMillis()) {
+                stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176, 192);
+            } else {
+                if (devoStampare) {
+                    stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176, 192);
+                    // g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width,
+                    // m.hitboxNave.height);
+                    devoStampare = false;
+                } else {
+                    devoStampare = true;
+                }
+            }
         }
+        // g.setColor(Color.RED);
+        // g.drawRect(hitBox.x, hitBox.y, hitBox.width, hitBox.height);
     }
 
     @Override
     public void run() {
         while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
             y += velocita;
+            hitBox.y += velocita;
             int sinistro = 0, destro = 0;
             synchronized (m.bullets) {
                 for (int i = 0; i < m.bullets.size(); i++) {
@@ -122,6 +141,7 @@ public class Nemico extends Pianeti {
                 isMovimento = false;
             }
             x += velocitaX;
+            hitBox.x += velocitaX;
 
             if (timerSpawn < System.currentTimeMillis()) {
                 bullet.add(new Bullets(m, x + grandezzaPianeta / 2 - 10, y + grandezzaPianeta / 2 + 30, 8));
@@ -138,6 +158,7 @@ public class Nemico extends Pianeti {
                         continue;
                     }
                     if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
+                        bullet.remove(bullet.get(i));
                         System.out.println("sei stato colpito");
                         m.cl.show(m.contenitore, "GAMEOVER");
                         m.gameOver = true;
@@ -162,6 +183,16 @@ public class Nemico extends Pianeti {
                     }
                 }
             }
+            if (this.hitBox.intersects(m.hitboxNave)) {
+                synchronized (m.nemici) {
+                    this.isVivo = false;
+                    m.nemici.remove(this);
+                }
+                System.out.println("la nave principale è stata toccata in modo inproprio da un nemico");
+                m.cl.show(m.contenitore, "GAMEOVER");
+                m.gameOver = true;
+                GUI.scriviPunteggio();
+            }
             if (isScudoOn) {
                 synchronized (bullet) {
                     for (int i = 0; i < bullet.size(); i++) {
@@ -170,6 +201,13 @@ public class Nemico extends Pianeti {
                             i--;
                         }
                     }
+                }
+                if (this.hitBox.intersects(m.hitBoxScudo)) {
+                    isVivo = false;
+                    synchronized (m.nemici) {
+                        m.nemici.remove(this);
+                    }
+                    m.esplosioni1.add(new Esplosioni1(x - 100, y - 100, velocita));
                 }
             }
             try {
@@ -192,10 +230,12 @@ public class Nemico extends Pianeti {
             GUI.scriviPunteggio();
         }
     }
-        public static void stampaOggettiClasse(Graphics g,ArrayList<BufferedImage> image,int x,int y,int maxFrame,int width,int height) {
+
+    public static void stampaOggettiClasse(Graphics g, ArrayList<BufferedImage> image, int x, int y, int maxFrame,
+            int width, int height) {
         g.drawImage(image.get(Nemico.frameScudo), x, y, width, height, null);
-            Nemico.frameScudo++;
-            if (Nemico.frameScudo > maxFrame)
-                Nemico.frameScudo = 0;
+        Nemico.frameScudo++;
+        if (Nemico.frameScudo > maxFrame)
+            Nemico.frameScudo = 0;
     }
 }
