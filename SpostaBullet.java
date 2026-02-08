@@ -56,6 +56,13 @@ class SpostaBullet extends Thread {
     public void run() {
         while (true && !m.gameOver) {
 
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             // spostamento dei proiettili
             for (int i = 0; i < m.bullets.size(); i++) {
                 m.bullets.get(i).sposta();
@@ -86,8 +93,7 @@ class SpostaBullet extends Thread {
                                     m.nemici.get(j).isVivo = false;
 
                                     int cavia = m.r.nextInt(0, m.nPowerUp);
-                                    if (m.r.nextInt(0, 100) < 45) 
-                                        {
+                                    if (m.r.nextInt(0, 100) < 45) {
                                         m.powerUps.add(
                                                 new PowerUp(
                                                         m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,

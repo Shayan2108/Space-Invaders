@@ -57,6 +57,13 @@ public class PowerUp extends Pianeti {
         while ((y <= m.getHeight() || iniziatoUnaVolta)
                 && !finireThread && !m.gameOver) {
 
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             hitbox.translate(0, velocita);
 
@@ -97,7 +104,8 @@ public class PowerUp extends Pianeti {
                             if (m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
                                 System.out.println("spengo tutti falsei");
                             }
-                            if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
+                            if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0
+                                    && m.powerUps.get(i).iniziatoUnaVolta) {
                                 finitoPerTutti = false;
                                 System.out.println("uno manca ancora");
                             }

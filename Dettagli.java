@@ -63,6 +63,13 @@ public class Dettagli extends OggettiScendenti {
     @Override
     public void run() {
         while (y <= super.m.getHeight()) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             try {
                 sleep(33);

@@ -15,6 +15,14 @@ public class Sfondo extends Thread {
     @Override
     public void run() {
         while (y < m.getHeight()) {
+
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             synchronized (m.sfondi) {
                 y += 5;
                 if (y > 0 && aggiungi) {

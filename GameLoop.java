@@ -41,6 +41,13 @@ public class GameLoop extends Thread {
     @Override
     public void run() {
         while (true) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             // aggiorna il pannello principale del gioco
             m.repaint();
 

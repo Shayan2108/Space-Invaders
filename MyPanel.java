@@ -164,6 +164,10 @@ public class MyPanel extends JPanel {
     ArrayList<BufferedImage> cuori = new ArrayList<>();
     public static volatile int cuoreRimanenti = 9;
 
+    public boolean isPaused = false;
+
+    public int volume = 100;
+
     /**
      * @brief costruttore del pannello
      *
@@ -376,7 +380,7 @@ public class MyPanel extends JPanel {
         // g.setColor(Color.RED);
         // g.drawRect(hitboxNave.x, hitboxNave.y, hitboxNave.width, hitboxNave.height);
         // g.drawRect(hitBoxScudo.x, hitBoxScudo.y,
-        //         hitBoxScudo.width, hitBoxScudo.height);
+        // hitBoxScudo.width, hitBoxScudo.height);
     }
 
     private void stampaCuori(Graphics g) {
@@ -427,7 +431,7 @@ public class MyPanel extends JPanel {
                 g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
                 g.drawImage(cuori.get(2), 40, 3, 20, 20, null);
                 break;
-            case 9: 
+            case 9:
                 g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
                 g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
                 g.drawImage(cuori.get(3), 40, 3, 20, 20, null);
@@ -437,7 +441,7 @@ public class MyPanel extends JPanel {
                 cl.show(contenitore, "GAMEOVER");
                 gameOver = true;
                 GUI.scriviPunteggio();
-                MyPanel.cuoreRimanenti = 9; 
+                MyPanel.cuoreRimanenti = 9;
                 break;
         }
 
@@ -636,9 +640,12 @@ public class MyPanel extends JPanel {
         long ore = elapsedMillis / 3600000;
         long minuti = (elapsedMillis % 3600000) / 60000;
         long secondi = (elapsedMillis % 60000) / 1000;
+
         String tempo = String.format("%02d:%02d:%02d", ore, minuti, secondi);
         timerLabel.setText("Tempo: " + tempo);
-        timerLabel.setLocation(10, getHeight() - 20);
+
+        // SOTTO I CUORI
+        timerLabel.setLocation(5, 28);
     }
 
     public void startTimer() {
@@ -652,6 +659,14 @@ public class MyPanel extends JPanel {
         // Ogni 30 secondi aumenta il livello
         int livello = secondi / 30 + 1;
         return Math.min(livello, 10); // Limite massimo
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
     }
 
 }

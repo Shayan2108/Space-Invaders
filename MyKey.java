@@ -10,7 +10,10 @@
  * Questa classe serve per gestire i tasti della tastiera.
  * Permette di muovere la nave e di iniziare la partita.
  */
+import java.awt.Window;
 import java.awt.event.*;
+
+import javax.swing.SwingUtilities;
 
 public class MyKey implements KeyListener {
 
@@ -61,6 +64,16 @@ public class MyKey implements KeyListener {
             m.isPressed = true;
             m.movimento = -((m.getWidth() + 16) / 400 * 6);
             isA = true;
+        }
+
+        if ((e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                && !m.isPaused) {
+
+            m.isPaused = true;
+
+            Window w = SwingUtilities.getWindowAncestor(m);
+            PauseMenuDialog dialog = new PauseMenuDialog(w, m);
+            dialog.setVisible(true);
         }
     }
 

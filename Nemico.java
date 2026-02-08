@@ -105,6 +105,13 @@ public class Nemico extends Pianeti {
     @Override
     public void run() {
         while (y <= super.m.getHeight() - super.grandezzaPianeta && isVivo) {
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             y += velocita;
             hitBox.y += velocita;
             int sinistro = 0, destro = 0;

@@ -82,6 +82,13 @@ class ManagerGenerale extends Thread {
         // Ciclo principale del gioco
         while (true && !m.gameOver) {
 
+            if (m.isPaused) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
             // Gestione movimento nave
             if (m.isPressed) {
                 if (m.xNave + m.paddingX + m.movimento <= m.getWidth() && m.xNave + m.movimento >= 0) {
