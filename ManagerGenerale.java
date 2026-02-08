@@ -125,13 +125,20 @@ class ManagerGenerale extends Thread {
                 m.timer = System.currentTimeMillis()
                         + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
+            // --- spawn nemici con difficoltà graduale ---
+            int livello = m.getDifficolta(); // livello attuale in base al tempo
+            int velocita = m.getVelocitaNemici(); // velocità nemici basata sul livello
+            long intervalloSpawn = m.getIntervalloSpawnNemici(); // intervallo spawn basato sul livello
+
             if (System.currentTimeMillis() >= timerNemici) {
                 synchronized (m.nemici) {
-                    m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
-                            m.immaginiNemici));
+                    m.nemici.add(new Nemico(
+                            m.r.nextInt(0, m.getWidth()), 0,
+                            m.r.nextInt(5, 5 + velocita), // velocità nemici proporzionale al livello
+                            m, m.immaginiNemici));
                 }
                 timerNemici = System.currentTimeMillis()
-                        + m.r.nextInt(Nemico.frequenzaAggiuntaNemicoMinima, Nemico.frequenzaAggiuntaNemicoMassima);
+                        + m.r.nextInt((int) (intervalloSpawn * 9 / 10), (int) (intervalloSpawn * 11 / 10));
             }
             // Spawn Dettagli
             if (System.currentTimeMillis() >= timerDettagli) {

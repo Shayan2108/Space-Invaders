@@ -166,8 +166,6 @@ public class MyPanel extends JPanel {
 
     public boolean isPaused = false;
 
-    public int volume = 100;
-
     /**
      * @brief costruttore del pannello
      *
@@ -652,21 +650,29 @@ public class MyPanel extends JPanel {
         startTime = System.currentTimeMillis(); // parte da zero
     }
 
+    // Ritorna il livello attuale in base al tempo giocato
     public int getDifficolta() {
         long elapsedMillis = System.currentTimeMillis() - startTime;
         int secondi = (int) (elapsedMillis / 1000);
 
         // Ogni 30 secondi aumenta il livello
         int livello = secondi / 30 + 1;
-        return Math.min(livello, 10); // Limite massimo
+
+        // Limite massimo livello
+        return Math.min(livello, 10);
     }
 
-    public int getVolume() {
-        return volume;
+    // Velocità nemici in base al livello
+    public int getVelocitaNemici() {
+        int livello = getDifficolta();
+        // Inizia da 2, aumenta di 0.5 per livello, molto graduale
+        return 2 + (livello - 1) / 2;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    // Frequenza spawn nemici (millisecondi)
+    public long getIntervalloSpawnNemici() {
+        int livello = getDifficolta();
+        // Inizia da 3000ms (3 secondi), diminuisce di 150ms per livello, graduale
+        return Math.max(1000, 3000 - (livello - 1) * 150);
     }
-
 }
