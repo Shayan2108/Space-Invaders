@@ -86,10 +86,10 @@ public class Nemico extends Pianeti {
         }
         if (isScudoOn) {
             if (tempoScudo == null || tempoScudo - 2000 > System.currentTimeMillis()) {
-                stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176, 192);
+                stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 37, m.hitBoxScudo.y - 50, 31, 176, 192);
             } else {
                 if (devoStampare) {
-                    stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 32, m.hitBoxScudo.y - 32, 31, 176, 192);
+                    stampaOggettiClasse(g, m.immagineScudo, m.hitBoxScudo.x - 37, m.hitBoxScudo.y - 50, 31, 176, 192);
                     // g.drawRect(m.hitboxNave.x, m.hitboxNave.y, m.hitboxNave.width,
                     // m.hitboxNave.height);
                     devoStampare = false;
@@ -159,10 +159,8 @@ public class Nemico extends Pianeti {
                     }
                     if (bullet.get(i).hitBox.intersects(m.hitboxNave)) {
                         bullet.remove(bullet.get(i));
+                        MyPanel.cuoreRimanenti -= 1;
                         System.out.println("sei stato colpito");
-                        m.cl.show(m.contenitore, "GAMEOVER");
-                        m.gameOver = true;
-                        GUI.scriviPunteggio();
 
                     }
                 }
@@ -188,10 +186,8 @@ public class Nemico extends Pianeti {
                     this.isVivo = false;
                     m.nemici.remove(this);
                 }
+                MyPanel.cuoreRimanenti -= 3;
                 System.out.println("la nave principale è stata toccata in modo inproprio da un nemico");
-                m.cl.show(m.contenitore, "GAMEOVER");
-                m.gameOver = true;
-                GUI.scriviPunteggio();
             }
             if (isScudoOn) {
                 synchronized (bullet) {
@@ -207,6 +203,7 @@ public class Nemico extends Pianeti {
                     synchronized (m.nemici) {
                         m.nemici.remove(this);
                     }
+                    MyPanel.score += this.dardiMaxUccisione;
                     m.esplosioni1.add(new Esplosioni1(x - 100, y - 100, velocita));
                 }
             }
@@ -224,10 +221,8 @@ public class Nemico extends Pianeti {
 
         // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
+            MyPanel.cuoreRimanenti -= 1;
             System.out.println("la nave ha superato il limite");
-            m.cl.show(m.contenitore, "GAMEOVER");
-            m.gameOver = true;
-            GUI.scriviPunteggio();
         }
     }
 

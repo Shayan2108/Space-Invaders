@@ -90,17 +90,17 @@ class ManagerGenerale extends Thread {
                     m.hitBoxScudo.x += m.movimento;
                 } else if (m.xNave + m.paddingX + m.movimento > m.getWidth()) {
                     m.xNave = m.getWidth() - m.paddingX + 1;
-                    m.hitboxNave.x = m.getWidth() - m.paddingX + 1;
-                    m.hitBoxScudo.x = m.getWidth() - m.paddingX + 1 - 10;
+                    m.hitboxNave.x = m.getWidth() - m.paddingX + 1 + 10;
+                    m.hitBoxScudo.x = m.getWidth() - m.paddingX + 1;
                 } else if (m.xNave + m.movimento < 0) {
-                    m.hitboxNave.x = 0;
+                    m.hitboxNave.x = 0 + 10;
                     m.xNave = 0;
-                    m.hitBoxScudo.x = 0 - 10;
+                    m.hitBoxScudo.x = 0;
                 }
             } else {
                 m.yNave = m.getHeight() - m.paddingY;
-                m.hitboxNave.y = m.getHeight() - m.paddingY;
-                m.hitBoxScudo.y = m.getHeight() - m.paddingY - 10;
+                m.hitboxNave.y = m.getHeight() - m.paddingY + 40;
+                m.hitBoxScudo.y = m.getHeight() - m.paddingY + 10;
             }
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
@@ -119,8 +119,10 @@ class ManagerGenerale extends Thread {
                         + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
             if (System.currentTimeMillis() >= timerNemici) {
-                m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
-                        m.immaginiNemici));
+                synchronized (m.nemici) {
+                    m.nemici.add(new Nemico(m.r.nextInt(0, m.getWidth()), 0, m.r.nextInt(5, 15), m,
+                            m.immaginiNemici));
+                }
                 timerNemici = System.currentTimeMillis()
                         + m.r.nextInt(Nemico.frequenzaAggiuntaNemicoMinima, Nemico.frequenzaAggiuntaNemicoMassima);
             }

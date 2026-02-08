@@ -161,6 +161,8 @@ public class MyPanel extends JPanel {
 
     Rectangle hitboxNave;
     ArrayList<BufferedImage> immagineScudo = new ArrayList<>();
+    ArrayList<BufferedImage> cuori = new ArrayList<>();
+    public static volatile int cuoreRimanenti = 9;
 
     /**
      * @brief costruttore del pannello
@@ -216,9 +218,9 @@ public class MyPanel extends JPanel {
         NpngPerDettagliImmagini = 8;
         this.NImmaginiNemici = 7;
         gameOver = false;
-        hitboxNave = new Rectangle(xNave, yNave, larghezzaNave, altezzaNave - 40);
-        hitBoxScudo = new Rectangle(hitboxNave.x - 10, hitboxNave.y - 10, hitboxNave.width + 20,
-                hitboxNave.height + 20);
+        hitboxNave = new Rectangle(xNave + 10, yNave, larghezzaNave - 20, altezzaNave - 80);
+        hitBoxScudo = new Rectangle(hitboxNave.x - 10, hitboxNave.y - 30, hitboxNave.width + 20,
+                hitboxNave.height + 60);
         try {
             immagineSfondo = ImageIO.read(new File("Sfondo.png"));
         } catch (IOException e) {
@@ -232,6 +234,7 @@ public class MyPanel extends JPanel {
         inizializzaScudo();
         InizializzaImmaginiEsplosioni();
         InizializzaImmaginiEsplosioni1();
+        inizializzaCuori();
         try {
             nave = ImageIO.read(new File("Nave.png"));
         } catch (IOException e) {
@@ -312,6 +315,16 @@ public class MyPanel extends JPanel {
         });
     }
 
+    private void inizializzaCuori() {
+        for (int index = 0; index < 4; index++) {
+            try {
+                cuori.add(ImageIO.read(new File("Cuori/" + index + ".png")));
+            } catch (IOException e) {
+                System.err.println("cuore non trovato");
+            }
+        }
+    }
+
     private void inizializzaScudo() {
 
         try {
@@ -359,10 +372,75 @@ public class MyPanel extends JPanel {
         stampaPowerUp(g);
         stampaEsplosioni(g);
         stampaEsplosioni1(g);
-        //g.setColor(Color.RED);
-        // g.drawRect(hitboxNave.x, hitboxNave.y, hitboxNave.width,hitboxNave.height);
+        stampaCuori(g);
+        // g.setColor(Color.RED);
+        // g.drawRect(hitboxNave.x, hitboxNave.y, hitboxNave.width, hitboxNave.height);
         // g.drawRect(hitBoxScudo.x, hitBoxScudo.y,
-        // hitBoxScudo.width,hitBoxScudo.height);
+        //         hitBoxScudo.width, hitBoxScudo.height);
+    }
+
+    private void stampaCuori(Graphics g) {
+        switch (MyPanel.cuoreRimanenti) {
+            case 0:
+                cl.show(contenitore, "GAMEOVER");
+                gameOver = true;
+                GUI.scriviPunteggio();
+                MyPanel.cuoreRimanenti = 9;
+                break;
+            case 1:
+                g.drawImage(cuori.get(1), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 2:
+                g.drawImage(cuori.get(2), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 3:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 4:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(1), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 5:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(2), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 6:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(0), 40, 3, 20, 20, null);
+                break;
+            case 7:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(1), 40, 3, 20, 20, null);
+                break;
+            case 8:
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(2), 40, 3, 20, 20, null);
+                break;
+            case 9: 
+                g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
+                g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
+                g.drawImage(cuori.get(3), 40, 3, 20, 20, null);
+                break;
+
+            default:
+                cl.show(contenitore, "GAMEOVER");
+                gameOver = true;
+                GUI.scriviPunteggio();
+                MyPanel.cuoreRimanenti = 9; 
+                break;
+        }
+
     }
 
     private void stampaPowerUp(Graphics g) {
@@ -560,7 +638,7 @@ public class MyPanel extends JPanel {
         long secondi = (elapsedMillis % 60000) / 1000;
         String tempo = String.format("%02d:%02d:%02d", ore, minuti, secondi);
         timerLabel.setText("Tempo: " + tempo);
-        timerLabel.setLocation(10, 0);
+        timerLabel.setLocation(10, getHeight() - 20);
     }
 
     public void startTimer() {
