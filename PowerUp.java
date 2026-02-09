@@ -130,6 +130,13 @@ public class PowerUp extends Pianeti {
                     timerPowerUp = System.currentTimeMillis() + 10000;
                     Nemico.tempoScudo = System.currentTimeMillis() + 10000;
                 }
+                if (tipo == 2) {
+                    if (MyPanel.cuoreRimanenti + 3 >= 9) {
+                        MyPanel.cuoreRimanenti = 9;
+                    } else {
+                        MyPanel.cuoreRimanenti += 3;
+                    }
+                }
 
                 effettoIniziato = false;
                 iniziatoUnaVolta = true;
