@@ -9,6 +9,17 @@
  *        il file contiene la classe che si occupa di controllare tutti gli
  *        oggetti che devono essere messi a video
  */
+
+/**
+ * @class ManagerGenerale
+ *
+ * @brief Thread principale per la gestione del gioco.
+ *
+ *        Coordina tutti gli oggetti dinamici presenti nel gioco,
+ *        come stelle, pianeti, nemici, dettagli e power-up.
+ *        Controlla il movimento della nave e aggiorna le strutture dati
+ *        condivise nel pannello principale.
+ */
 class ManagerGenerale extends Thread {
 
     /**

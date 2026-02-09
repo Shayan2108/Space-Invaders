@@ -1,3 +1,15 @@
+
+/**
+* @author  Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
+* @version 1.0
+* @file SchermataIniziale.java 
+* 
+* @brief Schermata iniziale del gioco Space Invaders.
+*
+* Contiene lo sfondo, il bottone Start e il bottone Help.
+* Gestisce anche la musica di sottofondo con volume regolabile.
+*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -6,40 +18,100 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
+/**
+ * @class SchermataIniziale
+ * 
+ * @brief Pannello della schermata iniziale del gioco.
+ * 
+ *        Gestisce l'interfaccia iniziale: sfondo, bottoni Start e Help,
+ *        e la musica di sottofondo. Consente di iniziare il gioco e
+ *        aprire la finestra di aiuto.
+ */
 public class SchermataIniziale extends JPanel {
 
+    /** Layout del contenitore principale */
     CardLayout cl;
+
+    /** Pannello contenitore principale */
     JPanel contenitore;
+
+    /** Bottone Start */
     JButton bottone;
+
+    /** Sfondo della schermata iniziale */
     BufferedImage image;
 
-    // 🎵 Musica globale condivisa
+    /** Clip musicale di sottofondo condivisa tra tutte le schermate */
     public static Clip clipSottofondo;
-    public static int volume = 100; // da 0 a 100
 
+    /** Volume corrente della musica, da 0 a 100 */
+    public static int volume = 100;
+
+    /**
+     * @brief Costruttore della schermata iniziale.
+     *
+     *        Inizializza il layout, lo sfondo, il bottone Start,
+     *        il bottone Help e il listener per la musica di sottofondo.
+     * @param cl          layout del contenitore principale
+     * @param contenitore pannello principale che contiene le varie schermate
+     */
     public SchermataIniziale(CardLayout cl, JPanel contenitore) {
         this.cl = cl;
         this.contenitore = contenitore;
         this.setLayout(null);
 
-        // 🔹 Caricamento immagine di sfondo
+        // Caricamento immagine di sfondo
         try {
             image = ImageIO.read(new File("alt f4.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // 🔹 Bottone Start
-        ImageIcon icon = new ImageIcon(getClass().getResource("Start_button.png"));
-        bottone = new JButton(icon);
-        bottone.setBounds(920, 62, bottone.getPreferredSize().width, bottone.getPreferredSize().height);
+        // Bottone Start
+        ImageIcon startIcon = new ImageIcon(getClass().getResource("Start_button.png"));
+        bottone = new JButton(startIcon);
+        bottone.setBounds(920, 62, 250, 63); // dimensioni standard
         bottone.setBorderPainted(false);
         bottone.setOpaque(false);
         bottone.setContentAreaFilled(false);
         bottone.setFocusPainted(false);
         this.add(bottone);
 
-        // 🔹 Listener per ridimensionamento e partenza audio
+        // Bottone Help leggermente più alto
+        try {
+            ImageIcon helpIconOriginal = new ImageIcon(getClass().getResource("help_buttom.png"));
+
+            // Dimensioni target: stessa larghezza dello Start, altezza leggermente maggiore
+            int targetWidth = 250;
+            int targetHeight = 80;
+
+            // Ridimensionamento proporzionale all'altezza desiderata
+            Image scaledHelp = helpIconOriginal.getImage().getScaledInstance(targetWidth, targetHeight,
+                    Image.SCALE_SMOOTH);
+            ImageIcon helpIcon = new ImageIcon(scaledHelp);
+
+            JButton helpBtn = new JButton(helpIcon);
+            helpBtn.setBounds(bottone.getX(), bottone.getY() + bottone.getHeight() + 20, targetWidth, targetHeight);
+
+            // Trasparenza come Start
+            helpBtn.setBorderPainted(false);
+            helpBtn.setOpaque(false);
+            helpBtn.setContentAreaFilled(false);
+            helpBtn.setFocusPainted(false);
+
+            // Apre la finestra HelpDialog
+            helpBtn.addActionListener(e -> {
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
+                new HelpDialog(frame).setVisible(true);
+            });
+
+            this.add(helpBtn);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Listener per ridimensionamento e partenza audio
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -49,7 +121,7 @@ public class SchermataIniziale extends JPanel {
             }
         });
 
-        // 🔹 Bottone Start gioco
+        // Bottone Start gioco
         bottone.addActionListener(e -> {
             cl.show(contenitore, "GAME");
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SchermataIniziale.this);
@@ -57,13 +129,23 @@ public class SchermataIniziale extends JPanel {
         });
     }
 
+    /**
+     * @brief Ridisegna lo sfondo della schermata.
+     *
+     * @param g contesto grafico
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null);
     }
 
-    // 🔹 Metodo per avviare la musica
+    /**
+     * @brief Avvia la musica di sottofondo della schermata iniziale.
+     *
+     *        Se la clip non è già caricata, la apre e la fa partire in loop
+     *        continuo.
+     */
     private void startBackgroundMusic() {
         try {
             if (clipSottofondo == null) {
@@ -73,39 +155,31 @@ public class SchermataIniziale extends JPanel {
                 setVolume(volume); // applica volume attuale
                 clipSottofondo.loop(Clip.LOOP_CONTINUOUSLY);
                 clipSottofondo.start();
-
-                System.out.println("File trovato: " + new File("audioSchermataIniziale.wav").exists());
-                System.out.println("Clip supporta MASTER_GAIN: " +
-                        clipSottofondo.isControlSupported(FloatControl.Type.MASTER_GAIN));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // 🔹 Metodo per cambiare volume
+    /**
+     * @brief Imposta il volume della musica.
+     *
+     *        Usa scala logaritmica per una percezione più naturale.
+     *
+     * @param vol volume desiderato, da 0 a 100
+     */
     public static void setVolume(int vol) {
         volume = vol;
         if (clipSottofondo != null) {
             try {
                 FloatControl gain = (FloatControl) clipSottofondo.getControl(FloatControl.Type.MASTER_GAIN);
-
-                // volume percepito lineare usando scala logaritmica
-                // 0 -> -80 dB (silenzio), 100 -> 0 dB (max)
-                float min = -80f; // silenzio
-                float max = 0f; // massimo
-                float dB;
-                if (vol == 0) {
+                float min = -80f;
+                float max = 0f;
+                float dB = (vol == 0) ? min : (float) (20 * Math.log10(vol / 100.0));
+                if (dB < min)
                     dB = min;
-                } else {
-                    dB = (float) (min + (Math.log10(vol / 100.0) / Math.log10(1.0)) * (max - min));
-                    // soluzione semplice: scala logaritmica naturale percepita
-                    dB = (float) (20 * Math.log10(vol / 100.0));
-                    if (dB < min)
-                        dB = min;
-                    if (dB > max)
-                        dB = max;
-                }
+                if (dB > max)
+                    dB = max;
                 gain.setValue(dB);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,7 +187,11 @@ public class SchermataIniziale extends JPanel {
         }
     }
 
-    // 🔹 Metodo per leggere il volume
+    /**
+     * @brief Restituisce il volume corrente della musica.
+     *
+     * @return volume corrente, da 0 a 100
+     */
     public static int getVolume() {
         return volume;
     }

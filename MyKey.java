@@ -15,6 +15,16 @@ import java.awt.event.*;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * @class MyKey
+ *
+ * @brief Listener della tastiera per il gioco.
+ *
+ *        Collega i tasti della tastiera al pannello di gioco.
+ *        Gestisce il movimento della nave (A e D), l'avvio della partita
+ *        (spazio)
+ *        e la pausa del gioco (P o ESC).
+ */
 public class MyKey implements KeyListener {
 
     /**

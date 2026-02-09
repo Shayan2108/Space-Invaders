@@ -13,6 +13,16 @@
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+/**
+ * @class Bullets
+ *
+ * @brief Gestione dei proiettili della nave.
+ *
+ *        Ogni istanza rappresenta un proiettile singolo. La classe
+ *        gestisce la posizione, la hitbox e il movimento verticale
+ *        del proiettile, rimuovendolo automaticamente quando esce
+ *        dallo schermo.
+ */
 public class Bullets {
 
     /** pannello principale del gioco, usato per accedere alle immagini e liste */

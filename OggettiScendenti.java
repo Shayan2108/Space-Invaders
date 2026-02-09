@@ -9,6 +9,16 @@
  *        Questo file contiene la classe Stella che rappresenta
  *        un punto bianco che si muove verso il basso nello schermo.
  */
+
+/**
+ * @class OggettiScendenti
+ *
+ * @brief Oggetto animato che scende verticalmente nello schermo.
+ *
+ *        La classe gestisce la posizione (x,y), la velocità e un riferimento
+ *        al pannello di gioco. Fornisce metodi per muovere l'oggetto e
+ *        controllare se è uscito dallo schermo.
+ */
 public class OggettiScendenti extends Thread {
 
     /**

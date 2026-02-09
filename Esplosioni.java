@@ -10,16 +10,36 @@
  *        l'avanzamento dei frame dell'animazione.
  */
 
+/**
+ * @class Esplosioni
+ * 
+ * @brief Esplosione animata nel gioco.
+ * 
+ *        Gestisce la posizione x e y dell'esplosione, l'avanzamento
+ *        dei frame e determina quando l'animazione è terminata.
+ */
 public class Esplosioni {
 
+    /** coordinata x dell'esplosione */
     public int x;
+
+    /** coordinata y dell'esplosione */
     public int y;
+
+    /** frame attualmente in esecuzione nell'animazione */
     public int frameInEseguzione;
+
+    /** numero massimo di frame dell'animazione */
     public int maxFrame;
+
+    /** velocità di avanzamento dei frame */
     public int avanzamento;
 
     /**
-     * Costruttore della classe Esplosioni.
+     * @brief Costruttore della classe Esplosioni.
+     *
+     *        Inizializza la posizione e la velocità di avanzamento dei frame.
+     *        Imposta il numero massimo di frame a 70 e il frame iniziale a 0.
      *
      * @param x           posizione x dell'esplosione
      * @param y           posizione y dell'esplosione
@@ -34,16 +54,20 @@ public class Esplosioni {
     }
 
     /**
-     * Avanza l'animazione dell'esplosione.
+     * @brief Avanza l'animazione dell'esplosione.
+     *
+     *        Incrementa il frame in esecuzione usando la velocità di avanzamento.
+     *        L'animazione progredisce fino a raggiungere il numero massimo di
+     *        frame.
      */
     public void aggiorna() {
         frameInEseguzione += avanzamento;
     }
 
     /**
-     * Controlla se l'animazione è terminata.
+     * @brief Controlla se l'animazione è terminata.
      *
-     * @return true se l'esplosione è finita
+     * @return true se il frame in esecuzione ha raggiunto o superato il massimo
      */
     public boolean isFinita() {
         return frameInEseguzione >= maxFrame;

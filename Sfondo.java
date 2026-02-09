@@ -15,6 +15,19 @@
  * lo sfondo in modo continuo.
  */
 
+/**
+ * @class Sfondo
+ *
+ * @brief Thread per il movimento dello sfondo del gioco.
+ *
+ *        Ogni oggetto Sfondo scorre verso il basso all'interno del pannello di
+ *        gioco.
+ *        Controlla se il gioco è in pausa e aggiunge un nuovo sfondo quando
+ *        necessario.
+ *        Alla fine del movimento, lo sfondo si rimuove automaticamente dalla
+ *        lista
+ *        degli sfondi nel pannello principale.
+ */
 public class Sfondo extends Thread {
 
     // posizione x dello sfondo

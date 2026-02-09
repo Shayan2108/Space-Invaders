@@ -10,6 +10,14 @@
  *        il numero massimo di frame dell'animazione.
  */
 
+/**
+ * @class Esplosioni1
+ * 
+ * @brief Esplosione grande animata.
+ * 
+ *        Estende la classe Esplosioni modificando il numero massimo
+ *        di frame per ottenere un effetto di esplosione più grande.
+ */
 public class Esplosioni1 extends Esplosioni {
 
     /**
