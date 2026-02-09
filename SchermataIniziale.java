@@ -15,7 +15,7 @@ public class SchermataIniziale extends JPanel {
 
     // 🎵 Musica globale condivisa
     public static Clip clipSottofondo;
-    public static int volume = 50; // da 0 a 100
+    public static int volume = 100; // da 0 a 100
 
     public SchermataIniziale(CardLayout cl, JPanel contenitore) {
         this.cl = cl;
@@ -73,6 +73,10 @@ public class SchermataIniziale extends JPanel {
                 setVolume(volume); // applica volume attuale
                 clipSottofondo.loop(Clip.LOOP_CONTINUOUSLY);
                 clipSottofondo.start();
+
+                System.out.println("File trovato: " + new File("audioSchermataIniziale.wav").exists());
+                System.out.println("Clip supporta MASTER_GAIN: " +
+                        clipSottofondo.isControlSupported(FloatControl.Type.MASTER_GAIN));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +89,23 @@ public class SchermataIniziale extends JPanel {
         if (clipSottofondo != null) {
             try {
                 FloatControl gain = (FloatControl) clipSottofondo.getControl(FloatControl.Type.MASTER_GAIN);
-                float dB = (float) (-80 + (vol / 100.0f) * 80);
+
+                // volume percepito lineare usando scala logaritmica
+                // 0 -> -80 dB (silenzio), 100 -> 0 dB (max)
+                float min = -80f; // silenzio
+                float max = 0f; // massimo
+                float dB;
+                if (vol == 0) {
+                    dB = min;
+                } else {
+                    dB = (float) (min + (Math.log10(vol / 100.0) / Math.log10(1.0)) * (max - min));
+                    // soluzione semplice: scala logaritmica naturale percepita
+                    dB = (float) (20 * Math.log10(vol / 100.0));
+                    if (dB < min)
+                        dB = min;
+                    if (dB > max)
+                        dB = max;
+                }
                 gain.setValue(dB);
             } catch (Exception e) {
                 e.printStackTrace();
