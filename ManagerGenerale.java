@@ -112,8 +112,8 @@ class ManagerGenerale extends Thread {
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
                     synchronized (m.powerUps) {
-                            if (!m.powerUps.get(i).iniziatoUnaVolta)
-                                m.powerUps.get(i).effettoIniziato = true;
+                        if (!m.powerUps.get(i).iniziatoUnaVolta)
+                            m.powerUps.get(i).effettoIniziato = true;
                         m.powerUps.get(i).isDisegnare = false;
                     }
                 }
@@ -126,7 +126,7 @@ class ManagerGenerale extends Thread {
                         + m.r.nextLong(m.frequezaminimaPianeti, m.frequezaMassimaPianeti);
             }
             // --- spawn nemici con difficoltà graduale ---
-            int livello = m.getDifficolta(); // livello attuale in base al tempo
+            // int livello = m.getDifficolta(); // livello attuale in base al tempo
             int velocita = m.getVelocitaNemici(); // velocità nemici basata sul livello
             long intervalloSpawn = m.getIntervalloSpawnNemici(); // intervallo spawn basato sul livello
 

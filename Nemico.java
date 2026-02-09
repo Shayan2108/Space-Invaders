@@ -10,7 +10,6 @@
 e riscrive la stampaOgetti e il run della classe thread
 **/
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -67,7 +66,7 @@ public class Nemico extends Pianeti {
         timerSpawn = System.currentTimeMillis() + frequenzaSpawn;
         passo = 10;
         this.hitBox = new Rectangle(this.x, this.y, grandezzaPianeta, grandezzaPianeta);
-     }
+    }
 
     @Override
     public void stampaOggettiClasse(Graphics g) {
@@ -221,12 +220,12 @@ public class Nemico extends Pianeti {
             }
         }
 
-            // Rimuove il nemico dalla lista
+        // Rimuove il nemico dalla lista
         synchronized (m.nemici) {
             m.nemici.remove(this);
         }
-        
-            // Se il nemico arriva in fondo vivo, game over
+
+        // Se il nemico arriva in fondo vivo, game over
         if (isVivo) {
             MyPanel.cuoreRimanenti -= 1;
             System.out.println("la nave ha superato il limite");
