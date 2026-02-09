@@ -51,8 +51,8 @@ public class PowerUp extends Pianeti {
         isTimerFinito = false;
     }
 
-    @Override
-    public void run() {
+        @Override
+        public void run() {
 
         while ((y <= m.getHeight() || iniziatoUnaVolta)
                 && !finireThread && !m.gameOver) {
@@ -104,8 +104,8 @@ public class PowerUp extends Pianeti {
                             if (m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
                                 System.out.println("spengo tutti falsei");
                             }
-                            if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0
-                                    && m.powerUps.get(i).iniziatoUnaVolta) {
+                                if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0
+                                        && m.powerUps.get(i).iniziatoUnaVolta) {
                                 finitoPerTutti = false;
                                 System.out.println("uno manca ancora");
                             }
@@ -123,7 +123,7 @@ public class PowerUp extends Pianeti {
             m.powerUps.remove(this);
         }
     }
-
+    
     public void stampaOggettiClasse(Graphics g) {
 
         g.drawImage(

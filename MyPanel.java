@@ -378,7 +378,7 @@ public class MyPanel extends JPanel {
         // g.setColor(Color.RED);
         // g.drawRect(hitboxNave.x, hitboxNave.y, hitboxNave.width, hitboxNave.height);
         // g.drawRect(hitBoxScudo.x, hitBoxScudo.y,
-        // hitBoxScudo.width, hitBoxScudo.height);
+         // hitBoxScudo.width, hitBoxScudo.height);
     }
 
     private void stampaCuori(Graphics g) {
@@ -429,7 +429,7 @@ public class MyPanel extends JPanel {
                 g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
                 g.drawImage(cuori.get(2), 40, 3, 20, 20, null);
                 break;
-            case 9:
+                case 9:
                 g.drawImage(cuori.get(3), 0, 3, 20, 20, null);
                 g.drawImage(cuori.get(3), 20, 3, 20, 20, null);
                 g.drawImage(cuori.get(3), 40, 3, 20, 20, null);
@@ -439,7 +439,7 @@ public class MyPanel extends JPanel {
                 cl.show(contenitore, "GAMEOVER");
                 gameOver = true;
                 GUI.scriviPunteggio();
-                MyPanel.cuoreRimanenti = 9;
+                 MyPanel.cuoreRimanenti = 9;
                 break;
         }
 
@@ -554,8 +554,8 @@ public class MyPanel extends JPanel {
                 immaginiDettagli.add(ImageIO.read(new File("Dettagli/" + j + ".png")));
             } catch (IOException e) {
                 System.err.println("Errore caricando: Asteroidi/vio/" + j + ".png");
+                }
             }
-        }
     }
 
     /**
@@ -585,10 +585,10 @@ public class MyPanel extends JPanel {
         for (int i = 0; i < 70; i++) {
             try {
                 framesEsplosione.add(ImageIO.read(new File("Esplosioni/" + i + ".png")));
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
 
     private void InizializzaImmaginiEsplosioni1() {

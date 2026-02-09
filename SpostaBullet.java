@@ -20,7 +20,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 class SpostaBullet extends Thread {
-
+ 
     /**
      * @brief pannello principale del gioco
      *
@@ -29,20 +29,20 @@ class SpostaBullet extends Thread {
      */
     MyPanel m;
 
-    /**
+    /** 
      * @brief costruttore del thread SpostaBullet
      *
      *        Inizializza il riferimento al pannello di gioco.
      *
-     * @param m pannello principale del gioco
-     */
+     * @param m pannello principale del gioco 
+     */ 
     SpostaBullet(MyPanel m) {
         this.m = m;
     }
 
     /**
      * @brief metodo principale del thread
-     *
+     * 
      *        Il metodo run viene eseguito in ciclo continuo.
      *        Sposta i proiettili, controlla le collisioni con i nemici
      *        e aggiorna punteggio, esplosioni e suoni.
@@ -93,7 +93,7 @@ class SpostaBullet extends Thread {
                                     m.nemici.get(j).isVivo = false;
 
                                     int cavia = m.r.nextInt(0, m.nPowerUp);
-                                    if (m.r.nextInt(0, 100) < 45) {
+                                     if (m.r.nextInt(0, 100) < 45) {
                                         m.powerUps.add(
                                                 new PowerUp(
                                                         m.nemici.get(j).x + m.nemici.get(j).grandezzaPianeta / 2,
@@ -131,9 +131,9 @@ class SpostaBullet extends Thread {
                                     continue cicloBullet;
                                 }
                             }
+                            }
                         }
                     }
-                }
             }
 
             try {

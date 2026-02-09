@@ -112,8 +112,8 @@ class ManagerGenerale extends Thread {
             for (int i = 0; i < m.powerUps.size(); i++) {
                 if (m.powerUps.get(i).hitbox.intersects(m.hitboxNave)) {
                     synchronized (m.powerUps) {
-                        if (!m.powerUps.get(i).iniziatoUnaVolta)
-                            m.powerUps.get(i).effettoIniziato = true;
+                            if (!m.powerUps.get(i).iniziatoUnaVolta)
+                                m.powerUps.get(i).effettoIniziato = true;
                         m.powerUps.get(i).isDisegnare = false;
                     }
                 }
