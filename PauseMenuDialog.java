@@ -1,16 +1,48 @@
+
+/**
+ * @author  Statella Giuseppe Salvatore, statella.giuseppe01@gmail.com
+ * @version 1.0
+ * @file PauseMenuDialog.java
+ * 
+ * @brief Dialog di pausa del gioco.
+ *
+ * Questo file contiene la finestra di pausa del gioco Space Invaders.
+ * Permette di regolare il volume, tornare al gioco o uscire dalla partita.
+ */
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 
+/**
+ * @class PauseMenuDialog
+ * 
+ * @brief Finestra di dialogo per il menu di pausa.
+ * 
+ *        Questa classe rappresenta il menu di pausa modale del gioco.
+ *        Gestisce la regolazione del volume, la ripresa del gioco e
+ *        l'uscita dalla partita.
+ */
 public class PauseMenuDialog extends JDialog {
 
+    /** Pannello principale del gioco, usato per gestire lo stato di pausa */
     private MyPanel gamePanel;
 
+    /**
+     * @brief Costruttore del menu di pausa.
+     *
+     *        Inizializza la finestra di pausa, imposta la grafica,
+     *        lo slider del volume e i pulsanti di controllo.
+     *        Aggiorna il volume globale del gioco tramite SchermataIniziale.
+     *
+     * @param owner     finestra proprietaria del dialog
+     * @param gamePanel pannello di gioco da mettere in pausa
+     */
     public PauseMenuDialog(Window owner, MyPanel gamePanel) {
         super(owner, ModalityType.APPLICATION_MODAL);
         this.gamePanel = gamePanel;
 
-        // 🎨 Configurazione dialog
+        // Configurazione dialog
         setUndecorated(true);
         setSize(320, 260);
         setLocationRelativeTo(owner);
@@ -27,13 +59,13 @@ public class PauseMenuDialog extends JDialog {
         title.setBounds(60, 20, 200, 40);
         add(title);
 
-        // 🔹 Label Volume
+        // Label Volume
         JLabel volumeLabel = new JLabel("Volume:");
         volumeLabel.setForeground(new Color(255, 180, 255));
         volumeLabel.setBounds(50, 80, 70, 20);
         add(volumeLabel);
 
-        // 🔹 Slider
+        // Slider
         JSlider volumeSlider = new JSlider(0, 100, SchermataIniziale.getVolume());
         volumeSlider.setBounds(50, 105, 250, 30);
         volumeSlider.setOpaque(false);
@@ -73,7 +105,7 @@ public class PauseMenuDialog extends JDialog {
 
         add(volumeSlider);
 
-        // 🔹 Componente per disegnare la percentuale
+        // Componente per disegnare la percentuale
         JComponent percentDisplay = new JComponent() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -87,7 +119,7 @@ public class PauseMenuDialog extends JDialog {
         percentDisplay.setOpaque(false);
         add(percentDisplay);
 
-        // 🔹 Bottone Torna al gioco
+        // Bottone Torna al gioco
         JButton resumeBtn = new JButton("Torna al gioco");
         resumeBtn.setBounds(50, 160, 250, 35);
         resumeBtn.setFocusPainted(false);
@@ -99,7 +131,7 @@ public class PauseMenuDialog extends JDialog {
         });
         add(resumeBtn);
 
-        // 🔹 Bottone Esci dalla partita
+        // Bottone Esci dalla partita
         JButton quitBtn = new JButton("Esci dalla partita");
         quitBtn.setBounds(50, 205, 250, 35);
         quitBtn.setFocusPainted(false);
