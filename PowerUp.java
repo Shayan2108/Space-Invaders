@@ -5,10 +5,16 @@
  * @author Mohammad Shayan Attari Bin Mohammad Zeshan Attari
  * @version 1.0
  *
- * @brief Classe PowerUp
+ * Classe PowerUp
  *
- * Rappresenta un power-up che scende dall’alto quando si distrugge una nave nemica.
- * Quando viene preso, attiva un effetto temporaneo.
+ * Questa classe rappresenta un power up del gioco.
+ * Il power up scende dall’alto verso il basso.
+ * Quando il giocatore lo prende, attiva un effetto
+ * che dura per un certo tempo.
+ *
+ * Il power up viene gestito con un thread.
+ * Quando il tempo finisce, l’effetto viene tolto
+ * e il power up viene eliminato dalla lista.
  */
 
 import java.awt.*;
@@ -17,18 +23,43 @@ import java.util.ArrayList;
 
 public class PowerUp extends Pianeti {
 
+    // tipo del power up
     int tipo;
+
+    // area di collisione
     Rectangle hitbox;
 
+    // indica se l’effetto è finito
     volatile boolean effettoFinito;
+
+    // indica se l’effetto è iniziato
     volatile boolean effettoIniziato;
+
+    // serve per evitare che l’effetto parta più volte
     boolean iniziatoUnaVolta;
+
+    // indica se il thread deve finire
     volatile boolean finireThread;
+
+    // indica se il power up deve essere disegnato
     volatile boolean isDisegnare;
+
+    // indica se il timer è finito
     volatile boolean isTimerFinito;
 
+    // timer del power up
     Long timerPowerUp;
 
+    /**
+     * Costruttore della classe PowerUp
+     *
+     * @param x        posizione x iniziale
+     * @param y        posizione y iniziale
+     * @param velocita velocità di discesa
+     * @param m        riferimento al pannello di gioco
+     * @param image    lista delle immagini
+     * @param tipo     tipo del power up
+     */
     public PowerUp(int x, int y, int velocita, MyPanel m,
             ArrayList<BufferedImage> image, int tipo) {
 
@@ -51,12 +82,22 @@ public class PowerUp extends Pianeti {
         isTimerFinito = false;
     }
 
-        @Override
-        public void run() {
+    /**
+     * Metodo run del thread.
+     *
+     * Fa scendere il power up.
+     * Controlla la pausa del gioco.
+     * Attiva l’effetto quando viene preso.
+     * Controlla quando il timer finisce.
+     * Alla fine rimuove il power up dalla lista.
+     */
+    @Override
+    public void run() {
 
         while ((y <= m.getHeight() || iniziatoUnaVolta)
                 && !finireThread && !m.gameOver) {
 
+            // se il gioco è in pausa
             if (m.isPaused) {
                 try {
                     Thread.sleep(50);
@@ -64,6 +105,8 @@ public class PowerUp extends Pianeti {
                 }
                 continue;
             }
+
+            // movimento verso il basso
             y += velocita;
             hitbox.translate(0, velocita);
 
@@ -73,12 +116,14 @@ public class PowerUp extends Pianeti {
                 e.printStackTrace();
             }
 
+            // attivazione effetto
             if (effettoIniziato) {
 
                 if (tipo == 1) {
                     m.bulletMassime += 16;
                     timerPowerUp = System.currentTimeMillis() + 10000;
                 }
+
                 if (tipo == 0) {
                     Nemico.accesiTipo0++;
                     Nemico.isScudoOn = true;
@@ -89,28 +134,32 @@ public class PowerUp extends Pianeti {
                 effettoIniziato = false;
                 iniziatoUnaVolta = true;
             }
+
+            // controllo fine timer
             if (timerPowerUp != null &&
                     timerPowerUp < System.currentTimeMillis()) {
+
                 if (tipo == 1 && !isTimerFinito) {
                     m.bulletMassime -= 16;
                 }
+
                 isTimerFinito = true;
+
                 if (tipo == 0) {
                     Nemico.accesiTipo0--;
                     boolean finitoPerTutti = true;
                     finireThread = true;
+
                     synchronized (m.powerUps) {
                         for (int i = 0; i < m.powerUps.size(); i++) {
-                            if (m.powerUps.get(i).tipo == 0 && m.powerUps.get(i).iniziatoUnaVolta) {
-                                System.out.println("spengo tutti falsei");
-                            }
-                                if (!m.powerUps.get(i).isTimerFinito && m.powerUps.get(i).tipo == 0
-                                        && m.powerUps.get(i).iniziatoUnaVolta) {
+                            if (!m.powerUps.get(i).isTimerFinito
+                                    && m.powerUps.get(i).tipo == 0
+                                    && m.powerUps.get(i).iniziatoUnaVolta) {
                                 finitoPerTutti = false;
-                                System.out.println("uno manca ancora");
                             }
                         }
                     }
+
                     if (Nemico.accesiTipo0 == 0 && finitoPerTutti) {
                         Nemico.isScudoOn = false;
                         Nemico.tempoScudo = null;
@@ -119,11 +168,17 @@ public class PowerUp extends Pianeti {
             }
         }
 
+        // rimozione dalla lista dei power up
         synchronized (m.powerUps) {
             m.powerUps.remove(this);
         }
     }
-    
+
+    /**
+     * Disegna il power up a schermo
+     *
+     * @param g oggetto Graphics
+     */
     public void stampaOggettiClasse(Graphics g) {
 
         g.drawImage(
