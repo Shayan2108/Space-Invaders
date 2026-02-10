@@ -18,14 +18,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-/**
- * @class MyMouse
- *
- * @brief Listener del mouse per sparare proiettili.
- *
- *        Collega il mouse al pannello di gioco e gestisce la creazione
- *        dei proiettili e la riproduzione del suono di sparo.
- */
 public class MyMouse implements MouseListener {
 
     /**

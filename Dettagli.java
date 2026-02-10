@@ -12,16 +12,6 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-/**
- * @class Dettagli
- *
- * @brief Dettagli grafici animati sullo sfondo.
- *
- *        Questa classe gestisce piccoli oggetti che scendono
- *        sullo schermo. Ogni oggetto è un thread che aggiorna
- *        autonomamente la propria posizione e si rimuove
- *        automaticamente quando esce dallo schermo.
- */
 public class Dettagli extends OggettiScendenti {
 
     /** frequenza di aggiornamento del movimento */

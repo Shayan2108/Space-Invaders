@@ -14,18 +14,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-/**
- * @class Pianeti
- *
- * @brief Pianeta animato che scende nello sfondo del gioco.
- *
- *        La classe Pianeti eredita da OggettiScendenti e gestisce il movimento
- *        e
- *        l'animazione di un pianeta sullo sfondo. Controlla il tempo tra i
- *        frame
- *        e si rimuove automaticamente dalla lista del pannello quando esce
- *        dallo schermo.
- */
 public class Pianeti extends OggettiScendenti {
 
     /** lista di immagini per l'animazione del pianeta */

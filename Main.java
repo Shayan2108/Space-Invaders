@@ -13,14 +13,6 @@
  */
 import javax.swing.SwingUtilities;
 
-/**
- * @class Main
- *
- * @brief Classe principale con il metodo main.
- *
- *        Gestisce l'avvio del programma e l'inizializzazione
- *        della GUI tramite Swing.
- */
 public class Main {
 
     /**

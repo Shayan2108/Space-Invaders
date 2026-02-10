@@ -19,19 +19,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-/**
- * @class SpostaBullet
- * 
- * @brief Thread per il movimento dei proiettili e gestione collisioni.
- * 
- *        Questa classe estende Thread e gestisce in ciclo continuo lo
- *        spostamento
- *        dei proiettili nel gioco, il controllo delle collisioni con i nemici,
- *        l'aggiornamento del punteggio e la gestione delle esplosioni e dei
- *        suoni.
- *        Collabora con MyPanel per accedere alle liste di proiettili, nemici,
- *        esplosioni e power-up.
- */
 class SpostaBullet extends Thread {
 
     /**

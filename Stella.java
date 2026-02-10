@@ -9,17 +9,6 @@
  *        Questo file contiene la classe Stella che rappresenta
  *        un punto bianco che si muove verso il basso nello schermo.
  */
-
-/**
- * @class Stella
- * 
- * @brief Rappresenta una stella di sfondo che si muove verso il basso.
- * 
- *        La classe Stella estende Thread e gestisce la posizione, la velocità
- *        e il movimento verticale di una stella nello sfondo del gioco.
- *        Collabora con il pannello principale MyPanel per verificare i limiti
- *        dello schermo e determinare quando la stella è fuori vista.
- */
 public class Stella extends Thread {
 
     /**

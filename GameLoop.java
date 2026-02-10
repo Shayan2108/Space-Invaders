@@ -9,16 +9,6 @@
  *        la classe estende la classe Thread e ha il compito di chiamare la
  *        funzione repaint ogni 33 millisecondi
  */
-
-/**
- * @class GameLoop
- *
- * @brief Thread per aggiornare la grafica del gioco.
- *
- *        La classe esegue un ciclo infinito che richiama repaint()
- *        su MyPanel a intervalli regolari di 33 ms (circa 30 fps).
- *        Gestisce anche la pausa del gioco controllando l'attributo isPaused.
- */
 public class GameLoop extends Thread {
 
     /**

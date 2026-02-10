@@ -7,9 +7,9 @@
  *
  * @brief Classe che gestisce l'interfaccia grafica del gioco
  *
- *        La classe GUI estende Thread e si occupa della creazione
- *        della finestra principale, del CardLayout e della gestione
- *        delle schermate di gioco.
+ * La classe GUI estende Thread e si occupa della creazione
+ * della finestra principale, del CardLayout e della gestione
+ * delle schermate di gioco.
  */
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -22,10 +22,7 @@ import javax.swing.*;
 
 public class GUI extends Thread {
 
-    /**
-     * indica lo stato attuale del gioco
-     * Variabile statica e volatile perché condivisa tra thread.
-     */
+    /** indica lo stato attuale del gioco */
     static volatile String statoAttuale = "";
 
     /**
@@ -86,13 +83,6 @@ public class GUI extends Thread {
         frame.setVisible(true);
     }
 
-    /**
-     * @brief Scrive il punteggio massimo su file.
-     *
-     *        Se il punteggio corrente supera il punteggio massimo
-     *        salvato, aggiorna il file "gr.txt" e il punteggio massimo
-     *        in memoria.
-     */
     public static void scriviPunteggio() {
         if (MyPanel.score > MyPanel.scoreMassimo) {
             try {

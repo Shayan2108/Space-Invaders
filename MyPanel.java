@@ -30,29 +30,13 @@ import javax.sound.sampled.Clip;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-/**
- * @class MyPanel
- *
- * @brief Pannello principale del gioco.
- *
- *        La classe gestisce tutto ciò che viene disegnato a schermo:
- *        stelle, pianeti, asteroidi, nave, fuoco e proiettili.
- *        Contiene anche la logica per il movimento della nave, gestione
- *        dei nemici, dei powerup, del punteggio e del timer di gioco.
- */
 public class MyPanel extends JPanel {
-    /** Audio della sparatoria della nave */
+    /** variabili necessari per il Audio di quando spara la nave */
     AudioInputStream audioSparatoria;
-
-    /** Lista dei clip audio di sparatoria */
     ArrayList<Clip> sparoClip = new ArrayList<>();
 
-    /** Audio quando un nemico viene colpito */
     AudioInputStream audioColpito;
-
-    /** Lista dei clip audio di colpito */
     ArrayList<Clip> colpitoClip = new ArrayList<>();
-
     /** lista di stelle presenti sullo sfondo */
     volatile ArrayList<Sfondo> sfondi = new ArrayList<>();
 
@@ -89,19 +73,6 @@ public class MyPanel extends JPanel {
     /** istanze delle esplozioni */
     ArrayList<Esplosioni> esplosioni = new ArrayList<>();
     ArrayList<Esplosioni1> esplosioni1 = new ArrayList<>();
-
-    /** immagini dei powerup */
-    ArrayList<ArrayList<BufferedImage>> immaginiPowerUp = new ArrayList<>();
-
-    /** lista dei powerup attivi */
-    ArrayList<PowerUp> powerUps = new ArrayList<>();
-
-    /** immagini del scudo */
-    ArrayList<BufferedImage> immagineScudo = new ArrayList<>();
-
-    /** immagini dei cuori */
-    ArrayList<BufferedImage> cuori = new ArrayList<>();
-
     /** frame corrente della fiamma */
     int frameFiamma;
 
@@ -161,7 +132,6 @@ public class MyPanel extends JPanel {
     /** timer per stampare pianeta */
     long timerStampaPianeta;
 
-    /** tempo di inizio del gioco */
     public static long startTime;
 
     /** intervalli per spawn pianeti */
@@ -172,38 +142,28 @@ public class MyPanel extends JPanel {
 
     /** numero di immagini per dettagli */
     int NpngPerDettagliImmagini;
-
     /** stato del gioco */
     volatile boolean gameOver;
-
-    /** layout del pannello */
+    /** layout e contenitore del pannello */
     CardLayout cl;
-
-    // **contenitore del pannello */
     JPanel contenitore;
-
     /** numero di immagini delle navi nemiche */
     int NImmaginiNemici;
-
     /** score piu alto fatto dul gioco */
     static int scoreMassimo;
 
-    /** frame corrente dei powerup */
+    ArrayList<ArrayList<BufferedImage>> immaginiPowerUp = new ArrayList<>();
+    ArrayList<PowerUp> powerUps = new ArrayList<>();
+
     int framePerPoweUp;
-
-    /** numero massimo di powerup */
     int nPowerUp;
-
-    /** hitbox del powerup scudo */
     Rectangle hitBoxScudo;
 
-    /** hitbox della nave */
     Rectangle hitboxNave;
-
-    /** cuori rimanenti */
+    ArrayList<BufferedImage> immagineScudo = new ArrayList<>();
+    ArrayList<BufferedImage> cuori = new ArrayList<>();
     public static volatile int cuoreRimanenti = 9;
 
-    /** stato di pausa del gioco */
     public boolean isPaused = false;
 
     /**
@@ -357,14 +317,6 @@ public class MyPanel extends JPanel {
         });
     }
 
-    /**
-     * @brief inizializza le immagini dei cuori
-     *
-     *        Carica le immagini dei cuori dal disco e le aggiunge alla lista
-     *        `cuori`.
-     *        Le immagini vengono utilizzate per mostrare la vita rimanente del
-     *        giocatore.
-     */
     private void inizializzaCuori() {
         for (int index = 0; index < 4; index++) {
             try {
@@ -375,13 +327,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief inizializza le immagini dello scudo
-     *
-     *        Carica le immagini dello scudo dal disco e le aggiunge alla lista
-     *        `immagineScudo`.
-     *        Lo scudo protegge la nave dai danni dei nemici e dei proiettili.
-     */
     private void inizializzaScudo() {
 
         try {
@@ -393,13 +338,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief inizializza le immagini dei powerup
-     *
-     *        Carica tutte le immagini dei powerup presenti nel gioco e le organizza
-     *        in frame per animazione. Le immagini vengono aggiunte alla lista
-     *        `immaginiPowerUp`.
-     */
     private void inizializzaPowerUp() {
         for (int i = 0; i < nPowerUp; i++) {
             ArrayList<BufferedImage> cavia = new ArrayList<>();
@@ -443,10 +381,6 @@ public class MyPanel extends JPanel {
         // hitBoxScudo.width, hitBoxScudo.height);
     }
 
-    /**
-     * @brief aggiorna la posizione e la visualizzazione dei cuori
-     * @param g contesto grafico
-     */
     private void stampaCuori(Graphics g) {
         switch (MyPanel.cuoreRimanenti) {
             case 0:
@@ -511,10 +445,6 @@ public class MyPanel extends JPanel {
 
     }
 
-    /**
-     * @brief disegna i powerup
-     * @param g contesto grafico
-     */
     private void stampaPowerUp(Graphics g) {
         for (PowerUp p : powerUps) {
             if (p.isDisegnare) {
@@ -523,19 +453,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief aggiorna il testo e la posizione delle JLabel
-     *
-     *        Aggiorna il testo delle JLabel per mostrare i proiettili
-     *        rimanenti, il punteggio attuale e il punteggio massimo.
-     *        Inoltre, posiziona le JLabel in modo appropriato sullo
-     *        schermo.
-     *
-     *        Attributi utilizzati:
-     *        - bulletDisponibili
-     *        - scorePoint
-     *        - maxPoint
-     */
     private void setLabel() {
         bulletDisponibili.setLocation(this.getWidth() - bulletDisponibili.getWidth(),
                 getHeight() - bulletDisponibili.getHeight());
@@ -656,10 +573,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief disegna i nemici sullo schermo
-     * @param g contesto grafico
-     */
     private void stampaNemici(Graphics g) {
         synchronized (nemici) {
             for (Nemico n : nemici) {
@@ -668,9 +581,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief inizializza le immagini di esplosioni
-     */
     private void InizializzaImmaginiEsplosioni() {
         for (int i = 0; i < 70; i++) {
             try {
@@ -681,9 +591,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief inizializza le immagini di esplosioni alternative
-     */
     private void InizializzaImmaginiEsplosioni1() {
         for (int i = 0; i < 16; i++) {
             try {
@@ -694,10 +601,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief disegna esplosioni
-     * @param g contesto grafico
-     */
     private void stampaEsplosioni(Graphics g) {
         for (int i = 0; i < esplosioni.size(); i++) {
             if (esplosioni.get(i).frameInEseguzione < esplosioni.get(i).maxFrame) {
@@ -714,10 +617,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief disegna esplosioni alternative
-     * @param g contesto grafico
-     */
     private void stampaEsplosioni1(Graphics g) {
         for (int i = 0; i < esplosioni1.size(); i++) {
             if (esplosioni1.get(i).frameInEseguzione < esplosioni1.get(i).maxFrame) {
@@ -734,9 +633,6 @@ public class MyPanel extends JPanel {
         }
     }
 
-    /**
-     * @brief aggiorna il tempo di gioco nella JLabel
-     */
     private void aggiornaTempoDiGioco() {
         long elapsedMillis = System.currentTimeMillis() - startTime;
         long ore = elapsedMillis / 3600000;
@@ -750,17 +646,11 @@ public class MyPanel extends JPanel {
         timerLabel.setLocation(5, 28);
     }
 
-    /**
-     * @brief avvia il timer del gioco
-     */
     public void startTimer() {
         startTime = System.currentTimeMillis(); // parte da zero
     }
 
-    /**
-     * @brief ritorna il livello di difficoltà in base al tempo
-     * @return livello livello di difficoltà attuale
-     */
+    // Ritorna il livello attuale in base al tempo giocato
     public int getDifficolta() {
         long elapsedMillis = System.currentTimeMillis() - startTime;
         int secondi = (int) (elapsedMillis / 1000);
@@ -772,20 +662,14 @@ public class MyPanel extends JPanel {
         return Math.min(livello, 10);
     }
 
-    /**
-     * @brief ritorna la velocità dei nemici in base al livello
-     * @return velocita velocità dei nemici
-     */
+    // Velocità nemici in base al livello
     public int getVelocitaNemici() {
         int livello = getDifficolta();
         // Inizia da 2, aumenta di 0.5 per livello, molto graduale
         return 2 + (livello - 1) / 2;
     }
 
-    /**
-     * @brief ritorna l'intervallo di spawn dei nemici in millisecondi
-     * @return intervallo intervallo di spawn dei nemici
-     */
+    // Frequenza spawn nemici (millisecondi)
     public long getIntervalloSpawnNemici() {
         int livello = getDifficolta();
         // Inizia da 3000ms (3 secondi), diminuisce di 150ms per livello, graduale
